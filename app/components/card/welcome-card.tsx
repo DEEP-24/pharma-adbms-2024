@@ -14,8 +14,8 @@ export function WelcomeCard(props: WelcomeCardProps) {
     <div className="flex flex-col gap-4 pb-6 pt-1">
       <div className={cn('flex items-center', className)}>
         <h2 className="text-lg">
-          Welcome back,{' '}
-          <span className="text-brand text-xl font-semibold">{name}</span>
+          Welcome,{' '}
+          <span className="text-xl font-semibold text-brand">{name}</span>
         </h2>
       </div>
 
