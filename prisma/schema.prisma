@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator enums {
+  provider = "tsx ./prisma/enum-generator.ts"
+}
+
+model Admin {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admin")
+}
+
+model Pharmacist {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String   @unique
+  password String
+  gender   Gender
+  dob      DateTime @map("date_of_birth")
+  phone    String
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pharmacist")
+}
+
+model Doctor {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String   @unique
+  password String
+  gender   Gender
+  dob      DateTime @map("date_of_birth")
+  phone    String
+
+  prescriptions Prescription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("doctor")
+}
+
+model Patient {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String   @unique
+  password String
+  gender   Gender
+  dob      DateTime @map("date_of_birth")
+  phone    String
+
+  prescriptions Prescription[]
+  orders        Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("patient")
+}
+
+model Medication {
+  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+  brand                String
+  dosage               String
+  name                 String
+  price                Float
+  quantity             Int
+  unit                 String
+  prescriptionRequired Boolean @default(false)
+
+  prescriptions Prescription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("medication")
+}
+
+model Prescription {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  dosage           Int
+  durationNumber   Int
+  durationUnit     String
+  frequency        String
+  frequencyTimings Int[]
+  remarks          String?
+  timing           String
+  unit             String
+  startDate        DateTime
+  expiryDate       DateTime
+  totalAmount      Float
+
+  patient      Patient    @relation(fields: [patientId], references: [id])
+  patientId    String     @db.ObjectId
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  medicationId String     @db.ObjectId
+  doctor       Doctor?    @relation(fields: [doctorId], references: [id])
+  doctorId     String?    @db.ObjectId
+  order        Order?
+  orderId      String?    @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("prescription")
+}
+
+model Order {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  patient     Patient     @relation(fields: [patientId], references: [id])
+  patientId   String      @db.ObjectId
+  totalAmount Float
+  payment     Payment?
+  status      OrderStatus
+
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id])
+  prescriptionId String       @unique @db.ObjectId
+
+  pharmacist   Pharmacist? @relation(fields: [pharmacistId], references: [id])
+  pharmacistId String?     @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("order")
+}
+
+model Payment {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  orderId       String        @unique @db.ObjectId
+  order         Order         @relation(fields: [orderId], references: [id])
+  paymentMethod PaymentMethod
+  amount        Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payment")
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  CASH
+}
+
+enum MedicationUnit {
+  CAPSULE
+  DROP
+  G
+  IU
+  L
+  MCG
+  MEQ
+  MG
+  ML
+  MMOL
+  PERCENT
+  PILL
+  TABLET
+  UNIT
+}
