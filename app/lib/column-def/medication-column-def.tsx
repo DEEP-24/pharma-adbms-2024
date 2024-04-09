@@ -127,6 +127,25 @@ export const medicationColumnDef: ColumnDef<Medication>[] = [
     ),
   },
   {
+    accessorKey: 'prescriptionRequired',
+    accessorFn: row => (row.prescriptionRequired ? 'Yes' : 'No'),
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        highlight
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    enableColumnFilter: false,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Price" />
+    ),
+  },
+  {
     cell: ({ row }) => <TableRowAction row={row} />,
     id: 'actions',
     size: 50,

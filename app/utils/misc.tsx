@@ -25,7 +25,7 @@ export function upperCase(string: string) {
 
 export function formatCurrency(number: number) {
   return new Intl.NumberFormat('en-IN', {
-    currency: 'INR',
+    currency: 'USD',
     style: 'currency',
   }).format(number)
 }

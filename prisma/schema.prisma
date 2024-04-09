@@ -155,6 +155,16 @@ model Payment {
   @@map("payment")
 }
 
+model TableView {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name String
+  type String
+  data Json
+}
+
 enum OrderStatus {
   PENDING
   COMPLETED
