@@ -15,7 +15,7 @@ export const SidebarSection = ({
       {title ? (
         <p
           className={cn(
-            'select-none overflow-hidden truncate text-[11px] font-semibold uppercase text-gray-400 transition-all duration-300',
+            'select-none overflow-hidden truncate text-[11px] font-semibold uppercase text-white transition-all duration-300',
             isSidebarOpen ? 'w-auto opacity-100' : 'w-0 opacity-0',
           )}
         >

@@ -10,7 +10,7 @@ export default function DashboardLayout({
   topSlot?: React.ReactNode
 }) {
   return (
-    <div className="relative flex h-screen w-full flex-col bg-stone-100">
+    <div className="relative flex h-screen w-full flex-col bg-neutral-700">
       {topSlot ? topSlot : null}
 
       <div className="flex min-h-0 flex-auto flex-row">

@@ -22,7 +22,7 @@ function BackButton() {
       <ActionIconButton onClick={() => goBack()}>
         <ArrowLeftIcon size={16} />
       </ActionIconButton>
-      <span className="font-semibold text-gray-600">Settings</span>
+      <span className="font-semibold text-neutral-200">Settings</span>
     </div>
   )
 }
@@ -44,7 +44,7 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        'group/sidebar relative h-full overflow-hidden transition-all duration-300',
+        'group/sidebar relative h-full overflow-hidden bg-neutral-700 transition-all duration-300',
         isSidebarOpen ? 'w-56' : 'w-[54px]',
       )}
     >

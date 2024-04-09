@@ -1,11 +1,6 @@
 import { redirect, type LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
-import {
-  LayoutDashboardIcon,
-  PillIcon,
-  Users2Icon,
-  UsersIcon,
-} from 'lucide-react'
+import { LayoutDashboardIcon, PillIcon, Users2Icon } from 'lucide-react'
 
 import { CommandMenu } from '~/components/command-menu'
 import DashboardLayout from '~/components/layout/dashboard-layout'

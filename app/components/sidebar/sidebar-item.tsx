@@ -121,7 +121,7 @@ function BaseSideItem({
       className={cn(
         'relative flex w-full items-center gap-2 rounded-md py-px pl-2',
         'transition-all duration-150 ease-in-out',
-        'text-black hover:bg-stone-300/50',
+        'text-neutral-300 hover:bg-stone-300/50',
         isActive ? 'bg-stone-300/50 ' : null,
       )}
     >

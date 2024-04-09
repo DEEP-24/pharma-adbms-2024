@@ -18,7 +18,7 @@ export function SidebarHeader({
     >
       <div className="flex items-center gap-3">
         {isSidebarOpen ? (
-          <div className={cn('text-base font-semibold text-gray-800')}>
+          <div className={cn('text-base font-semibold text-white')}>
             {appConfig.appTitle}
           </div>
         ) : null}
@@ -30,7 +30,7 @@ export function SidebarHeader({
         )}
       >
         <ActionIconButton
-          className="text-gray-700"
+          className="text-neutral-300"
           onClick={() => toggleSidebar()}
           tooltipLabel="Collapse sidebar"
         >

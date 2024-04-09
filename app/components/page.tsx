@@ -47,7 +47,7 @@ type PageHeaderProps = {
 function BackButton({ href }: { href: string }) {
   return (
     <ActionIconButton component={Link} to={href}>
-      <ArrowLeftIcon className="text-gray-500" size={16} />
+      <ArrowLeftIcon className="text-neutral-200" size={16} />
     </ActionIconButton>
   )
 }
@@ -73,7 +73,7 @@ function Header(props: PageHeaderProps): React.ReactElement {
             onClick={() => toggleSidebar()}
             tooltipLabel="Expand sidebar"
           >
-            <SidebarOpenIcon size={14} />
+            <SidebarOpenIcon size={14} className="text-neutral-200" />
           </ActionIconButton>
 
           <Separator className="h-3 bg-gray-300" orientation="vertical" />
@@ -89,7 +89,7 @@ function Header(props: PageHeaderProps): React.ReactElement {
           {backButtonHref ? <BackButton href={backButtonHref} /> : null}
 
           {props.children ?? (
-            <div className=" flex w-full items-center gap-2">
+            <div className=" flex w-full items-center gap-2 text-neutral-200">
               {props.icon}
               <span className="flex max-w-[50%] truncate text-sm">
                 {props.title}

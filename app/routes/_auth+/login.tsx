@@ -78,7 +78,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let user
   if (role === UserRole.ADMIN) {
     user = await verifyAdminLogin({ email, password })
-    console.log(user)
   } else if (role === UserRole.DOCTOR) {
     user = await verifyDoctorLogin({ email, password })
   } else if (role === UserRole.PATIENT) {

@@ -33,7 +33,7 @@ export function UserDetailsButton({
         >
           <Avatar
             alt={`${user.name}'s avatar`}
-            color="gray"
+            color="dark"
             radius="sm"
             size={32}
             src={undefined}
@@ -43,8 +43,10 @@ export function UserDetailsButton({
           </Avatar>
 
           <div className={cn(isSidebarOpen ? 'w-auto overflow-hidden' : 'w-0')}>
-            <p className="truncate text-sm font-medium">{user.name}</p>
-            <p className="truncate text-xs text-gray-500">{user.email}</p>
+            <p className="truncate text-sm font-medium text-neutral-300">
+              {user.name}
+            </p>
+            <p className="truncate text-xs text-neutral-50">{user.email}</p>
           </div>
         </Button>
       </DropdownMenuTrigger>
