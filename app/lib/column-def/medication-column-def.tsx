@@ -30,6 +30,7 @@ export const medicationColumnDef: ColumnDef<Medication>[] = [
         value={info.getValue<string>()}
       />
     ),
+    enableColumnFilter: false,
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Name" />
@@ -48,6 +49,7 @@ export const medicationColumnDef: ColumnDef<Medication>[] = [
         />
       )
     },
+    enableColumnFilter: false,
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Brand" />
@@ -75,6 +77,7 @@ export const medicationColumnDef: ColumnDef<Medication>[] = [
     cell: info => (
       <DataTableRowCell
         column={info.column}
+        highlight
         table={info.table}
         value={medicationUnitLabelLookup[info.getValue<MedicationUnit>()]}
       />

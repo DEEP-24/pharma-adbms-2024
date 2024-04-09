@@ -3,26 +3,11 @@ import '@tanstack/react-table'
 import * as React from 'react'
 
 import { type Column, type Table } from '@tanstack/react-table'
-import {
-  ChevronsUpDownIcon,
-  EyeOffIcon,
-  FilterIcon,
-  FilterXIcon,
-  MoreVerticalIcon,
-  SortAscIcon,
-  SortDescIcon,
-  XIcon,
-} from 'lucide-react'
+import { FilterIcon } from 'lucide-react'
 
 import { DataTableFacetedFilter } from '~/components/data-table/data-table-faceted-filter'
 import { DataTableFIlterInput } from '~/components/data-table/data-table-filter-input'
 import { ActionIconButton } from '~/components/ui/action-icon-button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu'
 import {
   Popover,
   PopoverContent,
@@ -102,7 +87,7 @@ export function DataTableColumnHeader<TData, TValue>({
         </span>
 
         <div className="flex items-center pr-1">
-          {column.getCanSort() ? (
+          {/* {column.getCanSort() ? (
             <ActionIconButton
               className="text-gray-600"
               onClick={() => column.toggleSorting()}
@@ -122,11 +107,11 @@ export function DataTableColumnHeader<TData, TValue>({
                 <ChevronsUpDownIcon size={14} />
               )}
             </ActionIconButton>
-          ) : null}
+          ) : null} */}
 
-          {renderFilter()}
+          {/* {renderFilter()} */}
 
-          <DropdownMenu modal={false}>
+          {/* <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <ActionIconButton>
                 <MoreVerticalIcon className="text-gray-600" size={14} />
@@ -169,7 +154,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 </DropdownMenuItem>
               ) : null}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </div>
