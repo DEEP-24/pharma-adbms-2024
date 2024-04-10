@@ -3,6 +3,7 @@ import { createCookieSessionStorage, redirect } from '@remix-run/node'
 import { match } from 'ts-pattern'
 import { serverEnv } from '~/lib/env.server'
 import { UserRole } from '~/enums'
+import { $path } from 'remix-routes'
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -41,7 +42,7 @@ export async function requireUserId(
 ) {
   const userId = await getUserId(request)
   if (!userId) {
-    throw redirect('/login')
+    throw redirect($path('/login'))
   }
 
   return userId
@@ -134,7 +135,7 @@ export async function logout(request: Request) {
   session.unset(USER_SESSION_KEY)
   session.unset(USER_ROLE_KEY)
 
-  return redirect('/login', {
+  return redirect($path('/login'), {
     headers: {
       'Set-Cookie': await sessionStorage.destroySession(session),
     },
@@ -168,7 +169,7 @@ export async function validateUserRole(
   const existingUserRole = await getUserRole(request)
 
   if (!existingUserRole) {
-    return redirect('/login')
+    return redirect($path('/login'))
   }
 
   if (role !== null && existingUserRole === role) {
