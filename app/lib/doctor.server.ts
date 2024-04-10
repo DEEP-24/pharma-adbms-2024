@@ -62,3 +62,11 @@ export async function getOptionalDoctor(
 
   return null
 }
+
+export async function getDoctors() {
+  return db.doctor.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+  })
+}

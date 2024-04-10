@@ -102,6 +102,44 @@ export const editPatientSchema = z.object({
   phone: z.string().trim().min(10, 'Phone number is required'),
 })
 
+export const editDoctorSchema = z.object({
+  dob: z.coerce
+    .date({
+      errorMap: () => ({
+        message: 'Date of birth is required',
+      }),
+    })
+    .max(new Date(), 'Date of birth cannot be in the past'),
+  email: z.string().trim().email('Invalid email address').optional(),
+  gender: z.nativeEnum(Gender, {
+    errorMap: () => ({
+      message: 'Gender is required',
+    }),
+  }),
+  name: z.string().trim().min(3, 'Name is required'),
+  doctorId: z.string().trim(),
+  phone: z.string().trim().min(10, 'Phone number is required'),
+})
+
+export const editPharmacistSchema = z.object({
+  dob: z.coerce
+    .date({
+      errorMap: () => ({
+        message: 'Date of birth is required',
+      }),
+    })
+    .max(new Date(), 'Date of birth cannot be in the past'),
+  email: z.string().trim().email('Invalid email address').optional(),
+  gender: z.nativeEnum(Gender, {
+    errorMap: () => ({
+      message: 'Gender is required',
+    }),
+  }),
+  name: z.string().trim().min(3, 'Name is required'),
+  pharmacistId: z.string().trim(),
+  phone: z.string().trim().min(10, 'Phone number is required'),
+})
+
 export const createMedicationSchema = z.object({
   brand: z.string().trim().min(3, 'Brand is required'),
   dosage: z.string().trim().min(3, 'Dosage is required'),

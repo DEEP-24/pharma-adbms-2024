@@ -7,28 +7,28 @@ import { useLoaderData } from '@remix-run/react'
 import { Table, TableSkeleton } from '~/components/data-table/table'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
-import { patientsColumnDef } from '~/lib/column-def/patients-column-def'
-import { getPatients } from '~/lib/patient.server'
+import { getPharmacists } from '~/lib/pharmacist.server'
+import { pharmacistsColumnDef } from '~/lib/column-def/pharmacists-column-def'
 
 export const loader = async () => {
-  const patients = await getPatients()
+  const pharmacists = await getPharmacists()
 
-  return json({ patients })
+  return json({ pharmacists })
 }
 
-export default function ManagePatients() {
-  const { patients } = useLoaderData<typeof loader>()
+export default function ManageDoctors() {
+  const { pharmacists } = useLoaderData<typeof loader>()
 
   return (
     <>
       <Page.Layout>
-        <Page.Header icon={<Users2Icon size={14} />} title="Patients" />
+        <Page.Header icon={<Users2Icon size={14} />} title="Pharmacists" />
 
         <Page.Main>
           <Section className="overflow-auto">
             <Suspense fallback={<TableSkeleton />}>
               {/* @ts-ignore */}
-              <Table columns={patientsColumnDef} data={patients} />
+              <Table columns={pharmacistsColumnDef} data={pharmacists} />
             </Suspense>
           </Section>
         </Page.Main>
