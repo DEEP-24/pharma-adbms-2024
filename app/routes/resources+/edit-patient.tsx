@@ -1,9 +1,8 @@
 import { Select, TextInput } from '@mantine/core'
 import { DatePickerInput } from '@mantine/dates'
 import { type Patient } from '@prisma/client'
-import { type ActionFunctionArgs } from '@remix-run/node'
+import { json, type ActionFunctionArgs } from '@remix-run/node'
 import { CalendarIcon } from 'lucide-react'
-import { jsonWithSuccess } from 'remix-toast'
 
 import { type BaseModalProps } from '~/components/global-modals'
 import { CustomButton } from '~/components/ui/custom-button'
@@ -49,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     },
   })
 
-  return jsonWithSuccess({ success: true }, 'Patient updated successfully!')
+  return json({ success: true })
 }
 
 interface IEditPatientModal extends BaseModalProps {

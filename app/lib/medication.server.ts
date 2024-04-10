@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import { type z } from 'zod'
 
 import { db } from '~/lib/db.server'
@@ -28,12 +29,16 @@ export async function editMedication({
   medicationId,
   ...otherFields
 }: z.infer<typeof editMedicationSchema>) {
-  const updatedMedication = await db.medication.update({
-    data: otherFields,
-    where: {
-      id: medicationId,
-    },
-  })
+  const updatedMedication = await db.medication
+    .update({
+      data: otherFields,
+      where: {
+        id: medicationId,
+      },
+    })
+    .then(() => {
+      toast.success('Medication updated successfully!')
+    })
 
   return updatedMedication
 }

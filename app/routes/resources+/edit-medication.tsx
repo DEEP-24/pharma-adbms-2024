@@ -1,5 +1,5 @@
 import { NumberInput, Select, TextInput } from '@mantine/core'
-import { type ActionFunctionArgs } from '@remix-run/node'
+import { json, type ActionFunctionArgs } from '@remix-run/node'
 import { jsonWithSuccess } from 'remix-toast'
 
 import { type BaseModalProps } from '~/components/global-modals'
@@ -38,7 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   await editMedication(fields)
 
-  return jsonWithSuccess({ success: true }, 'Medication updated successfully!')
+  return json({ success: true })
 }
 
 interface IEditMedicationModalProps extends BaseModalProps {
