@@ -82,6 +82,7 @@ async function createMedications() {
         quantity: 60,
         price: 60,
         unit: 'MG',
+        prescriptionRequired: 'true',
       },
       {
         brand: 'Dolo',
@@ -90,6 +91,7 @@ async function createMedications() {
         quantity: 60,
         price: 40,
         unit: 'MG',
+        prescriptionRequired: 'false',
       },
       {
         brand: 'Dolo',
@@ -98,6 +100,7 @@ async function createMedications() {
         quantity: 30,
         price: 12,
         unit: 'MG',
+        prescriptionRequired: 'true',
       },
       {
         brand: 'Dolo',
@@ -106,6 +109,7 @@ async function createMedications() {
         quantity: 100,
         price: 20,
         unit: 'MG',
+        prescriptionRequired: 'false',
       },
       {
         brand: 'Saradon',
@@ -114,6 +118,7 @@ async function createMedications() {
         quantity: 60,
         price: 50,
         unit: 'MG',
+        prescriptionRequired: 'true',
       },
     ],
   })

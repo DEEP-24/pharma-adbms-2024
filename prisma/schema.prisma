@@ -76,14 +76,14 @@ model Patient {
 }
 
 model Medication {
-  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+  id                   String @id @default(auto()) @map("_id") @db.ObjectId
   brand                String
   dosage               String
   name                 String
   price                Float
   quantity             Int
   unit                 String
-  prescriptionRequired Boolean @default(false)
+  prescriptionRequired String
 
   prescriptions Prescription[]
 

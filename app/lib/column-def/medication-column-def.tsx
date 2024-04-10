@@ -145,7 +145,11 @@ export const medicationColumnDef: ColumnDef<Medication>[] = [
       return value.includes(row.getValue(id))
     },
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Price" />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Prescription Required"
+      />
     ),
   },
   {

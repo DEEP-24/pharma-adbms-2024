@@ -30,7 +30,7 @@ export default function Medications() {
           <ActionIconButton
             color="dark"
             onClick={() => openModal(MODAL.createMedication)}
-            variant="filled"
+            variant="white"
           >
             <PlusIcon size={16} />
           </ActionIconButton>

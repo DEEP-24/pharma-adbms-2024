@@ -30,7 +30,7 @@ function BackButton() {
 export function Sidebar({
   items,
   user,
-  variant = DashboardView.standard,
+  variant = DashboardView.expanded,
 }: {
   items: SidebarListProps[]
   user: ReturnType<typeof useUser>

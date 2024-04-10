@@ -197,13 +197,6 @@ export default function Login() {
             </fieldset>
           </Form>
         </Card.Section>
-
-        {/* <Card.Section className="" inheritPadding py="sm">
-          <div className="flex items-center justify-center gap-2">
-            <p className="text-xsm font-medium text-gray-400">Secured by</p>
-            <img alt="TR" className="h-5 w-auto" src="/images/logo-new.png" />
-          </div>
-        </Card.Section> */}
       </Card>
     </div>
   )

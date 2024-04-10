@@ -1,4 +1,4 @@
-import { NumberInput, Select, TextInput } from '@mantine/core'
+import { NumberInput, Select, Switch, TextInput } from '@mantine/core'
 import { type ActionFunctionArgs } from '@remix-run/node'
 import { jsonWithSuccess } from 'remix-toast'
 
@@ -141,6 +141,23 @@ export const CreateMedicationModal = EasyModal.create(
                 placeholder="Enter price"
                 required
               />
+            </div>
+            <div>
+              <Switch
+                label="Is Prescription Required"
+                defaultChecked={false}
+                name="prescriptionRequired"
+                color="dark"
+              />
+              {/* <Select
+                comboboxProps={{ withinPortal: true }}
+                data={['yes', 'no']}
+                error={fetcher.data?.fieldErrors?.unit}
+                label="Prescription Required"
+                name="prescriptionRequired"
+                required
+                searchable
+              /> */}
             </div>
           </fetcher.Form>
         </CustomModal>

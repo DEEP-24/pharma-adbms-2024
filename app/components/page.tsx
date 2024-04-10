@@ -124,7 +124,7 @@ const variantPanelMap = {
 function MainContent({
   children,
   className,
-  variant = DashboardView.standard,
+  variant = DashboardView.expanded,
 }: PageBodyProps) {
   const { hasHeader } = React.useContext(PageContext)
 
