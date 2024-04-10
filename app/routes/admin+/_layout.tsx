@@ -6,6 +6,7 @@ import {
   Settings,
   Users2Icon,
 } from 'lucide-react'
+import { $path } from 'remix-routes'
 
 import { CommandMenu } from '~/components/command-menu'
 import DashboardLayout from '~/components/layout/dashboard-layout'
@@ -57,25 +58,25 @@ const menuItems = [
     title: 'Manage',
     items: [
       {
-        href: '/admin/medications',
+        href: $path('/admin/medications'),
         leftSlot: <PillIcon width={14} />,
         name: 'Medications',
       },
       {
         end: false,
-        href: '/admin/patients',
+        href: $path('/admin/patients'),
         leftSlot: <Users2Icon width={14} />,
         name: 'Patients',
       },
       {
         end: false,
-        href: '/admin/doctors',
+        href: $path('/admin/doctors'),
         leftSlot: <Users2Icon width={14} />,
         name: 'Doctors',
       },
       {
         end: false,
-        href: '/admin/pharmacists',
+        href: $path('/admin/pharmacists'),
         leftSlot: <Users2Icon width={14} />,
         name: 'Pharmacists',
       },
@@ -85,7 +86,7 @@ const menuItems = [
     title: 'Settings',
     items: [
       {
-        href: '/admin/settings',
+        href: $path('/admin/settings'),
         leftSlot: <Settings width={14} />,
         name: 'profile',
       },

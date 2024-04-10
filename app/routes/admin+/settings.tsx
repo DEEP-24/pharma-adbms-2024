@@ -91,7 +91,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 }
 
-export default function ProfileSettings() {
+export default function AdminProfileSettings() {
   const user = useUser()
 
   return (
