@@ -35,42 +35,6 @@ export function Table<TData, TValue>({
 
   return (
     <>
-      {/* <StickySection>
-        <SectionHeader
-          leftSlot={
-            <div className="flex flex-1 items-center">
-              <GlobalSearchFilter className="flex-1" table={table} />
-            </div>
-          }
-          rightSlot={<DataTableOptions table={table} />}
-        />
-
-        {isFilteredOrSorted ? (
-          <SectionHeader
-            leftSlot={
-              <div className="flex items-center gap-2">
-                <CurrentSort table={table} />
-                <CurrentColumnFilters table={table} />
-                <CurrentGlobalSearchFilter table={table} />
-              </div>
-            }
-            rightSlot={
-              <div className="flex items-center gap-1">
-                <CustomButton
-                  className="px-1.5 font-normal"
-                  color="red"
-                  onClick={() => table.reset()}
-                  size="compact-sm"
-                  variant="subtle"
-                >
-                  Reset
-                </CustomButton>
-              </div>
-            }
-          />
-        ) : null}
-      </StickySection> */}
-
       <SubSection className="py-0">
         <ScrollArea
           classNames={{

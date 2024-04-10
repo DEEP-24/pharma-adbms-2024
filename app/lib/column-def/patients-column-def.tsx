@@ -20,25 +20,6 @@ import { Gender } from '~/utils/prisma-enums'
 
 export const patientsColumnDef: ColumnDef<PrismaPatient>[] = [
   {
-    accessorKey: 'fccId',
-    cell: info => (
-      <DataTableRowCell
-        className="truncate"
-        column={info.column}
-        highlight
-        table={info.table}
-        value={info.getValue<string>()}
-      />
-    ),
-    enableSorting: false,
-    filterFn: 'fuzzy',
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="ID" />
-    ),
-    id: 'ID',
-    size: 100,
-  },
-  {
     accessorKey: 'name',
     cell: info => (
       <DataTableRowCell
@@ -65,25 +46,29 @@ export const patientsColumnDef: ColumnDef<PrismaPatient>[] = [
     ),
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="D.O.B" />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Date of Birth"
+      />
     ),
   },
-  // {
-  //   accessorKey: 'email',
-  //   cell: info => (
-  //     <DataTableRowCell
-  //       className="truncate"
-  //       column={info.column}
-  //       table={info.table}
-  //        highlight
-  //       value={info.getValue<string>()}
-  //     />
-  //   ),
-  //   filterFn: 'fuzzy',
-  //   header: ({ column, table }) => (
-  //     <DataTableColumnHeader column={column} table={table} title="Email" />
-  //   ),
-  // },
+  {
+    accessorKey: 'email',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        highlight
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Email" />
+    ),
+  },
   {
     accessorKey: 'gender',
     cell: info => (

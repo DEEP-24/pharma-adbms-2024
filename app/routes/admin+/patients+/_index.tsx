@@ -1,56 +1,37 @@
-// import { Suspense } from 'react'
+import { Suspense } from 'react'
 
-// import { PlusIcon, Users2Icon } from 'lucide-react'
-// import { TypedAwait, typeddefer, useTypedLoaderData } from 'remix-typedjson'
+import { Users2Icon } from 'lucide-react'
 
-// import { Table, TableSkeleton } from '~/components/data-table/table'
-// import { MODAL, openModal } from '~/components/global-modals'
-// import { Page } from '~/components/page'
-// import { Section } from '~/components/section'
-// import { ActionIconButton } from '~/components/ui/action-icon-button'
-// import { patientsColumnDef } from '~/lib/column-def/patients-column-def'
-// import { getPatients } from '~/lib/patient.server'
+import { json } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
+import { Table, TableSkeleton } from '~/components/data-table/table'
+import { Page } from '~/components/page'
+import { Section } from '~/components/section'
+import { patientsColumnDef } from '~/lib/column-def/patients-column-def'
+import { getPatients } from '~/lib/patient.server'
 
-// export const loader = async () => {
-//   const patientsPromise = getPatients()
+export const loader = async () => {
+  const patients = await getPatients()
 
-//   return typeddefer({
-//     patientsPromise,
-//   })
-// }
+  return json({ patients })
+}
 
-// export default function ManagePatients() {
-//   const { patientsPromise } = useTypedLoaderData<typeof loader>()
+export default function ManagePatients() {
+  const { patients } = useLoaderData<typeof loader>()
 
-//   return (
-//     <>
-//       <Page.Layout>
-//         <Page.Header
-//           action={
-//             <ActionIconButton
-//               color="dark"
-//               onClick={() => openModal(MODAL.createPatient)}
-//               variant="filled"
-//             >
-//               <PlusIcon size={16} />
-//             </ActionIconButton>
-//           }
-//           icon={<Users2Icon size={14} />}
-//           title="Patients"
-//         />
+  return (
+    <>
+      <Page.Layout>
+        <Page.Header icon={<Users2Icon size={14} />} title="Patients" />
 
-//         <Page.Main>
-//           <Section className="overflow-auto">
-//             <Suspense fallback={<TableSkeleton />}>
-//               <TypedAwait resolve={patientsPromise}>
-//                 {patients => (
-//                   <Table columns={patientsColumnDef} data={patients} />
-//                 )}
-//               </TypedAwait>
-//             </Suspense>
-//           </Section>
-//         </Page.Main>
-//       </Page.Layout>
-//     </>
-//   )
-// }
+        <Page.Main>
+          <Section className="overflow-auto">
+            <Suspense fallback={<TableSkeleton />}>
+              <Table columns={patientsColumnDef} data={patients} />
+            </Suspense>
+          </Section>
+        </Page.Main>
+      </Page.Layout>
+    </>
+  )
+}

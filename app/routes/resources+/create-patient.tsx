@@ -1,10 +1,9 @@
 // import * as React from 'react'
 
-// import { Loader, MultiSelect, Select, TextInput } from '@mantine/core'
+// import { Select, TextInput } from '@mantine/core'
 // import { DatePickerInput } from '@mantine/dates'
 // import { UserRole } from '@prisma/client'
-// import { type ActionFunctionArgs, json } from '@remix-run/node'
-// import { CONDITIONS } from '~/data/conditions'
+// import { json, type ActionFunctionArgs } from '@remix-run/node'
 // import { CalendarIcon } from 'lucide-react'
 // import { redirectWithSuccess } from 'remix-toast'
 
@@ -18,7 +17,7 @@
 // import { useFetcherCallback } from '~/utils/hooks/use-fetcher-callback'
 // import { badRequest } from '~/utils/misc.server'
 // import EasyModal from '~/utils/modal-manager'
-// import { Gender, PurposeOfVisit } from '~/utils/prisma-enums'
+// import { Gender } from '~/utils/prisma-enums'
 // import type { inferErrors } from '~/utils/validation'
 // import { validateAction } from '~/utils/validation'
 // import { createPatientSchema } from '~/utils/zod.schema'
@@ -184,71 +183,6 @@
 //               required
 //               valueFormat="DD-MMM-YYYY"
 //             />
-
-//             <Select
-//               comboboxProps={{ withinPortal: true }}
-//               data={Object.values(PurposeOfVisit).map(purpose => ({
-//                 label: purpose,
-//                 value: purpose,
-//               }))}
-//               error={fetcher.data?.fieldErrors?.purpose}
-//               label="Purpose"
-//               name="purpose"
-//               onChange={val => setPurposeOfVisit(val as PurposeOfVisit | null)}
-//               placeholder="Select purpose of visit"
-//               required
-//               value={purposeOfVisit}
-//             />
-
-//             {purposeOfVisit === PurposeOfVisit.CONSULTATION ? (
-//               <>
-//                 <MultiSelect
-//                   comboboxProps={{ withinPortal: true }}
-//                   data={Object.entries(CONDITIONS).map(([key, value]) => ({
-//                     label: value,
-//                     value: key,
-//                   }))}
-//                   error={fetcher.data?.fieldErrors?.conditions}
-//                   label="Conditions"
-//                   name="conditions"
-//                   placeholder="Select conditions"
-//                   searchable
-//                 />
-
-//                 <Select
-//                   clearable
-//                   comboboxProps={{ withinPortal: true }}
-//                   data={doctors.map(doctor => ({
-//                     label: doctor.name,
-//                     value: doctor.id,
-//                   }))}
-//                   disabled={isFetchingDoctors}
-//                   label="Primary Doctor"
-//                   name="doctorId"
-//                   placeholder="Select doctor"
-//                   rightSection={
-//                     isFetchingDoctors ? <Loader size={16} /> : undefined
-//                   }
-//                   searchable
-//                 />
-//               </>
-//             ) : null}
-
-//             {purposeOfVisit === PurposeOfVisit.LAB ? (
-//               <MultiSelect
-//                 comboboxProps={{ withinPortal: true }}
-//                 data={Object.entries(CONDITIONS).map(([key, value]) => ({
-//                   label: value,
-//                   value: key,
-//                 }))}
-//                 error={fetcher.data?.fieldErrors?.conditions}
-//                 label="Labs"
-//                 name="labs"
-//                 placeholder="Select labs"
-//                 required
-//                 searchable
-//               />
-//             ) : null}
 //           </fetcher.Form>
 //         </CustomModal>
 //       </>

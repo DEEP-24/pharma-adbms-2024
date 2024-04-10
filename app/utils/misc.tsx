@@ -60,9 +60,9 @@ export function formatDate(
     date = new Date(date)
   }
 
-  return new Intl.DateTimeFormat('en-IN', {
+  return new Intl.DateTimeFormat('en-US', {
     dateStyle: 'short',
-    timeZone: 'Asia/Kolkata',
+    timeZone: 'America/New_York',
     ...options,
   }).format(date)
 }

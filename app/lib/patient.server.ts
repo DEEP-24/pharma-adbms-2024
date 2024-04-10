@@ -3,6 +3,14 @@ import bcrypt from 'bcryptjs'
 import { db } from '~/lib/db.server'
 import { getPatientId, getUserId, logout } from '~/lib/session.server'
 
+export async function getPatients() {
+  return db.patient.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+  })
+}
+
 export async function verifyPatientLogin({
   email,
   password,

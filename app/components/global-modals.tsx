@@ -1,5 +1,6 @@
 import { CreateMedicationModal } from '~/routes/resources+/create-medication'
 import { EditMedicationModal } from '~/routes/resources+/edit-medication'
+import { EditPatientModal } from '~/routes/resources+/edit-patient'
 import EasyModal, {
   type EasyModalHOC,
   type InnerModalProps,
@@ -30,19 +31,19 @@ export const MODAL = {
 
 const modalMapper = {
   [MODAL.createMedication]: CreateMedicationModal,
-  //   [MODAL.createPatient]: CreatePatientModal,
+  // [MODAL.createPatient]: CreatePatientModal,
   //   [MODAL.createUser]: CreateUserModal,
   [MODAL.editMedication]: EditMedicationModal,
-  //   [MODAL.editPatient]: EditPatientModal,
-  //   [MODAL.editUser]: EditUserModal,
+  [MODAL.editPatient]: EditPatientModal,
+  // [MODAL.editUser]: EditUserModal,
 } as const
 
 interface ModalPropMappings {
   [MODAL.createMedication]: InferProps<typeof CreateMedicationModal>
-  //   [MODAL.createPatient]: InferProps<typeof CreatePatientModal>
+  // [MODAL.createPatient]: InferProps<typeof CreatePatientModal>
   //   [MODAL.createUser]: InferProps<typeof CreateUserModal>
   [MODAL.editMedication]: InferProps<typeof EditMedicationModal>
-  //   [MODAL.editPatient]: InferProps<typeof EditPatientModal>
+  [MODAL.editPatient]: InferProps<typeof EditPatientModal>
   //   [MODAL.editUser]: InferProps<typeof EditUserModal>
 }
 
@@ -52,13 +53,13 @@ type RequiredPropsModals = {
   //   [MODAL.editAppointment]: ModalPropMappings['edit-appointment']
   //   [MODAL.editLab]: ModalPropMappings['edit-lab']
   [MODAL.editMedication]: ModalPropMappings['edit-medication']
-  //   [MODAL.editPatient]: ModalPropMappings['edit-patient']
+  [MODAL.editPatient]: ModalPropMappings['edit-patient']
   //   [MODAL.editUser]: ModalPropMappings['edit-user']
 }
 
 type OptionalPropsModals = {
   [MODAL.createMedication]: ModalPropMappings['create-medication']
-  //   [MODAL.createPatient]: ModalPropMappings['create-patient']
+  // [MODAL.createPatient]: ModalPropMappings['create-patient']
 }
 
 export function openModal<M extends keyof RequiredPropsModals>(
