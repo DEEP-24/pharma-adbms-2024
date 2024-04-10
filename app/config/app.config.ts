@@ -1,6 +1,6 @@
 const appConfig = {
   appName: 'Pharmaceutical-inventory',
-  appTitle: 'Pharma Inventory',
+  appTitle: 'Pharma',
 }
 
 export default appConfig

@@ -142,7 +142,7 @@ function BaseSideItem({
       >
         <span
           className={cn(
-            'flex-1 whitespace-nowrap text-xsm font-normal',
+            'flex-1 whitespace-nowrap text-base font-normal',
             isSidebarOpen ? 'inline-block' : 'hidden',
           )}
         >

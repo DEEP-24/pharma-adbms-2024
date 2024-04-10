@@ -1,31 +1,13 @@
 import { ScrollArea } from '@mantine/core'
 import { useMatches } from '@remix-run/react'
-import { ArrowLeftIcon } from 'lucide-react'
 
-import { ActionIconButton } from '~/components/ui/action-icon-button'
 import { DashboardView, cn } from '~/utils/helpers'
-import { useGoBack } from '~/utils/hooks/use-go-back'
 import { useSidebarStore } from '~/utils/store/sidebar-store'
 
 import { useUser } from '~/utils/hooks/use-auth'
 import { SidebarHeader } from './sidebar-header'
 import { SidebarList, type SidebarListProps } from './sidebar-list'
 import { UserDetailsButton } from './user-details-button'
-
-function BackButton() {
-  const goBack = useGoBack({
-    fallback: '/',
-  })
-
-  return (
-    <div className="flex items-center gap-1">
-      <ActionIconButton onClick={() => goBack()}>
-        <ArrowLeftIcon size={16} />
-      </ActionIconButton>
-      <span className="font-semibold text-neutral-200">Settings</span>
-    </div>
-  )
-}
 
 export function Sidebar({
   items,
@@ -39,7 +21,6 @@ export function Sidebar({
   const matches = useMatches()
 
   const isSidebarOpen = useSidebarStore(state => state.isOpen)
-  const isSettingsPage = matches.some(match => match.id.includes('settings+'))
 
   return (
     <aside
@@ -54,13 +35,10 @@ export function Sidebar({
           variant === DashboardView.expanded ? 'pb-0' : '',
         )}
       >
-        <SidebarHeader hideToggleIcon={isSettingsPage} />
-
         <div className="flex flex-1 flex-col gap-6 overflow-hidden ">
-          {isSettingsPage ? <BackButton /> : null}
-
           <ScrollArea scrollHideDelay={500} scrollbarSize={8} type="hover">
-            <div className="flex flex-col gap-4">
+            <SidebarHeader />
+            <div className="mt-4 flex flex-col gap-6">
               <SidebarList section={items} />
             </div>
           </ScrollArea>

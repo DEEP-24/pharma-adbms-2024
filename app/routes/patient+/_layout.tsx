@@ -1,6 +1,6 @@
 import { redirect, type LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
-import { LayoutDashboardIcon, Users2Icon } from 'lucide-react'
+import { LayoutDashboardIcon, Settings, Users2Icon } from 'lucide-react'
 
 import { CommandMenu } from '~/components/command-menu'
 import DashboardLayout from '~/components/layout/dashboard-layout'
@@ -41,7 +41,7 @@ const menuItems = [
   {
     items: [
       {
-        href: '/doctor',
+        href: '/patient',
         leftSlot: <LayoutDashboardIcon width={14} />,
         name: 'Overview',
       },
@@ -60,6 +60,16 @@ const menuItems = [
         href: '/doctor/appointments/previous',
         leftSlot: <Users2Icon width={14} />,
         name: 'Previous',
+      },
+    ],
+  },
+  {
+    title: 'Settings',
+    items: [
+      {
+        href: '/patient/settings',
+        leftSlot: <Settings width={14} />,
+        name: 'profile',
       },
     ],
   },

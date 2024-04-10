@@ -9,10 +9,10 @@ export type SidebarListProps = {
 
 export const SidebarList = ({ section }: { section: SidebarListProps[] }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       {section.map(({ items, title }, idx) => (
         <SidebarSection key={idx} title={title}>
-          <div className="flex flex-col gap-px">
+          <div className="flex flex-col gap-2">
             {items.map(item => (
               <SidebarItem key={item.name} {...item} />
             ))}

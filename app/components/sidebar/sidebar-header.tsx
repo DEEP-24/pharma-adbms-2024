@@ -16,9 +16,9 @@ export function SidebarHeader({
     <div
       className={cn('flex min-h-header select-none items-center gap-2 pl-1.5')}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-center gap-3">
         {isSidebarOpen ? (
-          <div className={cn('text-base font-semibold text-white')}>
+          <div className={cn('mt-5 text-lg font-semibold text-white')}>
             {appConfig.appTitle}
           </div>
         ) : null}
