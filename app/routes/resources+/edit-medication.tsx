@@ -5,6 +5,8 @@ import { jsonWithSuccess } from 'remix-toast'
 import { type BaseModalProps } from '~/components/global-modals'
 import { CustomButton } from '~/components/ui/custom-button'
 import { CustomModal } from '~/components/ui/custom-modal'
+import { Label } from '~/components/ui/label'
+import { Switch } from '~/components/ui/switch'
 import { type Medication } from '~/lib/column-def/medication-column-def'
 import { editMedication } from '~/lib/medication.server'
 import { medicationUnitLabelLookup } from '~/utils/helpers'
@@ -157,6 +159,17 @@ export const EditMedicationModal = EasyModal.create(
                 name="price"
                 placeholder="Enter price"
                 required
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-sm" htmlFor="prescriptionRequired">
+                Is Prescription Required
+              </Label>
+
+              <Switch
+                id="prescriptionRequired"
+                name="prescriptionRequired"
+                defaultChecked={medication.prescriptionRequired}
               />
             </div>
           </fetcher.Form>

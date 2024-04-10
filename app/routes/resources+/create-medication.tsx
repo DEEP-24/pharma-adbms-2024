@@ -5,10 +5,12 @@ import { jsonWithSuccess } from 'remix-toast'
 import { type BaseModalProps } from '~/components/global-modals'
 import { CustomButton } from '~/components/ui/custom-button'
 import { CustomModal } from '~/components/ui/custom-modal'
+import { Label } from '~/components/ui/label'
 import { createMedication } from '~/lib/medication.server'
 import { useFetcherCallback } from '~/utils/hooks/use-fetcher-callback'
 import { badRequest } from '~/utils/misc.server'
 import EasyModal, { useModal } from '~/utils/modal-manager'
+import { MedicationUnit } from '~/utils/prisma-enums'
 import type { inferErrors } from '~/utils/validation'
 import { validateAction } from '~/utils/validation'
 import { createMedicationSchema } from '~/utils/zod.schema'
@@ -112,8 +114,11 @@ export const CreateMedicationModal = EasyModal.create(
                 required
               />
               <Select
-                comboboxProps={{ withinPortal: false }}
-                data={['mg', 'ml', 'g', 'oz', 'mcg']}
+                comboboxProps={{ withinPortal: true }}
+                data={Object.values(MedicationUnit).map(unit => ({
+                  label: unit,
+                  value: unit,
+                }))}
                 error={fetcher.data?.fieldErrors?.unit}
                 label="Unit"
                 name="unit"
@@ -142,22 +147,12 @@ export const CreateMedicationModal = EasyModal.create(
                 required
               />
             </div>
-            <div>
-              <Switch
-                label="Is Prescription Required"
-                defaultChecked={false}
-                name="prescriptionRequired"
-                color="dark"
-              />
-              {/* <Select
-                comboboxProps={{ withinPortal: true }}
-                data={['yes', 'no']}
-                error={fetcher.data?.fieldErrors?.unit}
-                label="Prescription Required"
-                name="prescriptionRequired"
-                required
-                searchable
-              /> */}
+            <div className="flex items-center gap-2">
+              <Label className="text-sm" htmlFor="prescriptionRequired">
+                Is Prescription Required
+              </Label>
+
+              <Switch id="prescriptionRequired" name="prescriptionRequired" />
             </div>
           </fetcher.Form>
         </CustomModal>

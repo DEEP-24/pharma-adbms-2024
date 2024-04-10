@@ -109,7 +109,10 @@ export const createMedicationSchema = z.object({
   quantity: z.preprocess(Number, z.number().min(0, 'Quantity is required')),
   price: z.preprocess(Number, z.number().min(0, 'Price is required')),
   unit: z.string().trim().min(1, 'Unit is required'),
-  prescriptionRequired: z.string().min(1, 'Prescription is required'),
+  prescriptionRequired: z
+    .enum(['on', 'off'])
+    .optional()
+    .transform(val => val === 'on'),
 })
 
 export const editMedicationSchema = createMedicationSchema.extend({
