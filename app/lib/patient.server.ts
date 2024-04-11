@@ -40,6 +40,9 @@ export async function verifyPatientLogin({
 export async function getPatientById(id: Patient['id']) {
   return db.patient.findUnique({
     where: { id },
+    include: {
+      prescriptions: true,
+    },
   })
 }
 

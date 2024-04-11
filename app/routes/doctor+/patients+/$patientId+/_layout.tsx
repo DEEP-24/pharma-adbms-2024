@@ -18,6 +18,7 @@ import {
 } from 'remix-typedjson'
 
 import { Page } from '~/components/page'
+import { PrescriptionList } from '~/components/prescription-collapsible-list'
 import { Section } from '~/components/section'
 import { SectionHeader } from '~/components/section-header'
 import { StickySection } from '~/components/sticky-section'
@@ -169,38 +170,16 @@ export default function PatientLayout() {
                 scrollbarSize={8}
                 type="hover"
               >
-                {/* <div className="overflow-hidden px-4">
-                  <AppointmentList
-                    appointments={patient.appointments}
+                <div className="overflow-hidden px-4">
+                  <PrescriptionList
+                    prescriptions={patient.prescriptions}
                     defaultExpanded
-                    title="Appointments"
+                    title="Prescriptions"
                   />
-                </div> */}
+                </div>
               </ScrollArea>
             </div>
           </div>
-
-          <Section className="overflow-auto">
-            {isAppointmentRoute ? null : (
-              <StickySection>
-                <SectionHeader
-                  leftSlot={
-                    <TabList
-                      items={[
-                        {
-                          href: `prescriptions`,
-                          icon: <NotebookPen size={14} />,
-                          name: 'Prescriptions',
-                        },
-                      ]}
-                    />
-                  }
-                />
-              </StickySection>
-            )}
-
-            <Outlet />
-          </Section>
         </div>
       </Page.Main>
     </Page.Layout>
