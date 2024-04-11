@@ -85,7 +85,7 @@ model Medication {
   unit                 String
   prescriptionRequired Boolean @default(false)
 
-  prescriptions Prescription[]
+  prescriptions PrescribedMedication[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -94,7 +94,30 @@ model Medication {
 }
 
 model Prescription {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  startDate   DateTime
+  expiryDate  DateTime
+  totalAmount Float
+
+  medications PrescribedMedication[]
+
+  patient   Patient @relation(fields: [patientId], references: [id])
+  patientId String  @db.ObjectId
+  doctor    Doctor? @relation(fields: [doctorId], references: [id])
+  doctorId  String? @db.ObjectId
+  order     Order?
+  orderId   String? @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("prescription")
+}
+
+model PrescribedMedication {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
   dosage           Int
   durationNumber   Int
   durationUnit     String
@@ -103,23 +126,16 @@ model Prescription {
   remarks          String?
   timing           String
   unit             String
-  startDate        DateTime
-  expiryDate       DateTime
-  totalAmount      Float
 
-  patient      Patient    @relation(fields: [patientId], references: [id])
-  patientId    String     @db.ObjectId
-  medication   Medication @relation(fields: [medicationId], references: [id])
-  medicationId String     @db.ObjectId
-  doctor       Doctor?    @relation(fields: [doctorId], references: [id])
-  doctorId     String?    @db.ObjectId
-  order        Order?
-  orderId      String?    @db.ObjectId
+  medication     Medication   @relation(fields: [medicationId], references: [id])
+  medicationId   String       @db.ObjectId
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id])
+  prescriptionId String       @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("prescription")
+  @@map("prescribed_medication")
 }
 
 model Order {
