@@ -1,10 +1,9 @@
 import { Divider, ScrollArea } from '@mantine/core'
 import { type LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useParams } from '@remix-run/react'
+import { useParams } from '@remix-run/react'
 import {
   AtSignIcon,
   CalendarIcon,
-  NotebookPen,
   PhoneIcon,
   UserIcon,
   Users2Icon,
@@ -19,10 +18,6 @@ import {
 
 import { Page } from '~/components/page'
 import { PrescriptionList } from '~/components/prescription-collapsible-list'
-import { Section } from '~/components/section'
-import { SectionHeader } from '~/components/section-header'
-import { StickySection } from '~/components/sticky-section'
-import { TabList } from '~/components/tab-list'
 import { BreadcrumbItem, Breadcrumbs } from '~/components/ui/breadcrumb'
 import { getPatientById } from '~/lib/patient.server'
 import {
@@ -35,7 +30,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { patientId } = $params('/doctor/patients/:patientId', params)
 
   if (!patientId) {
-    throw redirect($path('/admin/patients'))
+    throw redirect($path('/doctor/patients'))
   }
 
   const patient = await getPatientById(patientId)
@@ -66,11 +61,8 @@ export function usePatientData() {
 export default function PatientLayout() {
   const { patient } = useTypedLoaderData<typeof loader>()
   const params = useParams() as {
-    appointmentId?: string
     patientId: string
   }
-
-  const isAppointmentRoute = Boolean(params.appointmentId)
 
   return (
     <Page.Layout>
@@ -102,20 +94,8 @@ export default function PatientLayout() {
           />
           <BreadcrumbItem
             href={$path('/doctor/patients/:patientId', params)}
-            isLast={!isAppointmentRoute}
             label={patient.name}
           />
-          {isAppointmentRoute ? (
-            <BreadcrumbItem
-              href={$path('/admin/patients/:patientId/:appointmentId', {
-                patientId: params.patientId,
-                // @ts-expect-error - `appointmentId` is present in the params
-                appointmentId: params.appointmentId,
-              })}
-              isLast
-              label="Appointment"
-            />
-          ) : null}
         </Breadcrumbs>
       </Page.Header>
 
