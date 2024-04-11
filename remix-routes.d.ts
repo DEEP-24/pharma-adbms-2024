@@ -240,6 +240,15 @@ declare module 'remix-routes' {
       >
     }
 
+    '/doctor/patients/:patientId': {
+      params: {
+        patientId: string | number
+      }
+      query: ExportedQuery<
+        import('app/routes/doctor+/patients+/$patientId+/_index').SearchParams
+      >
+    }
+
     '/doctor/settings': {
       params: {}
       query: ExportedQuery<
@@ -513,6 +522,9 @@ declare module 'remix-routes' {
     | 'routes/doctor+/appointments+/$patientId+/$appointmentId+/prescription'
     | 'routes/doctor+/appointments+/previous'
     | 'routes/doctor+/patients'
+    | 'routes/doctor+/patients+/_index'
+    | 'routes/doctor+/patients+/$patientId+/_index'
+    | 'routes/doctor+/patients+/$patientId+/layout'
     | 'routes/doctor+/settings'
     | 'routes/patient+/_layout'
     | 'routes/patient+/_index'

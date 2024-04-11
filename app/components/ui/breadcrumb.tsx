@@ -31,7 +31,7 @@ interface BreadcrumbProps {
 
 export function Breadcrumbs({
   children,
-  seperator = <ChevronRightIcon size={14} />,
+  seperator = <ChevronRightIcon size={14} className="text-neutral-500" />,
 }: BreadcrumbProps) {
   return (
     <nav aria-label="Breadcrumb" className="-ml-1 flex">
@@ -68,10 +68,10 @@ export function BreadcrumbItem({
     <Button
       asChild
       className={cn(
-        'h-6 select-none pr-2 text-sm hover:bg-stone-200',
+        'h-6 select-none pr-2 text-sm hover:bg-stone-50',
         isLast
-          ? 'pointer-events-none font-medium text-gray-700 hover:bg-transparent'
-          : 'font-normal text-gray-500 ',
+          ? 'pointer-events-none font-medium text-neutral-200 hover:bg-transparent'
+          : 'font-normal text-neutral-200 ',
         icon ? 'pl-1' : 'pl-2',
       )}
       disabled={isLast}

@@ -130,7 +130,7 @@ function TableRowAction({ row }: TableRowActionProps<PrismaPatient>) {
         component={Link}
         prefetch="intent"
         size="compact-sm"
-        to={`${patient.id}/appointments`}
+        to={`${patient.id}`}
         variant="subtle"
       >
         View
