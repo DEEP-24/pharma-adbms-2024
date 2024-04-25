@@ -1,6 +1,6 @@
 import { redirect, type LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
-import { LayoutDashboardIcon, Settings, Users2Icon } from 'lucide-react'
+import { LayoutDashboardIcon, PillIcon, Settings } from 'lucide-react'
 import { $path } from 'remix-routes'
 
 import { CommandMenu } from '~/components/command-menu'
@@ -53,14 +53,8 @@ const menuItems = [
     items: [
       {
         href: $path('/pharmacist/medications'),
-        leftSlot: <Users2Icon width={14} />,
-        name: 'Today',
-      },
-      {
-        end: false,
-        href: $path('/pharmacist/orders'),
-        leftSlot: <Users2Icon width={14} />,
-        name: 'Previous',
+        leftSlot: <PillIcon width={14} />,
+        name: 'Medications',
       },
     ],
   },

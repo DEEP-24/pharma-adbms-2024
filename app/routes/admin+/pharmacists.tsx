@@ -7,8 +7,8 @@ import { useLoaderData } from '@remix-run/react'
 import { Table, TableSkeleton } from '~/components/data-table/table'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
+import { adminPharmacistsColumnDef } from '~/lib/column-def/admin-pharmacists-column-def'
 import { getPharmacists } from '~/lib/pharmacist.server'
-import { pharmacistsColumnDef } from '~/lib/column-def/pharmacists-column-def'
 
 export const loader = async () => {
   const pharmacists = await getPharmacists()
@@ -28,7 +28,7 @@ export default function ManageDoctors() {
           <Section className="overflow-auto">
             <Suspense fallback={<TableSkeleton />}>
               {/* @ts-ignore */}
-              <Table columns={pharmacistsColumnDef} data={pharmacists} />
+              <Table columns={adminPharmacistsColumnDef} data={pharmacists} />
             </Suspense>
           </Section>
         </Page.Main>

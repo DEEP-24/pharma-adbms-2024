@@ -15,6 +15,17 @@ export async function getMedications() {
   })
 }
 
+export async function getNonPrescribedMedications() {
+  return db.medication.findMany({
+    where: {
+      prescriptionRequired: false,
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  })
+}
+
 export async function createMedication(
   data: z.infer<typeof createMedicationSchema>,
 ) {
