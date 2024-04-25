@@ -31,6 +31,7 @@ import '~/styles/fonts.css'
 import '~/styles/tailwind.css'
 import { cn } from '~/utils/helpers'
 import { useGlobalNavigationToast } from '~/utils/hooks/use-global-navigation-toast'
+import { combineHeaders } from '~/utils/misc'
 import EasyModal from '~/utils/modal-manager'
 import { useNonce } from '~/utils/nonce-provider'
 
@@ -66,7 +67,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     response.patient = await getPatient(request)
   }
 
-  return json(response)
+  let headers = combineHeaders(toastHeaders)
+
+  return json({ ...response, toast }, { headers })
 }
 
 function Document({

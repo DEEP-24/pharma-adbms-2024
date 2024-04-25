@@ -1,7 +1,12 @@
-import { TextInput } from '@mantine/core'
+import { PasswordInput, TextInput } from '@mantine/core'
 import { type ActionFunctionArgs } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
-import { jsonWithError, jsonWithSuccess } from 'remix-toast'
+import { $path } from 'remix-routes'
+import {
+  jsonWithError,
+  jsonWithSuccess,
+  redirectWithSuccess,
+} from 'remix-toast'
 
 import { Page } from '~/components/page'
 import { SettingsPageContainer } from '~/components/settings/SettingsPageContainer'
@@ -15,6 +20,7 @@ import { useUser } from '~/utils/hooks/use-auth'
 
 const INTENT = {
   updateName: 'update-name',
+  updatePassword: 'update-password',
 } as const
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -28,6 +34,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (intent) {
     case INTENT.updateName: {
       const name = formData.get('name')?.toString()
+      console.log('name', name)
+
       if (!name) {
         return jsonWithError({ success: false }, 'Name is required')
       }
@@ -82,6 +90,80 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         })
 
         return jsonWithSuccess({ success: true }, 'Name updated')
+      }
+    }
+
+    case INTENT.updatePassword: {
+      const password = formData.get('password')?.toString()
+
+      console.log('password', password)
+
+      if (!password) {
+        return jsonWithError({ success: false }, 'Password is required')
+      }
+
+      if (role === UserRole.ADMIN) {
+        await db.admin.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password,
+          },
+        })
+
+        return redirectWithSuccess(
+          $path('/admin/settings'),
+          'Password updated successfully!',
+        )
+      }
+
+      if (role === UserRole.DOCTOR) {
+        await db.doctor.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password,
+          },
+        })
+
+        return redirectWithSuccess(
+          $path('/doctor/settings'),
+          'Password updated successfully!',
+        )
+      }
+
+      if (role === UserRole.PATIENT) {
+        await db.patient.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password,
+          },
+        })
+
+        return redirectWithSuccess(
+          $path('/patient/settings'),
+          'Password updated successfully!',
+        )
+      }
+
+      if (role === UserRole.PHARMACIST) {
+        await db.pharmacist.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password,
+          },
+        })
+
+        return redirectWithSuccess(
+          $path('/pharmacist/settings'),
+          'Password updated successfully!',
+        )
       }
     }
 
@@ -154,3 +236,40 @@ function UpdateNameForm() {
     </SettingsSection>
   )
 }
+
+// function UpdatePasswordForm() {
+//   const user = useUser()
+
+//   const fetcher = useFetcher()
+//   const isPending = fetcher.state !== 'idle'
+
+//   return (
+//     <SettingsSection title="Password">
+//       <fetcher.Form className="flex flex-col gap-4" method="POST">
+//         <input name="role" type="hidden" value={user.role} />
+//         <PasswordInput
+//           autoFocus
+//           label="Enter a new password"
+//           name="password"
+//           placeholder="Leave blank to keep the same"
+//           required
+//           withAsterisk={false}
+//         />
+
+//         <div className="flex items-center gap-4">
+//           <CustomButton
+//             className="font-normal"
+//             color="dark"
+//             loading={isPending}
+//             name="intent"
+//             type="submit"
+//             value={INTENT.updatePassword}
+//             variant="filled"
+//           >
+//             Update
+//           </CustomButton>
+//         </div>
+//       </fetcher.Form>
+//     </SettingsSection>
+//   )
+// }

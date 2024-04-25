@@ -5,16 +5,8 @@ import { Page } from '~/components/page'
 import { Section, SubSection } from '~/components/section'
 import { useUser } from '~/utils/hooks/use-auth'
 
-import { useNotifcationSubscription } from '~/utils/hooks/use-notifcations'
-
 export default function AdminOverview() {
   const user = useUser()
-
-  useNotifcationSubscription({
-    onUpdate: () => {
-      toast.info('New notification!')
-    },
-  })
 
   return (
     <Page.Layout>

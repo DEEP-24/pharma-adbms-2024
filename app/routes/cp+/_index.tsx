@@ -5,16 +5,9 @@ import { WelcomeCard } from '~/components/card/welcome-card'
 import { Page } from '~/components/page'
 import { Section, SubSection } from '~/components/section'
 import { useUser } from '~/utils/hooks/use-auth'
-import { useNotifcationSubscription } from '~/utils/hooks/use-notifcations'
 
 export default function AdminOverview() {
   const user = useUser()
-
-  useNotifcationSubscription({
-    onUpdate: () => {
-      toast.info('New notification!')
-    },
-  })
 
   return (
     <Page.Layout>
@@ -25,7 +18,7 @@ export default function AdminOverview() {
           <Section>
             <div className="flex flex-col gap-4">
               <SubSection className="p-4">
-                <WelcomeCard name={user.fullName} />
+                <WelcomeCard name={user.name} />
               </SubSection>
             </div>
           </Section>
