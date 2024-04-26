@@ -156,3 +156,18 @@ export const createMedicationSchema = z.object({
 export const editMedicationSchema = createMedicationSchema.extend({
   medicationId: z.string().trim().min(1, 'Medication ID is required'),
 })
+
+export const createPrescriptionSchema = z.object({
+  name: z.string().trim().min(3, 'Name is required'),
+  startDate: z.string().trim().min(10, 'Start date is required'),
+  expiryDate: z.string().trim().min(10, 'Expiry date is required'),
+  totalAmount: z.number().min(0, 'Total amount is required'),
+  patientId: z.string().trim().min(1, 'Patient ID is required'),
+  doctorId: z.string().trim().min(1, 'Doctor ID is required'),
+  medications: z.array(
+    z.object({
+      medicationId: z.string().trim().min(1, 'Medication ID is required'),
+      quantity: z.number().min(1, 'Quantity is required'),
+    }),
+  ),
+})

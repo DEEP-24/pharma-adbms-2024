@@ -2,6 +2,7 @@ import { vitePlugin as remix } from '@remix-run/dev'
 import morgan from 'morgan'
 import { flatRoutes } from 'remix-flat-routes'
 import { defineConfig, type ViteDevServer } from 'vite'
+import { remixRoutes } from 'remix-routes/vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
@@ -17,6 +18,9 @@ export default defineConfig({
           ignoredRouteFiles: ['**/*.test.{js,jsx,ts,tsx}', '**/__*.*'],
         })
       },
+    }),
+    remixRoutes({
+      outDir: '.',
     }),
   ],
 })

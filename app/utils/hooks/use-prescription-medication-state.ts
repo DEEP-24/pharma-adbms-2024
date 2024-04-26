@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { type MedicineComboboxItem } from '~/routes/resources+/search-medication'
 import { useSafeDispatch } from '~/utils/hooks/use-safe-dispatch'
-import { cuid } from '~/utils/misc'
+import { createId } from '~/utils/misc'
 import { MedicationUnit } from '~/utils/prisma-enums'
 
 export enum DoseFrequency {
@@ -126,7 +126,7 @@ const makeItem = (item?: Partial<PrescriptionItem>): PrescriptionItem => ({
   durationUnit: PrescriptionDurationUnits.DAYS,
   frequency: DoseFrequency.ONCE_A_DAY,
   frequencyTimings: [0, 0, 0, 0],
-  id: cuid(),
+  id: createId(),
   timing: DoseTiming.BEFORE_FOOD,
   ...item,
 })
@@ -138,6 +138,11 @@ const updateMedication = ({
   medication?: MedicineComboboxItem
   prescriptionItem: PrescriptionItem
 }) => {
+  console.log({
+    medication,
+    prescriptionItem,
+  })
+
   return {
     ...prescriptionItem,
     dosage: medication ? Number(medication.dosage) : 0,

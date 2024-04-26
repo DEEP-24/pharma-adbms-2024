@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { createId } from '@paralleldrive/cuid2'
+import ObjectID from 'bson-objectid'
 
 export function round(number: number, precision: number) {
   const d = Math.pow(10, precision)
@@ -145,7 +145,9 @@ export function useUpdateQueryStringValueWithoutNavigation(
   }, [queryKey, queryValue])
 }
 
-export const cuid = () => createId()
+export const createId = () => {
+  return ObjectID().toString()
+}
 
 /**
  * Convert a date to a relative time string, such as

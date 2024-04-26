@@ -18,44 +18,6 @@ export default function PatientOverview() {
             <div className="flex flex-col gap-4">
               <SubSection className="p-4">
                 <WelcomeCard name={user.name} />
-                {/* 
-                <OverviewCardContainer className="xl:grid-cols-2">
-                  <Suspense fallback={<OverviewCustomCardSkeleton />}>
-                    <Await resolve={allTimeAppointmentsPromise}>
-                      {data => (
-                        <OverviewCard
-                          chartdata={sampleChartData}
-                          name="Today"
-                          stat={data}
-                        />
-                      )}
-                    </Await>
-                  </Suspense>
-
-                  <Suspense fallback={<OverviewCustomCardSkeleton />}>
-                    <Await resolve={allTimeAppointmentsPromise}>
-                      {data => (
-                        <OverviewCard
-                          chartdata={sampleChartData}
-                          name="Pending"
-                          stat={data}
-                        />
-                      )}
-                    </Await>
-                  </Suspense>
-
-                  <Suspense fallback={<OverviewCustomCardSkeleton />}>
-                    <Await resolve={appointmentsTodayPromise}>
-                      {data => (
-                        <OverviewCard
-                          chartdata={sampleChartData}
-                          name="Completed"
-                          stat={data}
-                        />
-                      )}
-                    </Await>
-                  </Suspense>
-                </OverviewCardContainer> */}
               </SubSection>
             </div>
           </Section>

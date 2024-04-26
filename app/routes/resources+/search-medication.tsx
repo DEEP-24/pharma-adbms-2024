@@ -40,10 +40,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
     take: 10,
     where: {
-      name: {
-        contains: query,
-        mode: 'insensitive',
-      },
+      AND: [
+        {
+          name: {
+            contains: query,
+            mode: 'insensitive',
+          },
+        },
+        {
+          prescriptionRequired: true,
+        },
+      ],
     },
   })
 

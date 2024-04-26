@@ -14,6 +14,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react'
 import * as React from 'react'
 import { getToast } from 'remix-toast'
@@ -31,6 +32,7 @@ import '~/styles/fonts.css'
 import '~/styles/tailwind.css'
 import { cn } from '~/utils/helpers'
 import { useGlobalNavigationToast } from '~/utils/hooks/use-global-navigation-toast'
+import { useGlobalToast } from '~/utils/hooks/use-global-toast'
 import { combineHeaders } from '~/utils/misc'
 import EasyModal from '~/utils/modal-manager'
 import { useNonce } from '~/utils/nonce-provider'
@@ -46,11 +48,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     pharmacist: Awaited<ReturnType<typeof getPharmacist>>
     doctor: Awaited<ReturnType<typeof getDoctor>>
     patient: Awaited<ReturnType<typeof getPatient>>
+    toast: Awaited<ReturnType<typeof getToast>>['toast']
   } = {
     admin: null,
     pharmacist: null,
     doctor: null,
     patient: null,
+    toast: toast,
   }
 
   if (!userId || !userRole) {
@@ -67,9 +71,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     response.patient = await getPatient(request)
   }
 
-  let headers = combineHeaders(toastHeaders)
-
-  return json({ ...response, toast }, { headers })
+  return json({ ...response, toast }, { headers: combineHeaders(toastHeaders) })
 }
 
 function Document({
@@ -101,8 +103,11 @@ function Document({
 }
 
 export default function App() {
+  const { toast } = useLoaderData<typeof loader>()
   const nonce = useNonce()
   useGlobalNavigationToast()
+
+  useGlobalToast({ toast })
 
   return (
     <Document nonce={nonce}>

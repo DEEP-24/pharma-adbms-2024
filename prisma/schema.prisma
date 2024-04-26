@@ -107,7 +107,6 @@ model Prescription {
   doctor    Doctor? @relation(fields: [doctorId], references: [id])
   doctorId  String? @db.ObjectId
   order     Order?
-  orderId   String? @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

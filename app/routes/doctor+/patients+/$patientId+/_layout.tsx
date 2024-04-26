@@ -1,10 +1,11 @@
 import { Divider, ScrollArea } from '@mantine/core'
 import { type LoaderFunctionArgs } from '@remix-run/node'
-import { useParams } from '@remix-run/react'
+import { Outlet, useNavigate, useParams } from '@remix-run/react'
 import {
   AtSignIcon,
   CalendarIcon,
   PhoneIcon,
+  PlusIcon,
   UserIcon,
   Users2Icon,
 } from 'lucide-react'
@@ -18,6 +19,11 @@ import {
 
 import { Page } from '~/components/page'
 import { PrescriptionList } from '~/components/prescription-collapsible-list'
+import { Section } from '~/components/section'
+import { SectionHeader } from '~/components/section-header'
+import { StickySection } from '~/components/sticky-section'
+import { TabList } from '~/components/tab-list'
+import { ActionIconButton } from '~/components/ui/action-icon-button'
 import { BreadcrumbItem, Breadcrumbs } from '~/components/ui/breadcrumb'
 import { getPatientById } from '~/lib/patient.server'
 import {
@@ -46,7 +52,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export function usePatientData() {
   const data = useTypedRouteLoaderData<typeof loader>(
-    $routeId('routes/admin+/patients+/$patientId+/_layout'),
+    $routeId('routes/doctor+/patients+/$patientId+/_layout'),
   )
 
   if (!data) {
@@ -60,31 +66,39 @@ export function usePatientData() {
 
 export default function PatientLayout() {
   const { patient } = useTypedLoaderData<typeof loader>()
+
+  const navigate = useNavigate()
+
   const params = useParams() as {
+    prescriptionId?: string
     patientId: string
   }
 
+  const isPrescriptionRoute = Boolean(params.prescriptionId)
   return (
     <Page.Layout>
       <Page.Header
-      // action={
-      //   <ActionIconButton
-      //     className={isAppointmentRoute ? 'hidden' : ''}
-      //     color="dark"
-      //     onClick={() => {
-      //       if (isAppointmentRoute) {
-      //         return
-      //       }
+        action={
+          <ActionIconButton
+            className={isPrescriptionRoute ? 'hidden' : ''}
+            color="dark"
+            onClick={() => {
+              if (isPrescriptionRoute) {
+                return
+              }
 
-      //       openModal(MODAL.createAppointment, {
-      //         patientId: params.patientId,
-      //       })
-      //     }}
-      //     variant="filled"
-      //   >
-      //     <PlusIcon size={16} />
-      //   </ActionIconButton>
-      // }
+              navigate(
+                $path(
+                  '/doctor/patients/:patientId/create-prescription',
+                  params,
+                ),
+              )
+            }}
+            variant="filled"
+          >
+            <PlusIcon size={16} />
+          </ActionIconButton>
+        }
       >
         <Breadcrumbs>
           <BreadcrumbItem
@@ -96,6 +110,17 @@ export default function PatientLayout() {
             href={$path('/doctor/patients/:patientId', params)}
             label={patient.name}
           />
+          {isPrescriptionRoute ? (
+            <BreadcrumbItem
+              href={$path('/doctor/patients/:patientId/:prescriptionId', {
+                patientId: params.patientId,
+                // @ts-expect-error - `prescriptionId` is present in the params
+                prescriptionId: params.prescriptionId,
+              })}
+              isLast
+              label="Prescription"
+            />
+          ) : null}
         </Breadcrumbs>
       </Page.Header>
 
@@ -160,6 +185,25 @@ export default function PatientLayout() {
               </ScrollArea>
             </div>
           </div>
+          <Section className="overflow-auto">
+            <StickySection>
+              <SectionHeader
+                leftSlot={
+                  <TabList
+                    items={[
+                      {
+                        href: `prescriptions`,
+                        icon: <CalendarIcon size={14} />,
+                        name: 'Prescriptions',
+                      },
+                    ]}
+                  />
+                }
+              />
+            </StickySection>
+
+            <Outlet />
+          </Section>
         </div>
       </Page.Main>
     </Page.Layout>

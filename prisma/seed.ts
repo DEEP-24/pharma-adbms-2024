@@ -1,5 +1,6 @@
 import { Gender, PrismaClient } from '@prisma/client'
 import { createPasswordHash } from '~/utils/misc.server'
+import { MedicationUnit } from '~/utils/prisma-enums'
 
 const db = new PrismaClient()
 
@@ -77,47 +78,47 @@ async function createMedications() {
     data: [
       {
         brand: 'Glucophage',
-        dosage: '500mg',
+        dosage: '500',
         name: 'Metformin',
         quantity: 60,
         price: 60,
-        unit: 'MG',
+        unit: MedicationUnit.MG,
         prescriptionRequired: false,
       },
       {
         brand: 'Dolo',
-        dosage: '500mg',
+        dosage: '500',
         name: 'Dolo 500',
         quantity: 60,
         price: 40,
-        unit: 'MG',
+        unit: MedicationUnit.MG,
         prescriptionRequired: true,
       },
       {
         brand: 'Dolo',
-        dosage: '650mg',
+        dosage: '650',
         name: 'Dolo 650 EX',
         quantity: 30,
         price: 12,
-        unit: 'MG',
+        unit: MedicationUnit.MG,
         prescriptionRequired: false,
       },
       {
         brand: 'Dolo',
-        dosage: '250mg',
+        dosage: '250',
         name: 'Dolo Liquid',
         quantity: 100,
         price: 20,
-        unit: 'MG',
+        unit: MedicationUnit.ML,
         prescriptionRequired: true,
       },
       {
         brand: 'Saradon',
-        dosage: '500mg',
+        dosage: '500',
         name: 'Saradon',
         quantity: 60,
         price: 50,
-        unit: 'MG',
+        unit: MedicationUnit.MG,
         prescriptionRequired: false,
       },
     ],

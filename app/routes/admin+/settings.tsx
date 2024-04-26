@@ -34,7 +34,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (intent) {
     case INTENT.updateName: {
       const name = formData.get('name')?.toString()
-      console.log('name', name)
 
       if (!name) {
         return jsonWithError({ success: false }, 'Name is required')
@@ -95,9 +94,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     case INTENT.updatePassword: {
       const password = formData.get('password')?.toString()
-
-      console.log('password', password)
-
       if (!password) {
         return jsonWithError({ success: false }, 'Password is required')
       }

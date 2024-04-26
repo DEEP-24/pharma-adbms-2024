@@ -2,6 +2,7 @@ import type { Patient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { db } from '~/lib/db.server'
 import { getPatientId, getUserId, logout } from '~/lib/session.server'
+import { DateToString } from '~/utils/helpers'
 
 export async function getPatients() {
   return db.patient.findMany({
@@ -10,6 +11,28 @@ export async function getPatients() {
     },
   })
 }
+
+export async function getPatientPrescriptions({
+  patientId,
+  doctorId,
+}: {
+  patientId: Patient['id']
+  doctorId: Patient['id']
+}) {
+  return db.prescription.findMany({
+    where: {
+      patientId,
+      doctorId,
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  })
+}
+
+export type PatientPrescription = Awaited<
+  ReturnType<typeof getPatientPrescriptions>
+>[number]
 
 export async function verifyPatientLogin({
   email,
