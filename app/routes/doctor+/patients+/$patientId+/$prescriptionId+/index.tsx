@@ -1,15 +1,15 @@
 import * as React from 'react'
 
-import { Divider } from '@mantine/core'
+import { Divider, TextInput } from '@mantine/core'
 import {
   LoaderFunctionArgs,
   SerializeFrom,
-  TypedResponse,
   json,
   redirect,
   type ActionFunctionArgs,
 } from '@remix-run/node'
 import {
+  CalendarIcon,
   MoonIcon,
   PlusIcon,
   SaveIcon,
@@ -56,6 +56,7 @@ import usePrescriptionMedicationState, {
 } from '~/utils/hooks/use-prescription-medication-state'
 import { MedicationUnit } from '~/utils/prisma-enums'
 
+import { DatePickerInput } from '@mantine/dates'
 import { useLoaderData } from '@remix-run/react'
 
 interface ActionData {
@@ -70,7 +71,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
   const prescription = await db.prescription.findUnique({
     where: { id: prescriptionId },
-    include: {
+    select: {
+      name: true,
+      startDate: true,
+      expiryDate: true,
       medications: {
         include: {
           medication: true,
@@ -105,13 +109,16 @@ const mapToPrescriptionItem = (
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const doctorId = await requireUserId(request)
-  const { patientId } = $params(
-    '/doctor/patients/:patientId/create-prescription',
+  const { patientId, prescriptionId } = $params(
+    '/doctor/patients/:patientId/:prescriptionId',
     params,
   )
 
   const formData = await request.formData()
   const medicationsString = formData.get('medications') as null | string
+  const prescriptionName = formData.get('name')
+  const prescriptionStartDate = formData.get('startDate')
+  const prescriptionExpiryDate = formData.get('expiryDate')
 
   if (!medicationsString) {
     return jsonWithError({ success: false }, 'Please provide medications')
@@ -138,12 +145,13 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
     await upsertMedicationsInPrescription({
       doctorId,
-      name: 'Prescription',
-      startDate: new Date(),
-      expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      name: prescriptionName as string,
+      startDate: new Date(prescriptionStartDate as string),
+      expiryDate: new Date(prescriptionExpiryDate as string),
       totalAmount: 15000,
       medications: validMeds,
       patientId,
+      prescriptionId,
     })
 
     return jsonWithSuccess<ActionData>(
@@ -163,7 +171,16 @@ export default function PatientPrescription() {
 
   const [
     state,
-    { addItem, removeItem, clearItems, updateItem, resetToInitial },
+    {
+      addItem,
+      removeItem,
+      clearItems,
+      updateItem,
+      resetToInitial,
+      setName,
+      setExpiryDate,
+      setStartDate,
+    },
   ] = usePrescriptionMedicationState(
     mapToPrescriptionItem(prescription.medications),
   )
@@ -199,6 +216,64 @@ export default function PatientPrescription() {
   return (
     <>
       <SubSection className="flex flex-col gap-4 p-3">
+        <div className="m3-2 ml-2 grid grid-cols-12 items-center justify-center gap-2">
+          <TextInput
+            className="col-span-4"
+            placeholder="Enter prescription name"
+            label="Prescription Name"
+            onChange={e => setName(e.currentTarget.value)}
+            defaultValue={prescription.name}
+            type="text"
+            name="name"
+            required
+            withAsterisk={false}
+          />
+
+          <DatePickerInput
+            className="col-span-4"
+            clearable
+            defaultLevel="decade"
+            dropdownType="popover"
+            label="Start Date"
+            leftSection={<CalendarIcon className="text-gray-400" size={14} />}
+            onChange={val => {
+              console.log('Val', val?.toISOString() ?? '')
+              setStartDate(val?.toISOString() ?? '')
+              console.log('Start Date', state.startDate)
+            }}
+            leftSectionPointerEvents="none"
+            maxDate={new Date()}
+            name="startDate"
+            placeholder="Choose state date"
+            defaultValue={new Date(prescription.startDate)}
+            popoverProps={{
+              withinPortal: true,
+            }}
+            required
+            valueFormat="MM-DD-YYYY"
+            withAsterisk={false}
+          />
+
+          <DatePickerInput
+            className="col-span-4"
+            clearable
+            defaultLevel="decade"
+            dropdownType="popover"
+            label="Expiry Date"
+            leftSection={<CalendarIcon className="text-gray-400" size={14} />}
+            onChange={val => setExpiryDate(val?.toISOString() ?? '')}
+            leftSectionPointerEvents="none"
+            name="expiryDate"
+            defaultValue={new Date(prescription.expiryDate)}
+            placeholder="Choose expiry date"
+            popoverProps={{
+              withinPortal: true,
+            }}
+            required
+            valueFormat="MM-DD-YYYY"
+            withAsterisk={false}
+          />
+        </div>
         {state.items.length > 0 ? (
           <div className="grid grid-cols-1 gap-4">
             {state.items.map((item, index) => {
@@ -535,6 +610,25 @@ export default function PatientPrescription() {
                   return false
                 })
 
+                console.log('State', state)
+
+                if (!state.name) {
+                  toast.error('Please provide prescription name.')
+                  return
+                }
+
+                if (!state.startDate || !state.expiryDate) {
+                  toast.error('Please provide start and expiry date.')
+                  return
+                }
+
+                if (state.name && state.name.length < 3) {
+                  toast.error(
+                    'Prescription name must be at least 3 characters long.',
+                  )
+                  return
+                }
+
                 if (hasInvalidItems) {
                   toast.error(
                     'Please fill all the required fields before saving.',
@@ -545,6 +639,9 @@ export default function PatientPrescription() {
                 saveFetcher.submit(
                   {
                     medications: JSON.stringify(state.items),
+                    name: state.name,
+                    startDate: state.startDate,
+                    expiryDate: state.expiryDate,
                   },
                   {
                     method: 'POST',

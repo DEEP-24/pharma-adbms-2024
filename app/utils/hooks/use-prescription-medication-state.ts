@@ -96,6 +96,9 @@ type State = {
   initialItems?: Array<PrescriptionItem>
   isDirty: boolean
   items: Array<PrescriptionItem>
+  name: string
+  startDate: string
+  expiryDate: string
 }
 
 enum ActionTypes {
@@ -104,6 +107,9 @@ enum ActionTypes {
   RESET = 'RESET',
   UPDATE_ITEM = 'UPDATE_ITEM',
   RESET_TO_INITIAL = 'RESET_TO_INITIAL',
+  SET_NAME = 'SET_NAME',
+  SET_START_DATE = 'SET_START_DATE',
+  SET_EXPIRY_DATE = 'SET_EXPIRY_DATE',
 }
 
 type UpdateItemAction<K extends keyof PrescriptionItem> = {
@@ -119,6 +125,9 @@ type Action =
   | { items: PrescriptionItem[]; type: ActionTypes.RESET_TO_INITIAL }
   | { type: ActionTypes.RESET }
   | UpdateItemAction<keyof PrescriptionItem>
+  | { type: ActionTypes.SET_NAME; name: string }
+  | { type: ActionTypes.SET_START_DATE; startDate: string }
+  | { type: ActionTypes.SET_EXPIRY_DATE; expiryDate: string }
 
 const makeItem = (item?: Partial<PrescriptionItem>): PrescriptionItem => ({
   dosage: 0,
@@ -237,6 +246,24 @@ const reducer = (state: State, action: Action): State => {
         items: [],
       }
 
+    case ActionTypes.SET_NAME:
+      return {
+        ...state,
+        name: action.name,
+      }
+
+    case ActionTypes.SET_START_DATE:
+      return {
+        ...state,
+        startDate: action.startDate,
+      }
+
+    case ActionTypes.SET_EXPIRY_DATE:
+      return {
+        ...state,
+        expiryDate: action.expiryDate,
+      }
+
     default:
       return state
   }
@@ -252,6 +279,9 @@ export default function usePrescriptionMedicationState(
       initialMedications && initialMedications.length > 0
         ? initialMedications
         : [],
+    name: '',
+    startDate: '',
+    expiryDate: '',
   })
 
   const safeDispatch = useSafeDispatch(dispatch)
@@ -308,6 +338,23 @@ export default function usePrescriptionMedicationState(
     [initialMedications, safeDispatch],
   )
 
+  const setName = React.useCallback(
+    (name: string) => safeDispatch({ name, type: ActionTypes.SET_NAME }),
+    [safeDispatch],
+  )
+
+  const setStartDate = React.useCallback(
+    (startDate: string) =>
+      safeDispatch({ startDate, type: ActionTypes.SET_START_DATE }),
+    [safeDispatch],
+  )
+
+  const setExpiryDate = React.useCallback(
+    (expiryDate: string) =>
+      safeDispatch({ expiryDate, type: ActionTypes.SET_EXPIRY_DATE }),
+    [safeDispatch],
+  )
+
   const setState = {
     addFrequentItem,
     addItem,
@@ -315,6 +362,9 @@ export default function usePrescriptionMedicationState(
     clearItems,
     updateItem,
     resetToInitial,
+    setName,
+    setStartDate,
+    setExpiryDate,
   }
 
   return [state, setState] as const
