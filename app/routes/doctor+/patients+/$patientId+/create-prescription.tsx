@@ -12,8 +12,8 @@ import {
   SunsetIcon,
   Trash2Icon,
 } from 'lucide-react'
-import { $params } from 'remix-routes'
-import { jsonWithError, jsonWithSuccess } from 'remix-toast'
+import { $params, $path } from 'remix-routes'
+import { jsonWithError, redirectWithSuccess } from 'remix-toast'
 import { toast } from 'sonner'
 
 import { FourOhFour } from '~/components/404'
@@ -111,8 +111,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       patientId,
     })
 
-    return jsonWithSuccess<ActionData>(
-      { success: true },
+    return redirectWithSuccess(
+      $path('/doctor/patients/:patientId/prescriptions', { patientId }),
       "Medication's updated!",
     )
   } catch (error) {

@@ -3,9 +3,8 @@ import { $params } from 'remix-routes'
 import { typedjson, useTypedLoaderData } from 'remix-typedjson'
 import { Table } from '~/components/data-table/table'
 import { Section } from '~/components/section'
-import { doctorsPatientColumnDef } from '~/lib/column-def/doctors-patients-column-def'
 import { patientPrescriptionsColumnDef } from '~/lib/column-def/patients-prescription-def'
-import { getPatientPrescriptions, getPatients } from '~/lib/patient.server'
+import { getPatientPrescriptions } from '~/lib/patient.server'
 import { requireUserId } from '~/lib/session.server'
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
