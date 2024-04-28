@@ -103,11 +103,11 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
     // calculate the tatalAmount based on the medications and their individual prices
 
-    const totalAmount = validMeds.reduce((acc, med) => {
-      if (!med.medication) return acc
+    // const totalAmount = validMeds.reduce((acc, med) => {
+    //   if (!med.medication) return acc
 
-      return acc + med.medication.price
-    })
+    //   return acc + med.medication.price
+    // })
 
     await upsertMedicationsInPrescription({
       doctorId,

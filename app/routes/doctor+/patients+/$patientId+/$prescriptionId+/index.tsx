@@ -88,6 +88,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     },
   })
 
+  console.log('Prescription', prescription)
+
   if (!prescription) {
     return redirect(
       $path('/doctor/patients/:patientId/prescriptions', { patientId }),

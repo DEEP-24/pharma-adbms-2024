@@ -1,6 +1,11 @@
 import { redirect, type LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
-import { LayoutDashboardIcon, PillIcon, Settings } from 'lucide-react'
+import {
+  ClipboardCheckIcon,
+  LayoutDashboardIcon,
+  PillIcon,
+  Settings,
+} from 'lucide-react'
 import { $path } from 'remix-routes'
 
 import { CommandMenu } from '~/components/command-menu'
@@ -55,6 +60,16 @@ const menuItems = [
         href: $path('/pharmacist/medications'),
         leftSlot: <PillIcon width={14} />,
         name: 'Medications',
+      },
+    ],
+  },
+  {
+    title: 'Orders',
+    items: [
+      {
+        href: $path('/pharmacist/orders'),
+        leftSlot: <ClipboardCheckIcon width={14} />,
+        name: 'Orders',
       },
     ],
   },
