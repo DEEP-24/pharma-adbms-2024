@@ -127,34 +127,55 @@ function TableRowAction({
   <html>
   <head>
     <title>Prescription</title>
+    <style>
+      body { font-family: Arial, sans-serif; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+      th { background-color: #f2f2f2; }
+    </style>
   </head>
   <body>
     <h1>${patientPrescription.name}</h1>
-    <p><strong>Start Date:</strong> ${formatDate(patientPrescription.startDate)}</p>
-    <p><strong>Expiry Date:</strong> ${formatDate(patientPrescription.expiryDate)}</p>
-    <p><strong>Total Amount:</strong> ${formatCurrency(patientPrescription.totalAmount)}</p>
-    <p><strong>Doctor:</strong> ${patientPrescription.doctor!.name}</p>
+    <table>
+      <tr><th>Start Date</th><td>${formatDate(patientPrescription.startDate)}</td></tr>
+      <tr><th>Expiry Date</th><td>${formatDate(patientPrescription.expiryDate)}</td></tr>
+      <tr><th>Total Amount</th><td>${formatCurrency(patientPrescription.totalAmount)}</td></tr>
+      <tr><th>Doctor</th><td>${patientPrescription.doctor!.name}</td></tr>
+    </table>
     <h2>Medications</h2>
-    <ul>
-      ${patientPrescription.medications
-        .map(
-          med => `
-        <li>
-          <p><strong>Medication:</strong> ${med.medication.name} (${med.medication.brand})</p>
-          <p><strong>Dosage:</strong> ${med.dosage} ${med.unit} </p>
-          <p><strong>Duration:</strong> ${med.durationNumber} ${med.durationUnit}</p>
-          <p><strong>Frequency:</strong> ${med.frequency}</p>
-          <p><strong>Timing:</strong> ${med.timing}</p>
-          <p><strong>Frequency Timings:</strong> ${med.frequencyTimings.join(', ')}</p>
-          <p><strong>Remarks:</strong> ${med.remarks}</p>
-        </li>
-      `,
-        )
-        .join('')}
-    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Medication</th>
+          <th>Dosage</th>
+          <th>Duration</th>
+          <th>Frequency</th>
+          <th>Timing</th>
+          <th>Frequency Timings</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${patientPrescription.medications
+          .map(
+            med => `
+          <tr>
+            <td>${med.medication.name} (${med.medication.brand})</td>
+            <td>${med.dosage} ${med.unit}</td>
+            <td>${med.durationNumber} ${med.durationUnit}</td>
+            <td>${med.frequency}</td>
+            <td>${med.timing}</td>
+            <td>${med.frequencyTimings.join(', ')}</td>
+            <td>${med.remarks}</td>
+          </tr>
+        `,
+          )
+          .join('')}
+      </tbody>
+    </table>
   </body>
   </html>
-  `
+`
 
   return (
     <div className="flex items-center justify-center gap-2">
@@ -203,11 +224,12 @@ function PrescriptionModal({
       opened={isOpen}
       onClose={onClose}
       title="Prescription Details"
-      style={{ width: '800px', maxWidth: '90%' }}
+      size="90%"
+      style={{ maxWidth: '1200px' }}
     >
       <iframe
         srcDoc={prescription}
-        style={{ width: '100%', height: '600px', marginBottom: '20px' }}
+        style={{ width: '100%', height: '80vh', marginBottom: '20px' }}
       ></iframe>
       <a
         href={downloadHref}
