@@ -159,10 +159,13 @@ const updateMedication = ({
   }
 }
 
-const checkIsDirty = (
-  items: State['items'],
-  initialState: State['initialItems'],
-) => {
+const checkIsDirty = ({
+  items,
+  initialState,
+}: {
+  items: State['items']
+  initialState: State['initialItems']
+}) => {
   return !_.isEqual(items, initialState)
 }
 
@@ -193,7 +196,10 @@ const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
-        isDirty: checkIsDirty(updatedItems, state.initialItems),
+        isDirty: checkIsDirty({
+          items: updatedItems,
+          initialState: state.initialItems,
+        }),
         items: updatedItems,
       }
     }
@@ -208,7 +214,10 @@ const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
-        isDirty: checkIsDirty(updatedItems, state.initialItems),
+        isDirty: checkIsDirty({
+          items: updatedItems,
+          initialState: state.initialItems,
+        }),
         items: updatedItems,
       }
     }
@@ -226,7 +235,10 @@ const reducer = (state: State, action: Action): State => {
 
       return {
         ...state,
-        isDirty: checkIsDirty(updatedItems, state.initialItems),
+        isDirty: checkIsDirty({
+          items: updatedItems,
+          initialState: state.initialItems,
+        }),
         items: state.items.filter(item => item.id !== action.id),
       }
     }
@@ -242,7 +254,10 @@ const reducer = (state: State, action: Action): State => {
     case ActionTypes.RESET:
       return {
         ...state,
-        isDirty: checkIsDirty([], state.initialItems),
+        isDirty: checkIsDirty({
+          items: [],
+          initialState: state.initialItems,
+        }),
         items: [],
       }
 
@@ -250,18 +265,30 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         name: action.name,
+        isDirty: checkIsDirty({
+          items: state.items,
+          initialState: state.initialItems,
+        }),
       }
 
     case ActionTypes.SET_START_DATE:
       return {
         ...state,
         startDate: action.startDate,
+        isDirty: checkIsDirty({
+          items: state.items,
+          initialState: state.initialItems,
+        }),
       }
 
     case ActionTypes.SET_EXPIRY_DATE:
       return {
         ...state,
         expiryDate: action.expiryDate,
+        isDirty: checkIsDirty({
+          items: state.items,
+          initialState: state.initialItems,
+        }),
       }
 
     default:

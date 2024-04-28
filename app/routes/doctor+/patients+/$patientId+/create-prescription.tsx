@@ -101,6 +101,14 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       })
       .filter(Boolean)
 
+    // calculate the tatalAmount based on the medications and their individual prices
+
+    const totalAmount = validMeds.reduce((acc, med) => {
+      if (!med.medication) return acc
+
+      return acc + med.medication.price
+    })
+
     await upsertMedicationsInPrescription({
       doctorId,
       name: prescriptionName as string,
@@ -113,7 +121,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
     return redirectWithSuccess(
       $path('/doctor/patients/:patientId/prescriptions', { patientId }),
-      "Medication's updated!",
+      'Prescription created successfully!',
     )
   } catch (error) {
     return jsonWithError(

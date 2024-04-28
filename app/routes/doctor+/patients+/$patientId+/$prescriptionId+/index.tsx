@@ -19,7 +19,11 @@ import {
   Trash2Icon,
 } from 'lucide-react'
 import { $params, $path } from 'remix-routes'
-import { jsonWithError, jsonWithSuccess } from 'remix-toast'
+import {
+  jsonWithError,
+  jsonWithSuccess,
+  redirectWithSuccess,
+} from 'remix-toast'
 import { toast } from 'sonner'
 
 import { FourOhFour } from '~/components/404'
@@ -58,6 +62,7 @@ import { MedicationUnit } from '~/utils/prisma-enums'
 
 import { DatePickerInput } from '@mantine/dates'
 import { useLoaderData } from '@remix-run/react'
+import { set } from 'lodash'
 
 interface ActionData {
   success: boolean
@@ -154,9 +159,9 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       prescriptionId,
     })
 
-    return jsonWithSuccess<ActionData>(
-      { success: true },
-      "Medication's updated!",
+    return redirectWithSuccess(
+      $path('/doctor/patients/:patientId/prescriptions', { patientId }),
+      'Prescription updated successfully',
     )
   } catch (error) {
     return jsonWithError(
@@ -236,11 +241,7 @@ export default function PatientPrescription() {
             dropdownType="popover"
             label="Start Date"
             leftSection={<CalendarIcon className="text-gray-400" size={14} />}
-            onChange={val => {
-              console.log('Val', val?.toISOString() ?? '')
-              setStartDate(val?.toISOString() ?? '')
-              console.log('Start Date', state.startDate)
-            }}
+            onChange={val => setStartDate(val ? val.toString() : '')}
             leftSectionPointerEvents="none"
             maxDate={new Date()}
             name="startDate"
@@ -261,7 +262,7 @@ export default function PatientPrescription() {
             dropdownType="popover"
             label="Expiry Date"
             leftSection={<CalendarIcon className="text-gray-400" size={14} />}
-            onChange={val => setExpiryDate(val?.toISOString() ?? '')}
+            onChange={val => setExpiryDate(val ? val.toString() : '')}
             leftSectionPointerEvents="none"
             name="expiryDate"
             defaultValue={new Date(prescription.expiryDate)}
@@ -610,29 +611,27 @@ export default function PatientPrescription() {
                   return false
                 })
 
-                console.log('State', state)
+                if (hasInvalidItems) {
+                  toast.error(
+                    'Please fill all the required fields before saving.',
+                  )
+                  return
+                }
 
                 if (!state.name) {
                   toast.error('Please provide prescription name.')
                   return
                 }
 
-                if (!state.startDate || !state.expiryDate) {
-                  toast.error('Please provide start and expiry date.')
-                  return
-                }
-
-                if (state.name && state.name.length < 3) {
+                if (state.name.length < 3) {
                   toast.error(
                     'Prescription name must be at least 3 characters long.',
                   )
                   return
                 }
 
-                if (hasInvalidItems) {
-                  toast.error(
-                    'Please fill all the required fields before saving.',
-                  )
+                if (!state.startDate || !state.expiryDate) {
+                  toast.error('Please provide start and expiry date.')
                   return
                 }
 
