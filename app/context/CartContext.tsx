@@ -5,7 +5,7 @@ import * as React from 'react'
 import { DateToString } from '~/utils/helpers'
 import { useLocalStorageState } from '~/utils/hooks/use-local-storage-state'
 
-const LocalStorageKey = 'ekart-application'
+const LocalStorageKey = 'pharma'
 
 export type CartItem = DateToString<Prescription> & {
   basePrice: number
@@ -21,105 +21,105 @@ interface ICartContext {
 
 const CartContext = React.createContext<ICartContext | undefined>(undefined)
 
-// export function CartProvider({ children }: { children: React.ReactNode }) {
-//   const [items, setItems] = useLocalStorageState<CartItem[]>({
-//     key: LocalStorageKey,
-//     defaultValue: [],
-//   })
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [items, setItems] = useLocalStorageState<CartItem[]>({
+    key: LocalStorageKey,
+    defaultValue: [],
+  })
 
-//   const totalPrice = items.reduce(
-//     (acc, item) => acc + item.basePrice * item.quantity,
-//     0,
-//   )
+  const totalPrice = items.reduce(
+    (acc, item) => acc + item.basePrice * item.quantity,
+    0,
+  )
 
-//   const clearCart = React.useCallback(
-//     (showToast: boolean = true) => {
-//       cleanNotifications()
-//       setItems([])
+  const clearCart = React.useCallback(
+    (showToast: boolean = true) => {
+      cleanNotifications()
+      setItems([])
 
-//       if (!showToast) {
-//         return
-//       }
+      if (!showToast) {
+        return
+      }
 
-//       showNotification({
-//         title: 'Successfully cleared',
-//         message: 'All items in the cart are cleared',
-//         icon: <CheckCircleIcon className="h-7 w-7" />,
-//         color: 'green',
-//       })
-//     },
-//     [setItems],
-//   )
+      showNotification({
+        title: 'Successfully cleared',
+        message: 'All items in the cart are cleared',
+        icon: <CheckCircleIcon className="h-7 w-7" />,
+        color: 'green',
+      })
+    },
+    [setItems],
+  )
 
-//   const addItemToCart = React.useCallback(
-//     (item: CartItem) => {
-//       const isAlreadyInCart = items.some(i => i.id === item.id)
+  const addItemToCart = React.useCallback(
+    (item: CartItem) => {
+      const isAlreadyInCart = items.some(i => i.id === item.id)
 
-//       cleanNotifications()
+      cleanNotifications()
 
-//       if (!isAlreadyInCart) {
-//         setItems(prev => [
-//           ...prev,
-//           {
-//             ...item,
-//             quantity: item.quantity,
-//           },
-//         ])
+      if (!isAlreadyInCart) {
+        setItems(prev => [
+          ...prev,
+          {
+            ...item,
+            quantity: item.quantity,
+          },
+        ])
 
-//         return showNotification({
-//           title: 'Successfully added',
-//           message: `Added ${item.name} to cart`,
-//           color: 'green',
-//           icon: <CheckCircleIcon className="h-9 w-9" />,
-//         })
-//       }
+        return showNotification({
+          title: 'Successfully added',
+          message: `Added ${item.name} to cart`,
+          color: 'green',
+          icon: <CheckCircleIcon className="h-9 w-9" />,
+        })
+      }
 
-//       setItems(prevItems => {
-//         const newItems = [...prevItems]
+      setItems(prevItems => {
+        const newItems = [...prevItems]
 
-//         const index = newItems.findIndex(i => i.id === item.id)
-//         if (index > -1) {
-//           newItems[index].quantity = newItems[index].quantity + item.quantity
-//         }
+        const index = newItems.findIndex(i => i.id === item.id)
+        if (index > -1) {
+          newItems[index].quantity = newItems[index].quantity + item.quantity
+        }
 
-//         return newItems
-//       })
+        return newItems
+      })
 
-//       showNotification({
-//         title: 'Item already present in cart',
-//         message: `Quantity increased by ${item.quantity}`,
-//         icon: <CheckCircleIcon className="h-7 w-7" />,
-//         color: 'green',
-//       })
-//     },
-//     [items, setItems],
-//   )
+      showNotification({
+        title: 'Item already present in cart',
+        message: `Quantity increased by ${item.quantity}`,
+        icon: <CheckCircleIcon className="h-7 w-7" />,
+        color: 'green',
+      })
+    },
+    [items, setItems],
+  )
 
-//   const removeItemFromCart = (itemId: CartItem['id']) => {
-//     setItems(prev => prev.filter(item => item.id !== itemId))
+  const removeItemFromCart = (itemId: CartItem['id']) => {
+    setItems(prev => prev.filter(item => item.id !== itemId))
 
-//     showNotification({
-//       title: 'Successfully removed',
-//       message: 'Item removed from cart',
-//       icon: <MinusCircleIcon className="h-7 w-7" />,
-//       color: 'red',
-//     })
-//   }
+    showNotification({
+      title: 'Successfully removed',
+      message: 'Item removed from cart',
+      icon: <MinusCircleIcon className="h-7 w-7" />,
+      color: 'red',
+    })
+  }
 
-//   return (
-//     <CartContext.Provider
-//       value={{
-//         itemsInCart: items,
-//         totalPrice,
-//         addItemToCart,
-//         removeItemFromCart,
-//         clearCart,
-//       }}
-//     >
-//       {children}
-//     </CartContext.Provider>
-//   )
-// }
+  return (
+    <CartContext.Provider
+      value={{
+        itemsInCart: items,
+        totalPrice,
+        addItemToCart,
+        removeItemFromCart,
+        clearCart,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  )
+}
 
 export function useCart() {
   const context = React.useContext(CartContext)

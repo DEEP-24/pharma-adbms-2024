@@ -5,6 +5,7 @@ import {
   NotepadTextIcon,
   Pill,
   Settings,
+  ShoppingBagIcon,
 } from 'lucide-react'
 import { $path } from 'remix-routes'
 
@@ -70,6 +71,16 @@ const menuItems = [
         href: $path('/patient/prescriptions'),
         leftSlot: <NotepadTextIcon width={14} />,
         name: 'Prescriptions',
+      },
+    ],
+  },
+  {
+    title: 'Orders',
+    items: [
+      {
+        href: $path('/patient/order-history'),
+        leftSlot: <ShoppingBagIcon width={14} />,
+        name: 'Order History',
       },
     ],
   },

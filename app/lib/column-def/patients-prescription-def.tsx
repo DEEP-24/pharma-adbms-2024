@@ -157,22 +157,27 @@ function TableRowAction({
   `
 
   return (
-    <div className="flex items-center justify-between gap-2">
+    <div className="flex items-center justify-center gap-2">
       <CustomButton
         className="h-6 px-2"
         color="blue"
-        component={Link}
-        prefetch="intent"
         size="compact-sm"
-        to={$path('/patient/prescriptions', {
-          prescriptionId: patientPrescription.id,
-        })}
         variant="subtle"
         onClick={handleOpenModal}
       >
         View
         <ArrowUpRightIcon className="ml-1" size={14} />
       </CustomButton>
+      <CustomButton
+        className="h-6 px-2"
+        color="blue"
+        size="compact-sm"
+        variant="filled"
+        // onClick={handleOpenModal}
+      >
+        Order
+      </CustomButton>
+
       <PrescriptionModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
