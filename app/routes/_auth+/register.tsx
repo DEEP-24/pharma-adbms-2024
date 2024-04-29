@@ -225,7 +225,10 @@ export default function Register() {
                 value={role}
                 onChange={val => setRole(val as UserRole)}
                 data={Object.values(UserRole)
-                  .filter(role => role !== UserRole.ADMIN)
+                  .filter(
+                    role =>
+                      role !== UserRole.ADMIN && role !== UserRole.PHARMACIST,
+                  )
                   .map(role => ({
                     label: role,
                     value: role,

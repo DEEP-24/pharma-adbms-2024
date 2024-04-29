@@ -3,7 +3,7 @@ import { $params } from 'remix-routes'
 import { typedjson, useTypedLoaderData } from 'remix-typedjson'
 import { Table } from '~/components/data-table/table'
 import { Section } from '~/components/section'
-import { patientPrescriptionsColumnDef } from '~/lib/column-def/doctor-patient-prescription-def'
+import { doctorPatientPrescriptionsColumnDef } from '~/lib/column-def/doctor-patient-prescription-def'
 import { getPatientPrescriptions } from '~/lib/patient.server'
 import { requireUserId } from '~/lib/session.server'
 
@@ -29,7 +29,7 @@ export default function ManagePatients() {
     <>
       <Section className="overflow-auto">
         <Table
-          columns={patientPrescriptionsColumnDef}
+          columns={doctorPatientPrescriptionsColumnDef}
           data={patientPrescriptions}
         />
       </Section>

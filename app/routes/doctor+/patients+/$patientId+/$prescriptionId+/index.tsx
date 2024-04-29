@@ -19,11 +19,7 @@ import {
   Trash2Icon,
 } from 'lucide-react'
 import { $params, $path } from 'remix-routes'
-import {
-  jsonWithError,
-  jsonWithSuccess,
-  redirectWithSuccess,
-} from 'remix-toast'
+import { jsonWithError, redirectWithSuccess } from 'remix-toast'
 import { toast } from 'sonner'
 
 import { FourOhFour } from '~/components/404'
@@ -62,7 +58,6 @@ import { MedicationUnit } from '~/utils/prisma-enums'
 
 import { DatePickerInput } from '@mantine/dates'
 import { useLoaderData } from '@remix-run/react'
-import { set } from 'lodash'
 
 interface ActionData {
   success: boolean
@@ -155,7 +150,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       name: prescriptionName as string,
       startDate: new Date(prescriptionStartDate as string),
       expiryDate: new Date(prescriptionExpiryDate as string),
-      totalAmount: 15000,
       medications: validMeds,
       patientId,
       prescriptionId,

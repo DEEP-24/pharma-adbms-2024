@@ -101,20 +101,11 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       })
       .filter(Boolean)
 
-    const totalAmount = validMeds.reduce((acc, med) => {
-      const price = med.medication.price
-
-      if (isNaN(price)) return acc
-
-      return acc + price
-    }, 0)
-
     await upsertMedicationsInPrescription({
       doctorId,
       name: prescriptionName as string,
       startDate: new Date(prescriptionStartDate as string),
       expiryDate: new Date(prescriptionExpiryDate as string),
-      totalAmount: totalAmount,
       medications: validMeds,
       patientId,
     })

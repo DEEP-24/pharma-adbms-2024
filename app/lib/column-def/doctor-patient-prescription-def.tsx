@@ -1,4 +1,3 @@
-import { type Patient as PrismaPatient } from '@prisma/client'
 import { Link } from '@remix-run/react'
 import { type ColumnDef, type Row } from '@tanstack/react-table'
 import { ArrowUpRightIcon } from 'lucide-react'
@@ -8,93 +7,70 @@ import { DataTableColumnHeader } from '~/components/data-table/data-table-column
 import { DataTableRowCell } from '~/components/data-table/data-table-row-cell'
 import { CustomButton } from '~/components/ui/custom-button'
 import { PatientPrescription } from '~/lib/patient.server'
-import { genderLabelLookup } from '~/utils/helpers'
-import { formatCurrency, formatDate } from '~/utils/misc'
-import { Gender } from '~/utils/prisma-enums'
+import { formatDate } from '~/utils/misc'
 
-export const patientPrescriptionsColumnDef: ColumnDef<PatientPrescription>[] = [
-  {
-    accessorKey: 'name',
-    cell: info => (
-      <DataTableRowCell
-        className="truncate"
-        column={info.column}
-        table={info.table}
-        value={info.getValue<string>()}
-      />
-    ),
-    filterFn: 'fuzzy',
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Name" />
-    ),
-  },
-  {
-    accessorKey: 'startDate',
-    cell: info => (
-      <DataTableRowCell
-        className="truncate"
-        column={info.column}
-        table={info.table}
-        value={formatDate(info.getValue<Date>())}
-      />
-    ),
-    filterFn: 'fuzzy',
-    header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Start Date" />
-    ),
-  },
-  {
-    accessorKey: 'expiryDate',
-    cell: info => (
-      <DataTableRowCell
-        className="truncate"
-        column={info.column}
-        table={info.table}
-        highlight
-        value={formatDate(info.getValue<Date>())}
-      />
-    ),
-    filterFn: 'fuzzy',
-    header: ({ column, table }) => (
-      <DataTableColumnHeader
-        column={column}
-        table={table}
-        title="Expiry Date"
-      />
-    ),
-  },
-  {
-    accessorKey: 'totalAmount',
-    cell: info => (
-      <DataTableRowCell
-        column={info.column}
-        table={info.table}
-        value={formatCurrency(info.getValue<number>())}
-      />
-    ),
-    enableColumnFilter: false,
-    enableGlobalFilter: false,
-    filterFn: 'fuzzy',
-    header: ({ column, table }) => (
-      <DataTableColumnHeader
-        column={column}
-        table={table}
-        title="Total Amount"
-      />
-    ),
-    meta: {
-      options: Object.values(Gender).map(type => ({
-        label: genderLabelLookup[type],
-        value: type,
-      })),
+export const doctorPatientPrescriptionsColumnDef: ColumnDef<PatientPrescription>[] =
+  [
+    {
+      accessorKey: 'name',
+      cell: info => (
+        <DataTableRowCell
+          className="truncate"
+          column={info.column}
+          table={info.table}
+          value={info.getValue<string>()}
+        />
+      ),
+      filterFn: 'fuzzy',
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} title="Name" />
+      ),
     },
-  },
-  {
-    cell: ({ row }) => <TableRowAction row={row} />,
-    id: 'actions',
-    size: 100,
-  },
-]
+    {
+      accessorKey: 'startDate',
+      cell: info => (
+        <DataTableRowCell
+          className="truncate"
+          column={info.column}
+          table={info.table}
+          value={formatDate(info.getValue<Date>())}
+        />
+      ),
+      filterFn: 'fuzzy',
+      header: ({ column, table }) => (
+        <DataTableColumnHeader
+          column={column}
+          table={table}
+          title="Start Date"
+        />
+      ),
+    },
+    {
+      accessorKey: 'expiryDate',
+      cell: info => (
+        <DataTableRowCell
+          className="truncate"
+          column={info.column}
+          table={info.table}
+          highlight
+          value={formatDate(info.getValue<Date>())}
+        />
+      ),
+      filterFn: 'fuzzy',
+      header: ({ column, table }) => (
+        <DataTableColumnHeader
+          column={column}
+          table={table}
+          title="Expiry Date"
+        />
+      ),
+    },
+    {
+      cell: ({ row }) => <TableRowAction row={row} />,
+      id: 'actions',
+      size: 100,
+    },
+  ]
 
 interface TableRowActionProps<TData> {
   row: Row<TData>

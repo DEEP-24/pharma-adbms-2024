@@ -1,5 +1,4 @@
 import { Modal } from '@mantine/core'
-import { redirect } from '@remix-run/node'
 import { type ColumnDef, type Row } from '@tanstack/react-table'
 import { ArrowUpRightIcon } from 'lucide-react'
 
@@ -9,7 +8,7 @@ import { DataTableRowCell } from '~/components/data-table/data-table-row-cell'
 import { CustomButton } from '~/components/ui/custom-button'
 import { CartItem, useCart } from '~/context/CartContext'
 import { PatientPrescriptionsById } from '~/lib/patient.server'
-import { formatCurrency, formatDate } from '~/utils/misc'
+import { formatDate } from '~/utils/misc'
 
 export const patientsPrescriptionsColumnDef: ColumnDef<PatientPrescriptionsById>[] =
   [
@@ -68,26 +67,6 @@ export const patientsPrescriptionsColumnDef: ColumnDef<PatientPrescriptionsById>
       ),
     },
     {
-      accessorKey: 'totalAmount',
-      cell: info => (
-        <DataTableRowCell
-          column={info.column}
-          table={info.table}
-          value={formatCurrency(info.getValue<number>())}
-        />
-      ),
-      enableColumnFilter: false,
-      enableGlobalFilter: false,
-      filterFn: 'fuzzy',
-      header: ({ column, table }) => (
-        <DataTableColumnHeader
-          column={column}
-          table={table}
-          title="Total Amount"
-        />
-      ),
-    },
-    {
       accessorKey: 'doctor.name',
       cell: info => (
         <DataTableRowCell
@@ -138,7 +117,6 @@ function TableRowAction({
     const cartItem: CartItem = {
       id: patientPrescription.id,
       name: patientPrescription.name,
-      price: patientPrescription.totalAmount,
       quantity: 1,
       prescribedMedications: prescribedMedications,
     }
@@ -162,7 +140,6 @@ function TableRowAction({
     <table>
       <tr><th>Start Date</th><td>${formatDate(patientPrescription.startDate)}</td></tr>
       <tr><th>Expiry Date</th><td>${formatDate(patientPrescription.expiryDate)}</td></tr>
-      <tr><th>Total Amount</th><td>${formatCurrency(patientPrescription.totalAmount)}</td></tr>
       <tr><th>Doctor</th><td>${patientPrescription.doctor!.name}</td></tr>
     </table>
     <h2>Medications</h2>
