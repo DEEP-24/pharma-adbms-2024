@@ -1,4 +1,11 @@
-import { ActionIcon, Button, Input, Modal, Select } from '@mantine/core'
+import {
+  ActionIcon,
+  Button,
+  Input,
+  Modal,
+  NumberInput,
+  Select,
+} from '@mantine/core'
 import { DatePickerInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { PaymentMethod } from '@prisma/client'
@@ -7,10 +14,15 @@ import { Link, useFetcher, useLocation, useNavigate } from '@remix-run/react'
 import { MinusCircleIcon, ShoppingCartIcon, TrashIcon } from 'lucide-react'
 import * as React from 'react'
 import ReactInputMask from 'react-input-mask'
+import { $path } from 'remix-routes'
+import { jsonWithSuccess, redirectWithSuccess } from 'remix-toast'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
+import { CustomButton } from '~/components/ui/custom-button'
 import type { CartItem } from '~/context/CartContext'
 import { useCart } from '~/context/CartContext'
+import { createOrder } from '~/lib/order.server'
+import { requireUserId } from '~/lib/session.server'
 import { useUser } from '~/utils/hooks/use-auth'
 import { titleCase } from '~/utils/misc'
 import { badRequest } from '~/utils/misc.server'
@@ -23,6 +35,7 @@ type ActionData = Partial<{
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
 
+  const userId = await requireUserId(request)
   const intent = formData.get('intent')?.toString()
 
   if (!intent) {
@@ -33,12 +46,9 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'place-order': {
       const stringifiedProducts = formData.get('products[]')?.toString()
       const amount = formData.get('amount')?.toString()
-      const orderType = formData.get('orderType')?.toString()
       const paymentMethod = formData.get('paymentMethod')?.toString()
-      const address = formData.get('address')?.toString()
-      const pickupDateTime = formData.get('pickupTime')?.toString()
 
-      if (!stringifiedProducts || !amount || !paymentMethod || !orderType) {
+      if (!stringifiedProducts || !amount || !paymentMethod) {
         return badRequest<ActionData>({
           success: false,
           message: 'Invalid request body',
@@ -47,19 +57,17 @@ export async function action({ request }: ActionFunctionArgs) {
 
       const products = JSON.parse(stringifiedProducts) as Array<CartItem>
 
-      // await createOrder({
-      //   customerId: customer.id,
-      //   products,
-      //   amount: Number(amount),
-      //   paymentMethod: paymentMethod as PaymentMethod,
-      //   address: address || '',
-      //   pickupDateTime: pickupDateTime ? new Date(pickupDateTime) : null,
-      // })
-
-      return json({
-        success: true,
-        message: 'Order placed successfully',
+      await createOrder({
+        patientId: userId,
+        products,
+        amount: Number(amount),
+        paymentMethod: paymentMethod as PaymentMethod,
       })
+
+      return redirectWithSuccess(
+        $path('/patient/order-history'),
+        'Order placed successfully',
+      )
     }
   }
 }
@@ -355,7 +363,7 @@ export default function Cart() {
 }
 
 function CartItems() {
-  const { itemsInCart, removeItemFromCart, totalPrice } = useCart()
+  const { itemsInCart, totalPrice } = useCart()
 
   return (
     <>
@@ -363,7 +371,10 @@ function CartItems() {
         <thead className="sr-only text-left text-sm text-gray-500 sm:not-sr-only">
           <tr>
             <th scope="col" className="py-3 pr-8 font-normal sm:w-2/5 lg:w-1/3">
-              Products
+              Product Name
+            </th>
+            <th scope="col" className="py-3 pr-8 font-normal sm:w-2/5 lg:w-1/3">
+              Brand
             </th>
             <th
               scope="col"
@@ -377,33 +388,24 @@ function CartItems() {
             >
               Price
             </th>
-
             <th scope="col" className="w-0 py-3 text-right font-normal" />
           </tr>
         </thead>
 
         <tbody className="divide-y divide-gray-200 border-b border-gray-200 text-sm sm:border-t">
-          {itemsInCart.map(item => {
-            const itemTotalPrice = item.price * item.quantity
-
-            return (
-              <tr key={item.id}>
-                <td className="hidden py-6 pr-8 sm:table-cell">
-                  {item.quantity}
-                </td>
-                <td className="hidden py-6 pr-8 font-semibold sm:table-cell">
-                  ${itemTotalPrice.toFixed(2)}
-                </td>
-                <td className="whitespace-nowrap py-6 text-right font-medium">
-                  <ActionIcon onClick={() => removeItemFromCart(item.id!)}>
-                    <TrashIcon className="h-4 w-4 text-red-500" />
-                  </ActionIcon>
-                </td>
-              </tr>
-            )
-          })}
+          {itemsInCart.map(item => (
+            <ItemRow item={item} key={item.id} />
+          ))}
 
           <tr>
+            <td className="py-6 pr-8">
+              <div className="flex items-center">
+                <div>
+                  <div className="font-medium text-gray-900" />
+                  <div className="mt-1 sm:hidden" />
+                </div>
+              </div>
+            </td>
             <td className="py-6 pr-8">
               <div className="flex items-center">
                 <div>
@@ -421,6 +423,45 @@ function CartItems() {
         </tbody>
       </table>
     </>
+  )
+}
+
+function ItemRow({ item }: { item: CartItem }) {
+  const { removeItemFromCart, updateQuantity } = useCart()
+
+  const itemTotalPrice = item.price * item.quantity
+
+  const [quantity, setQuantity] = React.useState<number | ''>(
+    item.quantity ?? '',
+  )
+
+  React.useEffect(() => {
+    if (quantity !== '') {
+      updateQuantity(item.id, Number(quantity))
+    }
+  }, [item.id, quantity, updateQuantity])
+
+  return (
+    <tr key={item.id}>
+      <td className="py-6 pl-4 pr-8">
+        {item.name} ({item.dosage}-{item.unit})
+      </td>
+      <td className="py-6 pr-8">{item.brand}</td>
+      <td className="py-6 pr-8">
+        <NumberInput
+          min={1}
+          value={quantity}
+          onChange={val => setQuantity(Number(val))}
+          className="w-20"
+        />
+      </td>
+      <td className="py-6 pr-8 font-semibold">${itemTotalPrice.toFixed(2)}</td>
+      <td className="py-6 pr-8 text-right">
+        <CustomButton onClick={() => removeItemFromCart(item.id)}>
+          <TrashIcon className="h-3 w-3" />
+        </CustomButton>
+      </td>
+    </tr>
   )
 }
 

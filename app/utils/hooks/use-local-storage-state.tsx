@@ -18,7 +18,7 @@ export function useLocalStorageState<T>({
       return
     }
 
-    setValue(JSON.parse(localStorageValue))
+    setValue(JSON.parse(localStorageValue) as T)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

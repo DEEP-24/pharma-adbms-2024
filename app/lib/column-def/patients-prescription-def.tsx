@@ -104,24 +104,19 @@ function TableRowAction({
   const handleCloseModal = () => setModalOpen(false)
 
   const handleAddToCart = () => {
-    const prescribedMedications = patientPrescription.medications.map(med => ({
-      medicationName: med.medication.name,
-      medicationBrand: med.medication.brand,
-      dosage: `${med.dosage} ${med.unit}`,
-      duration: `${med.durationNumber} ${med.durationUnit}`,
-      frequency: med.frequency,
-      timing: med.timing,
-      remarks: med.remarks,
-    }))
+    patientPrescription.medications.forEach(med => {
+      const cartItem: CartItem = {
+        id: med.medication.id,
+        name: med.medication.name,
+        brand: med.medication.brand,
+        dosage: med.dosage,
+        unit: med.unit,
+        price: med.medication.price,
+        quantity: 1,
+      }
 
-    const cartItem: CartItem = {
-      id: patientPrescription.id,
-      name: patientPrescription.name,
-      quantity: 1,
-      prescribedMedications: prescribedMedications,
-    }
-
-    addItemToCart(cartItem)
+      addItemToCart(cartItem)
+    })
   }
 
   const prescriptionHtml = `

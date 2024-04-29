@@ -52,6 +52,7 @@ export async function getPatientPrescriptionsById(patientId: Patient['id']) {
           timing: true,
           medication: {
             select: {
+              id: true,
               name: true,
               brand: true,
               price: true,

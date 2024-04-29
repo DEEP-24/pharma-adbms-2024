@@ -107,9 +107,6 @@ model Prescription {
   doctor   Doctor? @relation(fields: [doctorId], references: [id])
   doctorId String? @db.ObjectId
 
-  order   Order?  @relation(fields: [orderId], references: [id])
-  orderId String? @db.ObjectId
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -152,8 +149,7 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Prescription    Prescription[]
-  MedicationOrder MedicationOrder[]
+  medications MedicationOrder[]
 
   @@map("order")
 }
@@ -179,13 +175,14 @@ model MedicationOrder {
 
 model Payment {
   id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  orderId       String        @unique @db.ObjectId
-  order         Order         @relation(fields: [orderId], references: [id])
   paymentMethod PaymentMethod
   amount        Float
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  orderId String @unique @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id])
 
   @@map("payment")
 }
