@@ -199,6 +199,8 @@ model TableView {
 
 enum OrderStatus {
   PENDING
+  ACCEPTED
+  REJECTED
   COMPLETED
   CANCELLED
 }

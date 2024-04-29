@@ -67,5 +67,7 @@ export function statusLabelLookup(status: OrderStatus) {
     [OrderStatus.PENDING]: 'Pending',
     [OrderStatus.COMPLETED]: 'Completed',
     [OrderStatus.CANCELLED]: 'Cancelled',
+    [OrderStatus.ACCEPTED]: 'Accepted',
+    [OrderStatus.REJECTED]: 'Rejected',
   }[status]
 }

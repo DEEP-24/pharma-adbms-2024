@@ -13,7 +13,7 @@ import * as React from 'react'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
 import { useCart } from '~/context/CartContext'
-import { getOrders } from '~/lib/order.server'
+import { getOrdersByPatientId } from '~/lib/order.server'
 import { requireUserId } from '~/lib/session.server'
 import { statusLabelLookup } from '~/utils/helpers'
 import { badRequest, unauthorized } from '~/utils/misc.server'
@@ -22,7 +22,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US')
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireUserId(request)
-  const orders = await getOrders(userId)
+  const orders = await getOrdersByPatientId(userId)
 
   return json({ orders })
 }

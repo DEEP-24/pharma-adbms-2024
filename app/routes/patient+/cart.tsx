@@ -1,11 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  Input,
-  Modal,
-  NumberInput,
-  Select,
-} from '@mantine/core'
+import { Button, Input, Modal, NumberInput, Select } from '@mantine/core'
 import { DatePickerInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { PaymentMethod } from '@prisma/client'
@@ -15,7 +8,7 @@ import { MinusCircleIcon, ShoppingCartIcon, TrashIcon } from 'lucide-react'
 import * as React from 'react'
 import ReactInputMask from 'react-input-mask'
 import { $path } from 'remix-routes'
-import { jsonWithSuccess, redirectWithSuccess } from 'remix-toast'
+import { redirectWithSuccess } from 'remix-toast'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
 import { CustomButton } from '~/components/ui/custom-button'
@@ -84,12 +77,6 @@ export default function Cart() {
   const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(
     PaymentMethod.CREDIT_CARD,
   )
-  const [pickupDate, setPickupDate] = React.useState<Date | null>(
-    new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-  )
-  const [pickupTime, setPickupTime] = React.useState<Date | null>(
-    new Date(new Date().setHours(16, 0, 0, 0)),
-  )
 
   const [isPaymentModalOpen, setIsPaymentModalOpen] = React.useState(false)
   const [cardNumber, setCardNumber] = React.useState<string>('1234567891234567')
@@ -142,25 +129,12 @@ export default function Cart() {
       return
     }
 
-    const pickupDateTime =
-      pickupDate && pickupTime
-        ? new Date(
-            pickupDate.setHours(
-              pickupTime.getHours(),
-              pickupTime.getMinutes(),
-              0,
-              0,
-            ),
-          )
-        : null
     fetcher.submit(
       {
         'products[]': JSON.stringify(itemsInCart),
         amount: totalPrice.toString(),
         intent: 'place-order',
         paymentMethod,
-        pickupDate: pickupDate?.toISOString() ?? '',
-        pickupTime: pickupDateTime?.toISOString() ?? '',
       },
       {
         method: 'post',

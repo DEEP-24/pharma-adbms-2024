@@ -3,7 +3,7 @@ import { CartItem } from '~/context/CartContext'
 import { db } from '~/lib/db.server'
 import { PaymentMethod } from '~/utils/prisma-enums'
 
-export async function getOrders(userId: Patient['id']) {
+export async function getOrdersByPatientId(userId: Patient['id']) {
   return db.order.findMany({
     where: {
       patientId: userId,
@@ -17,6 +17,20 @@ export async function getOrders(userId: Patient['id']) {
           medication: true,
         },
       },
+      payment: true,
+    },
+  })
+}
+
+export async function getOrders() {
+  return db.order.findMany({
+    include: {
+      medications: {
+        include: {
+          medication: true,
+        },
+      },
+      patient: true,
       payment: true,
     },
   })
