@@ -70,15 +70,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         },
       })
 
-      // if (status === OrderStatus.COMPLETED) {
-      //   const updatePromises = updatedOrder.medications.map(medication =>
-      //     updateMedicationStock({
-      //       medicationId: medication.id,
-      //       quantitySold: medication.quantity,
-      //     }),
-      //   )
-      //   await Promise.all(updatePromises)
-      // }
+      if (status === OrderStatus.COMPLETED) {
+        const updatePromises = updatedOrder.medications.map(medication =>
+          updateMedicationStock({
+            medicationId: medication.id,
+            quantitySold: medication.quantity,
+          }),
+        )
+        await Promise.all(updatePromises)
+      }
 
       return json({ success: true })
     }

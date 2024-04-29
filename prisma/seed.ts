@@ -6,6 +6,9 @@ const db = new PrismaClient()
 
 async function cleanup() {
   console.time('🧹 Cleaned up the database...')
+  await db.medicationOrder.deleteMany()
+  await db.payment.deleteMany()
+  await db.order.deleteMany()
   await db.prescribedMedication.deleteMany()
   await db.prescription.deleteMany()
   await db.patient.deleteMany()
