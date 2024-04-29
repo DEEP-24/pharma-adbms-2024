@@ -17,7 +17,9 @@ import { db } from '~/lib/db.server'
 import { getOrders } from '~/lib/order.server'
 import { titleCase } from '~/utils/misc'
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+const dateFormatter = new Intl.DateTimeFormat('en-US')
+
+export const loader = async () => {
   const orders = await getOrders()
 
   return json({ orders })
@@ -114,6 +116,7 @@ export default function Orders() {
                             >
                               Status
                             </th>
+
                             <th
                               scope="col"
                               className="relative py-3.5 pl-3 pr-4 sm:pr-6"
@@ -134,6 +137,9 @@ export default function Orders() {
                             const isOrderCompleted =
                               order.status === OrderStatus.COMPLETED
 
+                            const isOrderFulfilled =
+                              order.status === OrderStatus.COMPLETED
+
                             const statusOptions = [
                               'ACCEPTED',
                               'REJECTED',
@@ -142,118 +148,177 @@ export default function Orders() {
                             ]
 
                             return (
-                              <tr key={order.id}>
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                  <div className="flex items-center">
-                                    <div className="ml-4">
-                                      <div className="font-medium text-gray-900">
-                                        {order.patient.name}
-                                      </div>
-                                      <div className="text-gray-500">
-                                        {order.patient.email}
+                              <>
+                                <tr key={order.id}>
+                                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                    <div className="flex items-center">
+                                      <div className="ml-4">
+                                        <div className="font-medium text-gray-900">
+                                          {order.patient.name}
+                                        </div>
+                                        <div className="text-gray-500">
+                                          {order.patient.email}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </td>
-
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                  <Badge
-                                    color={
-                                      isOrderPending
-                                        ? 'gray'
-                                        : isOrderCancelled
-                                          ? 'indigo'
-                                          : isOrderRejected
-                                            ? 'red'
-                                            : 'green'
-                                    }
-                                  >
-                                    {titleCase(order.status)}
-                                  </Badge>
-                                </td>
-                                <td className="relative flex items-center justify-center whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
-                                  <div className="flex items-center gap-2">
-                                    {isOrderPending ? (
-                                      <>
-                                        <ActionIcon
-                                          color="green"
-                                          disabled={
-                                            isPending || !isOrderPending
-                                          }
-                                          onClick={() =>
-                                            submit(
-                                              {
-                                                intent: 'approve-order',
-                                                orderId: order.id,
-                                                customerEmail:
-                                                  order.patient.email,
-                                              },
-                                              {
-                                                method: 'post',
-                                                replace: true,
-                                              },
-                                            )
-                                          }
-                                        >
-                                          <CheckCircleIcon className="h-6" />
-                                        </ActionIcon>
-                                        <ActionIcon
-                                          color="red"
-                                          type="submit"
-                                          name="intent"
-                                          value="reject-order"
-                                          disabled={
-                                            isPending || !isOrderPending
-                                          }
-                                          onClick={() => {
-                                            submit(
-                                              {
-                                                intent: 'reject-order',
-                                                orderId: order.id,
-                                                customerEmail:
-                                                  order.patient.email,
-                                              },
-                                              {
-                                                method: 'post',
-                                                replace: true,
-                                              },
-                                            )
-                                          }}
-                                        >
-                                          <MinusCircleIcon className="h-7" />
-                                        </ActionIcon>
-                                      </>
-                                    ) : !isOrderRejected &&
-                                      !isOrderCompleted ? (
-                                      <>
-                                        <NativeSelect
-                                          className="w-48"
-                                          defaultValue={order.status}
-                                          disabled={
-                                            isPending || isOrderCompleted
-                                          }
-                                          data={statusOptions}
-                                          onChange={e => {
-                                            submit(
-                                              {
-                                                intent: 'update-order-status',
-                                                orderId: order.id,
-                                                status: e.target.value,
-                                                customerEmail:
-                                                  order.patient.email,
-                                              },
-                                              {
-                                                method: 'post',
-                                                replace: true,
-                                              },
-                                            )
-                                          }}
-                                        />
-                                      </>
-                                    ) : null}
-                                  </div>
-                                </td>
-                              </tr>
+                                  </td>
+                                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    <Badge
+                                      color={
+                                        isOrderPending
+                                          ? 'gray'
+                                          : isOrderCancelled
+                                            ? 'indigo'
+                                            : isOrderRejected
+                                              ? 'red'
+                                              : 'green'
+                                      }
+                                    >
+                                      {titleCase(order.status)}
+                                    </Badge>
+                                  </td>
+                                  <td className="relative flex items-center justify-center whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
+                                    <div className="flex items-center gap-2">
+                                      {isOrderPending ? (
+                                        <>
+                                          <ActionIcon
+                                            color="green"
+                                            disabled={
+                                              isPending || !isOrderPending
+                                            }
+                                            onClick={() =>
+                                              submit(
+                                                {
+                                                  intent: 'approve-order',
+                                                  orderId: order.id,
+                                                  customerEmail:
+                                                    order.patient.email,
+                                                },
+                                                {
+                                                  method: 'post',
+                                                  replace: true,
+                                                },
+                                              )
+                                            }
+                                          >
+                                            <CheckCircleIcon className="h-6" />
+                                          </ActionIcon>
+                                          <ActionIcon
+                                            color="red"
+                                            type="submit"
+                                            name="intent"
+                                            value="reject-order"
+                                            disabled={
+                                              isPending || !isOrderPending
+                                            }
+                                            onClick={() => {
+                                              submit(
+                                                {
+                                                  intent: 'reject-order',
+                                                  orderId: order.id,
+                                                  customerEmail:
+                                                    order.patient.email,
+                                                },
+                                                {
+                                                  method: 'post',
+                                                  replace: true,
+                                                },
+                                              )
+                                            }}
+                                          >
+                                            <MinusCircleIcon className="h-7" />
+                                          </ActionIcon>
+                                        </>
+                                      ) : !isOrderRejected &&
+                                        !isOrderCompleted ? (
+                                        <>
+                                          <NativeSelect
+                                            className="w-48"
+                                            defaultValue={order.status}
+                                            disabled={
+                                              isPending || isOrderCompleted
+                                            }
+                                            data={statusOptions}
+                                            onChange={e => {
+                                              submit(
+                                                {
+                                                  intent: 'update-order-status',
+                                                  orderId: order.id,
+                                                  status: e.target.value,
+                                                  customerEmail:
+                                                    order.patient.email,
+                                                },
+                                                {
+                                                  method: 'post',
+                                                  replace: true,
+                                                },
+                                              )
+                                            }}
+                                          />
+                                        </>
+                                      ) : null}
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <ul className="divide-y divide-gray-200">
+                                      {order.medications.map(
+                                        ({ medication, quantity }) => (
+                                          <li
+                                            key={medication.id}
+                                            className="p-4 sm:p-6"
+                                          >
+                                            <div className="flex items-center sm:items-start">
+                                              <div className="flex-1 text-sm">
+                                                <div className="font-medium text-gray-900 sm:flex sm:justify-between">
+                                                  <h5>
+                                                    {medication.name}{' '}
+                                                    <i>(x{quantity})</i>
+                                                  </h5>
+                                                  <p className="mt-2 sm:mt-0">
+                                                    $
+                                                    {(
+                                                      medication.price *
+                                                      quantity
+                                                    ).toFixed(2)}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="mt-6 sm:flex sm:justify-between">
+                                              <div className="flex items-center">
+                                                {isOrderFulfilled ? (
+                                                  <>
+                                                    <CheckCircleIcon
+                                                      className="h-5 w-5 text-green-500"
+                                                      aria-hidden="true"
+                                                    />
+                                                    <p className="ml-2 text-sm font-medium text-gray-500">
+                                                      Completed on{' '}
+                                                      <time
+                                                        dateTime={
+                                                          order.createdAt
+                                                        }
+                                                      >
+                                                        {dateFormatter.format(
+                                                          new Date(
+                                                            order.createdAt,
+                                                          ),
+                                                        )}
+                                                      </time>
+                                                    </p>
+                                                  </>
+                                                ) : null}
+                                              </div>
+                                            </div>
+                                          </li>
+                                        ),
+                                      )}
+                                    </ul>
+                                  </td>
+                                </tr>
+                              </>
                             )
                           })}
                         </tbody>

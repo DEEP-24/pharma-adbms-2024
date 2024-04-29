@@ -33,6 +33,9 @@ export async function getOrders() {
       patient: true,
       payment: true,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   })
 }
 
