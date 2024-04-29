@@ -1,8 +1,10 @@
 import { type Medication as PrismaMedication } from '@prisma/client'
-import { type ColumnDef } from '@tanstack/react-table'
+import { Row, type ColumnDef } from '@tanstack/react-table'
 
 import { DataTableColumnHeader } from '~/components/data-table/data-table-column-header'
 import { DataTableRowCell } from '~/components/data-table/data-table-row-cell'
+import { CustomButton } from '~/components/ui/custom-button'
+import { useCart } from '~/context/CartContext'
 import { medicationUnitLabelLookup, type DateToString } from '~/utils/helpers'
 import { formatCurrency } from '~/utils/misc'
 import { MedicationUnit } from '~/utils/prisma-enums'
@@ -143,4 +145,46 @@ export const patientMedicationColumnDef: ColumnDef<Medication>[] = [
       />
     ),
   },
+  {
+    cell: ({ row }) => <TableRowAction row={row} />,
+    id: 'actions',
+    size: 100,
+  },
 ]
+
+interface TableRowActionProps<TData> {
+  row: Row<TData>
+}
+
+function TableRowAction({ row }: TableRowActionProps<Medication>) {
+  const medication = row.original
+  const { addItemToCart } = useCart()
+
+  const handleAddToCart = () => {
+    const cartItem = {
+      id: medication.id,
+      name: medication.name,
+      brand: medication.brand,
+      price: medication.price,
+      dosage: Number(medication.dosage),
+      unit: medication.unit,
+      quantity: 1,
+    }
+
+    addItemToCart(cartItem)
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-2">
+      <CustomButton
+        className="h-6 px-2"
+        color="blue"
+        size="compact-sm"
+        variant="filled"
+        onClick={handleAddToCart}
+      >
+        Order
+      </CustomButton>
+    </div>
+  )
+}

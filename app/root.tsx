@@ -115,7 +115,7 @@ export default function App() {
       <Toaster
         closeButton
         duration={3000}
-        position="top-right"
+        position="bottom-center"
         richColors
         theme="light"
         visibleToasts={3}
