@@ -41,6 +41,7 @@ export async function getPatientPrescriptionsById(patientId: Patient['id']) {
     include: {
       medications: {
         select: {
+          id: true,
           dosage: true,
           unit: true,
           durationNumber: true,
@@ -53,6 +54,7 @@ export async function getPatientPrescriptionsById(patientId: Patient['id']) {
             select: {
               name: true,
               brand: true,
+              price: true,
             },
           },
         },

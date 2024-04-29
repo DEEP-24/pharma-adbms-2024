@@ -195,6 +195,13 @@ declare module "remix-routes" {
       query: ExportedQuery<import('app/routes/patient+/_index').SearchParams>,
     };
   
+    "/patient/cart": {
+      params: {
+      
+      },
+      query: ExportedQuery<import('app/routes/patient+/cart').SearchParams>,
+    };
+  
     "/patient/medications": {
       params: {
       
@@ -355,6 +362,7 @@ declare module "remix-routes" {
     | 'routes/doctor+/settings'
     | 'routes/patient+/_index'
     | 'routes/patient+/_layout'
+    | 'routes/patient+/cart'
     | 'routes/patient+/medications'
     | 'routes/patient+/order-history'
     | 'routes/patient+/prescriptions'

@@ -22,6 +22,7 @@ import { Toaster } from 'sonner'
 import { FourOhFour } from '~/components/404'
 import { GeneralErrorBoundary } from '~/components/GeneralErrorBoundary'
 import { GlobalBlockerModal } from '~/components/global-blocker-modal'
+import { CartProvider } from '~/context/CartContext'
 import { UserRole } from '~/enums'
 import { getAdmin } from '~/lib/admin.server'
 import { getDoctor } from '~/lib/doctor.server'
@@ -122,7 +123,9 @@ export default function App() {
       <MantineModalsProvider>
         <GlobalBlockerModal />
         <EasyModal.Provider>
-          <Outlet />
+          <CartProvider>
+            <Outlet />
+          </CartProvider>
         </EasyModal.Provider>
       </MantineModalsProvider>
     </Document>

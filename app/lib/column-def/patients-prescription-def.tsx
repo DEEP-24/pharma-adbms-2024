@@ -1,13 +1,13 @@
 import { Modal } from '@mantine/core'
-import { Link } from '@remix-run/react'
+import { redirect } from '@remix-run/node'
 import { type ColumnDef, type Row } from '@tanstack/react-table'
 import { ArrowUpRightIcon } from 'lucide-react'
-import { $path } from 'remix-routes'
 
 import * as React from 'react'
 import { DataTableColumnHeader } from '~/components/data-table/data-table-column-header'
 import { DataTableRowCell } from '~/components/data-table/data-table-row-cell'
 import { CustomButton } from '~/components/ui/custom-button'
+import { CartItem, useCart } from '~/context/CartContext'
 import { PatientPrescriptionsById } from '~/lib/patient.server'
 import { formatCurrency, formatDate } from '~/utils/misc'
 
@@ -117,11 +117,34 @@ interface TableRowActionProps<TData> {
 function TableRowAction({
   row,
 }: TableRowActionProps<PatientPrescriptionsById>) {
+  const { addItemToCart } = useCart()
   const patientPrescription = row.original
 
   const [isModalOpen, setModalOpen] = React.useState(false)
   const handleOpenModal = () => setModalOpen(true)
   const handleCloseModal = () => setModalOpen(false)
+
+  const handleAddToCart = () => {
+    const prescribedMedications = patientPrescription.medications.map(med => ({
+      medicationName: med.medication.name,
+      medicationBrand: med.medication.brand,
+      dosage: `${med.dosage} ${med.unit}`,
+      duration: `${med.durationNumber} ${med.durationUnit}`,
+      frequency: med.frequency,
+      timing: med.timing,
+      remarks: med.remarks,
+    }))
+
+    const cartItem: CartItem = {
+      id: patientPrescription.id,
+      name: patientPrescription.name,
+      price: patientPrescription.totalAmount,
+      quantity: 1,
+      prescribedMedications: prescribedMedications,
+    }
+
+    addItemToCart(cartItem)
+  }
 
   const prescriptionHtml = `
   <html>
@@ -194,7 +217,7 @@ function TableRowAction({
         color="blue"
         size="compact-sm"
         variant="filled"
-        // onClick={handleOpenModal}
+        onClick={handleAddToCart}
       >
         Order
       </CustomButton>

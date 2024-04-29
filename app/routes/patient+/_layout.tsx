@@ -6,6 +6,7 @@ import {
   Pill,
   Settings,
   ShoppingBagIcon,
+  ShoppingCartIcon,
 } from 'lucide-react'
 import { $path } from 'remix-routes'
 
@@ -77,6 +78,11 @@ const menuItems = [
   {
     title: 'Orders',
     items: [
+      {
+        href: $path('/patient/cart'),
+        leftSlot: <ShoppingCartIcon width={14} />,
+        name: 'Cart',
+      },
       {
         href: $path('/patient/order-history'),
         leftSlot: <ShoppingBagIcon width={14} />,

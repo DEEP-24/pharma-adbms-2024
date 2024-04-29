@@ -1,14 +1,25 @@
-import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { Prescription } from '@prisma/client'
-import { CheckCircleIcon, MinusCircleIcon } from 'lucide-react'
 import * as React from 'react'
-import { DateToString } from '~/utils/helpers'
+import { toast } from 'sonner'
 import { useLocalStorageState } from '~/utils/hooks/use-local-storage-state'
 
-const LocalStorageKey = 'pharma'
+const LocalStorageKey = 'pharmaCart'
 
-export type CartItem = DateToString<Prescription> & {
-  basePrice: number
+export type PrescribedMedicationType = {
+  medicationName: string
+  medicationBrand: string
+  dosage: string
+  duration: string
+  frequency: string
+  timing: string
+  remarks?: string | null
+}
+
+export type CartItem = {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  prescribedMedications: PrescribedMedicationType[]
 }
 
 interface ICartContext {
@@ -27,26 +38,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     defaultValue: [],
   })
 
-  const totalPrice = items.reduce(
-    (acc, item) => acc + item.basePrice * item.quantity,
-    0,
-  )
+  const totalPrice = items.reduce((acc, item) => acc + item.price, 0)
 
   const clearCart = React.useCallback(
     (showToast: boolean = true) => {
-      cleanNotifications()
       setItems([])
 
-      if (!showToast) {
-        return
+      if (showToast) {
+        toast.success('Cart cleared')
       }
-
-      showNotification({
-        title: 'Successfully cleared',
-        message: 'All items in the cart are cleared',
-        icon: <CheckCircleIcon className="h-7 w-7" />,
-        color: 'green',
-      })
     },
     [setItems],
   )
@@ -55,42 +55,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     (item: CartItem) => {
       const isAlreadyInCart = items.some(i => i.id === item.id)
 
-      cleanNotifications()
-
       if (!isAlreadyInCart) {
-        setItems(prev => [
-          ...prev,
-          {
-            ...item,
-            quantity: item.quantity,
-          },
-        ])
+        setItems(prev => [...prev, item])
 
-        return showNotification({
-          title: 'Successfully added',
-          message: `Added ${item.name} to cart`,
-          color: 'green',
-          icon: <CheckCircleIcon className="h-9 w-9" />,
-        })
+        toast.success('Item added to cart')
+      } else {
+        toast.error('Item already in cart')
       }
-
-      setItems(prevItems => {
-        const newItems = [...prevItems]
-
-        const index = newItems.findIndex(i => i.id === item.id)
-        if (index > -1) {
-          newItems[index].quantity = newItems[index].quantity + item.quantity
-        }
-
-        return newItems
-      })
-
-      showNotification({
-        title: 'Item already present in cart',
-        message: `Quantity increased by ${item.quantity}`,
-        icon: <CheckCircleIcon className="h-7 w-7" />,
-        color: 'green',
-      })
     },
     [items, setItems],
   )
@@ -98,12 +69,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeItemFromCart = (itemId: CartItem['id']) => {
     setItems(prev => prev.filter(item => item.id !== itemId))
 
-    showNotification({
-      title: 'Successfully removed',
-      message: 'Item removed from cart',
-      icon: <MinusCircleIcon className="h-7 w-7" />,
-      color: 'red',
-    })
+    toast.success('Item removed from cart')
   }
 
   return (
