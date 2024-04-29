@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { Gender, MedicationUnit } from '~/utils/prisma-enums'
+import { Gender, MedicationUnit, OrderStatus } from '~/utils/prisma-enums'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -61,3 +61,11 @@ export const genderLabelLookup = {
   MALE: 'Male',
   OTHER: 'Other',
 } satisfies Record<Gender, string>
+
+export function statusLabelLookup(status: OrderStatus) {
+  return {
+    [OrderStatus.PENDING]: 'Pending',
+    [OrderStatus.COMPLETED]: 'Completed',
+    [OrderStatus.CANCELLED]: 'Cancelled',
+  }[status]
+}

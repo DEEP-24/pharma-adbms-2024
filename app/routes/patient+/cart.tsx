@@ -204,57 +204,55 @@ export default function Cart() {
           <Section className="overflow-auto">
             <div className="flex flex-col gap-4 p-2">
               <div className="bg-white">
-                <div className="px-4 py-16">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-                        Your cart
-                      </h1>
-                      <p className="mt-2 text-sm text-gray-500">
-                        Products in your cart
-                      </p>
-                    </div>
-
-                    {itemsInCart.length > 0 ? (
-                      <div className="space-x-2">
-                        <Button
-                          variant="subtle"
-                          color="red"
-                          onClick={() => clearCart()}
-                          disabled={isSubmitting}
-                        >
-                          Clear cart
-                        </Button>
-
-                        {user ? (
-                          <Button
-                            variant="light"
-                            loading={isSubmitting}
-                            onClick={() => showPaymentModal()}
-                          >
-                            Make payment
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="light"
-                            component={Link}
-                            to={`/login?redirectTo=${encodeURIComponent(
-                              location.pathname,
-                            )}`}
-                          >
-                            Sign in to order
-                          </Button>
-                        )}
-                      </div>
-                    ) : null}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                      Your cart
+                    </h1>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Products in your cart
+                    </p>
                   </div>
 
-                  <div className="mt-16">
-                    <h2 className="sr-only">Current ice-creams in cart</h2>
+                  {itemsInCart.length > 0 ? (
+                    <div className="space-x-2">
+                      <Button
+                        variant="subtle"
+                        color="red"
+                        onClick={() => clearCart()}
+                        disabled={isSubmitting}
+                      >
+                        Clear cart
+                      </Button>
 
-                    <div className="flex flex-col gap-12">
-                      {itemsInCart.length > 0 ? <CartItems /> : <EmptyState />}
+                      {user ? (
+                        <Button
+                          variant="light"
+                          loading={isSubmitting}
+                          onClick={() => showPaymentModal()}
+                        >
+                          Make payment
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="light"
+                          component={Link}
+                          to={`/login?redirectTo=${encodeURIComponent(
+                            location.pathname,
+                          )}`}
+                        >
+                          Sign in to order
+                        </Button>
+                      )}
                     </div>
+                  ) : null}
+                </div>
+
+                <div className="mt-16">
+                  <h2 className="sr-only">Current ice-creams in cart</h2>
+
+                  <div className="flex flex-col gap-12">
+                    {itemsInCart.length > 0 ? <CartItems /> : <EmptyState />}
                   </div>
                 </div>
               </div>
