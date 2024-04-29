@@ -69,13 +69,6 @@ export function UserDetailsButton({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onSelect={() => navigate('/settings')}
-          textValue="Settings"
-        >
-          Settings
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
 
         <DropdownMenuItem className="cursor-pointer" onSelect={() => signOut()}>
