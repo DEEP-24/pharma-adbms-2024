@@ -1,5 +1,5 @@
 import { ActionIcon, Badge, NativeSelect } from '@mantine/core'
-import { OrderStatus } from '@prisma/client'
+import { Order, OrderStatus } from '@prisma/client'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
@@ -14,6 +14,7 @@ import invariant from 'tiny-invariant'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
 import { db } from '~/lib/db.server'
+import { updateMedicationStock } from '~/lib/medication.server'
 import { getOrders } from '~/lib/order.server'
 import { titleCase } from '~/utils/misc'
 
@@ -59,10 +60,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const status = formData.get('status')?.toString()
       invariant(status, 'Invalid status')
 
-      await db.order.update({
+      const updatedOrder = await db.order.update({
         where: { id: orderId },
-        data: { status: status as OrderStatus },
+        data: {
+          status: status as OrderStatus,
+        },
+        include: {
+          medications: true,
+        },
       })
+
+      // if (status === OrderStatus.COMPLETED) {
+      //   const updatePromises = updatedOrder.medications.map(medication =>
+      //     updateMedicationStock({
+      //       medicationId: medication.id,
+      //       quantitySold: medication.quantity,
+      //     }),
+      //   )
+      //   await Promise.all(updatePromises)
+      // }
 
       return json({ success: true })
     }
@@ -236,7 +252,9 @@ export default function Orders() {
                                             className="w-48"
                                             defaultValue={order.status}
                                             disabled={
-                                              isPending || isOrderCompleted
+                                              isPending ||
+                                              isOrderCompleted ||
+                                              isOrderCancelled
                                             }
                                             data={statusOptions}
                                             onChange={e => {

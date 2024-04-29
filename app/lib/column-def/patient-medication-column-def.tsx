@@ -169,6 +169,7 @@ function TableRowAction({ row }: TableRowActionProps<Medication>) {
       dosage: Number(medication.dosage),
       unit: medication.unit,
       quantity: 1,
+      stock: medication.quantity,
     }
 
     addItemToCart(cartItem)

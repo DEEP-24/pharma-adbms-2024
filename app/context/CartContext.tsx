@@ -12,6 +12,7 @@ export type CartItem = {
   unit: string
   price: number
   quantity: number
+  stock: number
 }
 
 interface ICartContext {

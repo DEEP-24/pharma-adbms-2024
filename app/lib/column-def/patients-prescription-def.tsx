@@ -113,6 +113,7 @@ function TableRowAction({
         unit: med.unit,
         price: med.medication.price,
         quantity: 1,
+        stock: med.medication.quantity,
       }
 
       addItemToCart(cartItem)

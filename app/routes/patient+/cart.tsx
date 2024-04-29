@@ -403,15 +403,17 @@ function ItemRow({ item }: { item: CartItem }) {
 
   const itemTotalPrice = item.price * item.quantity
 
+  const outOfStock = item.stock <= 0
+
   const [quantity, setQuantity] = React.useState<number | ''>(
     item.quantity ?? '',
   )
 
   React.useEffect(() => {
-    if (quantity !== '') {
+    if (quantity !== '' && quantity <= item.stock) {
       updateQuantity(item.id, Number(quantity))
     }
-  }, [item.id, quantity, updateQuantity])
+  }, [item.id, quantity, updateQuantity, item.stock])
 
   return (
     <tr key={item.id}>
@@ -420,12 +422,17 @@ function ItemRow({ item }: { item: CartItem }) {
       </td>
       <td className="py-6 pr-8">{item.brand}</td>
       <td className="py-6 pr-8">
-        <NumberInput
-          min={1}
-          value={quantity}
-          onChange={val => setQuantity(Number(val))}
-          className="w-20"
-        />
+        {outOfStock ? (
+          <span className="text-red-500">Out of Stock</span>
+        ) : (
+          <NumberInput
+            min={1}
+            max={item.stock}
+            value={quantity}
+            onChange={val => setQuantity(Number(val))}
+            className="w-20"
+          />
+        )}
       </td>
       <td className="py-6 pr-8 font-semibold">${itemTotalPrice.toFixed(2)}</td>
       <td className="py-6 pr-8 text-right">

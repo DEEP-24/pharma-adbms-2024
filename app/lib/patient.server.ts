@@ -56,6 +56,7 @@ export async function getPatientPrescriptionsById(patientId: Patient['id']) {
               name: true,
               brand: true,
               price: true,
+              quantity: true,
             },
           },
         },

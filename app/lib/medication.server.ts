@@ -1,3 +1,4 @@
+import { Medication } from '@prisma/client'
 import { toast } from 'sonner'
 import { type z } from 'zod'
 
@@ -72,4 +73,39 @@ export async function getLowStockMedications() {
 
 export async function getMedicationCount() {
   return db.medication.count()
+}
+
+export async function updateMedicationStock({
+  medicationId,
+  quantitySold,
+}: {
+  medicationId: Medication['id']
+  quantitySold: number
+}) {
+  try {
+    const medicationExists = await db.medication.findUnique({
+      where: {
+        id: medicationId,
+      },
+    })
+
+    if (!medicationExists) {
+      console.error(`No medication found with ID: ${medicationId}`)
+      throw new Error(`No medication found with ID: ${medicationId}`)
+    }
+
+    return await db.medication.update({
+      where: {
+        id: medicationId,
+      },
+      data: {
+        quantity: {
+          decrement: quantitySold,
+        },
+      },
+    })
+  } catch (error) {
+    console.error('Failed to update medication stock:', error)
+    throw error
+  }
 }
