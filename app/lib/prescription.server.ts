@@ -11,7 +11,6 @@ export async function upsertMedicationsInPrescription({
   doctorId,
   medications,
   name,
-  totalAmount,
   startDate,
   expiryDate,
 }: {
@@ -19,7 +18,6 @@ export async function upsertMedicationsInPrescription({
   patientId: Patient['id']
   doctorId: Doctor['id']
   name: Prescription['name']
-  totalAmount: Prescription['totalAmount']
   startDate: Prescription['startDate']
   expiryDate: Prescription['expiryDate']
 
@@ -33,7 +31,6 @@ export async function upsertMedicationsInPrescription({
     },
     update: {
       name,
-      totalAmount,
       startDate,
       expiryDate,
       medications: {
@@ -55,7 +52,6 @@ export async function upsertMedicationsInPrescription({
     },
     create: {
       name,
-      totalAmount,
       startDate,
       expiryDate,
       doctorId,

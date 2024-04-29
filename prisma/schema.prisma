@@ -94,11 +94,10 @@ model Medication {
 }
 
 model Prescription {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  startDate   DateTime
-  expiryDate  DateTime
-  totalAmount Float
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  startDate  DateTime
+  expiryDate DateTime
 
   medications PrescribedMedication[]
 
