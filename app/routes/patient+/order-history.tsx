@@ -1,5 +1,4 @@
-import { Badge, Button, Modal } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
+import { Badge } from '@mantine/core'
 import { OrderStatus } from '@prisma/client'
 import type {
   ActionFunctionArgs,
