@@ -32,8 +32,6 @@ model Pharmacist {
   dob      DateTime @map("date_of_birth")
   phone    String
 
-  orders Order[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -87,6 +85,8 @@ model Medication {
 
   prescriptions PrescribedMedication[]
 
+  orders MedicationOrder[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -103,9 +103,12 @@ model Prescription {
 
   patient   Patient @relation(fields: [patientId], references: [id])
   patientId String  @db.ObjectId
-  doctor    Doctor? @relation(fields: [doctorId], references: [id])
-  doctorId  String? @db.ObjectId
-  order     Order?
+
+  doctor   Doctor? @relation(fields: [doctorId], references: [id])
+  doctorId String? @db.ObjectId
+
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String? @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -125,8 +128,9 @@ model PrescribedMedication {
   timing           String
   unit             String
 
-  medication     Medication   @relation(fields: [medicationId], references: [id])
-  medicationId   String       @db.ObjectId
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  medicationId String     @db.ObjectId
+
   prescription   Prescription @relation(fields: [prescriptionId], references: [id])
   prescriptionId String       @db.ObjectId
 
@@ -138,22 +142,39 @@ model PrescribedMedication {
 
 model Order {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  patient     Patient     @relation(fields: [patientId], references: [id])
-  patientId   String      @db.ObjectId
   totalAmount Float
   payment     Payment?
   status      OrderStatus
 
-  prescription   Prescription @relation(fields: [prescriptionId], references: [id])
-  prescriptionId String       @unique @db.ObjectId
-
-  pharmacist   Pharmacist? @relation(fields: [pharmacistId], references: [id])
-  pharmacistId String?     @db.ObjectId
+  patient   Patient @relation(fields: [patientId], references: [id])
+  patientId String  @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  Prescription    Prescription[]
+  MedicationOrder MedicationOrder[]
+
   @@map("order")
+}
+
+model MedicationOrder {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  quantity Int
+  brand    String
+  dosage   String
+  price    Float
+
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  medicationId String     @db.ObjectId
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("medication_order")
 }
 
 model Payment {

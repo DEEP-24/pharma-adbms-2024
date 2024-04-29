@@ -4,22 +4,14 @@ import { useLocalStorageState } from '~/utils/hooks/use-local-storage-state'
 
 const LocalStorageKey = 'pharmaCart'
 
-export type PrescribedMedicationType = {
-  medicationName: string
-  medicationBrand: string
-  dosage: string
-  duration: string
-  frequency: string
-  timing: string
-  remarks?: string | null
-}
-
 export type CartItem = {
   id: string
   name: string
+  brand: string
+  dosage: string
+  unit: string
   price: number
   quantity: number
-  prescribedMedications: PrescribedMedicationType[]
 }
 
 interface ICartContext {

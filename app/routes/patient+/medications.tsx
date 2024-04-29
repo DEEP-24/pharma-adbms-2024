@@ -10,10 +10,10 @@ import { DashboardErrorLayout } from '~/components/layout/dashboard-error-layout
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
 import { patientMedicationColumnDef } from '~/lib/column-def/patient-medication-column-def'
-import { getNonPrescribedMedications } from '~/lib/medication.server'
+import { getMedications } from '~/lib/medication.server'
 
 export const loader = async () => {
-  const medications = await getNonPrescribedMedications()
+  const medications = await getMedications()
 
   return json({ medications })
 }
