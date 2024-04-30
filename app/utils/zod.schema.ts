@@ -142,7 +142,7 @@ export const editPharmacistSchema = z.object({
 
 export const createMedicationSchema = z.object({
   brand: z.string().trim().min(3, 'Brand is required'),
-  dosage: z.string().trim().min(3, 'Dosage is required'),
+  dosage: z.string().trim().min(2, 'Dosage is required'),
   name: z.string().trim().min(3, 'Name is required'),
   quantity: z.preprocess(Number, z.number().min(0, 'Quantity is required')),
   price: z.preprocess(Number, z.number().min(0, 'Price is required')),
