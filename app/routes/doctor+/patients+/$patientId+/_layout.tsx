@@ -4,10 +4,14 @@ import { Outlet, useNavigate, useParams } from '@remix-run/react'
 import {
   AtSignIcon,
   CalendarIcon,
+  GlobeIcon,
+  HomeIcon,
   PhoneIcon,
   PlusIcon,
+  RulerIcon,
   UserIcon,
   Users2Icon,
+  WeightIcon,
 } from 'lucide-react'
 import { $params, $path, $routeId } from 'remix-routes'
 import {
@@ -154,6 +158,18 @@ export default function PatientLayout() {
                     <UserIcon className="text-gray-400" size={14} />
                     <p className="text-sm ">{patient.gender}</p>
                   </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <RulerIcon className="text-gray-400" size={14} />
+                    <p className="text-sm ">{patient.height}(cm)</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <WeightIcon className="text-gray-400" size={14} />
+                    <p className="text-sm ">{patient.weight}(pounds)</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <GlobeIcon className="text-gray-400" size={14} />
+                    <p className="text-sm ">{patient.age}(yrs)</p>
+                  </div>
                   {patient.email ? (
                     <div className="flex items-center gap-2 text-gray-700">
                       <AtSignIcon className="text-gray-400" size={14} />
@@ -163,6 +179,10 @@ export default function PatientLayout() {
                   <div className="flex items-center gap-2 text-gray-700">
                     <PhoneIcon className="text-gray-400" size={14} />
                     <p className="text-sm ">{patient.phone}</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <HomeIcon className="text-gray-400" size={14} />
+                    <p className="text-sm ">{patient.address}</p>
                   </div>
                 </div>
               </div>

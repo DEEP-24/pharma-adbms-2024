@@ -8,7 +8,7 @@
 - [ ] Show all the medications for medicine drop down while creating prescription
 - [ ] The prescription will be seen to pharmacist only (not to patient). Patient will be able to see the prescription only after the payment
 - [ ] The status option for pharmacist will be [In progress, completed, out of stock]. There should be no accept or reject buttons
-- [ ] There should be no edit for prescription
+- [x] There should be no edit for prescription
 - [x] Change the order of Medication table (Name, Brand, Quantity, Dosage, Unit, Type, Price, Prescription Required)
 - [x] There should be one more field, type (capsule, tablet and syrup) for the medication
 - [x] For the medication there should be MG and ML units only

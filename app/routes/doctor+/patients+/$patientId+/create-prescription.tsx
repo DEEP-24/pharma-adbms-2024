@@ -193,7 +193,7 @@ export default function PatientPrescription() {
               console.log('Start Date', state.startDate)
             }}
             leftSectionPointerEvents="none"
-            maxDate={new Date()}
+            minDate={new Date()}
             name="startDate"
             placeholder="Choose state date"
             popoverProps={{
@@ -213,6 +213,7 @@ export default function PatientPrescription() {
             leftSection={<CalendarIcon className="text-gray-400" size={14} />}
             onChange={val => setExpiryDate(val?.toDateString() ?? '')}
             leftSectionPointerEvents="none"
+            minDate={new Date()}
             name="expiryDate"
             placeholder="Choose expiry date"
             popoverProps={{

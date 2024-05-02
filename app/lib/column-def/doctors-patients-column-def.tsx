@@ -12,7 +12,7 @@ import { Gender } from '~/utils/prisma-enums'
 
 export const doctorsPatientColumnDef: ColumnDef<PrismaPatient>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'firstName',
     cell: info => (
       <DataTableRowCell
         className="truncate"
@@ -23,7 +23,37 @@ export const doctorsPatientColumnDef: ColumnDef<PrismaPatient>[] = [
     ),
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Name" />
+      <DataTableColumnHeader column={column} table={table} title="First Name" />
+    ),
+  },
+  {
+    accessorKey: 'lastName',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Last Name" />
+    ),
+  },
+  {
+    accessorKey: 'age',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Age" />
     ),
   },
   {
@@ -84,6 +114,46 @@ export const doctorsPatientColumnDef: ColumnDef<PrismaPatient>[] = [
     },
   },
   {
+    accessorKey: 'height',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Height (cm)"
+      />
+    ),
+  },
+  {
+    accessorKey: 'weight',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Weight (pounds)"
+      />
+    ),
+  },
+  {
     accessorKey: 'phone',
     cell: info => (
       <DataTableRowCell
@@ -99,7 +169,22 @@ export const doctorsPatientColumnDef: ColumnDef<PrismaPatient>[] = [
       <DataTableColumnHeader column={column} table={table} title="Phone" />
     ),
   },
-
+  {
+    accessorKey: 'address',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Address" />
+    ),
+  },
   {
     cell: ({ row }) => <TableRowAction row={row} />,
     id: 'actions',
