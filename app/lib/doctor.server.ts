@@ -64,9 +64,5 @@ export async function getOptionalDoctor(
 }
 
 export async function getDoctors() {
-  return db.doctor.findMany({
-    orderBy: {
-      firstName: 'asc',
-    },
-  })
+  return db.doctor.findMany({})
 }

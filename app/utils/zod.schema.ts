@@ -194,3 +194,9 @@ export const createPrescriptionSchema = z.object({
     }),
   ),
 })
+
+export const createAppointmentSchema = z.object({
+  specialization: z.string().trim().min(1, 'Specialization is required'),
+  doctorId: z.string().trim().optional(),
+  patientId: z.string().trim().min(1, 'Patient ID is required'),
+})

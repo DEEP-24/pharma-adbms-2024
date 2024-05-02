@@ -1,6 +1,7 @@
 import { redirect, type LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import {
+  BookMinusIcon,
   LayoutDashboardIcon,
   NotepadTextIcon,
   Pill,
@@ -52,6 +53,16 @@ const menuItems = [
         href: $path('/patient'),
         leftSlot: <LayoutDashboardIcon width={14} />,
         name: 'Overview',
+      },
+    ],
+  },
+  {
+    title: 'Appointments',
+    items: [
+      {
+        href: $path('/patient/appointments'),
+        leftSlot: <BookMinusIcon width={14} />,
+        name: 'Appointments',
       },
     ],
   },

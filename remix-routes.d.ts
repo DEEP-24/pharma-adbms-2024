@@ -144,6 +144,13 @@ declare module "remix-routes" {
       query: ExportedQuery<import('app/routes/patient+/_index').SearchParams>,
     };
   
+    "/patient/appointments": {
+      params: {
+      
+      },
+      query: ExportedQuery<import('app/routes/patient+/appointments').SearchParams>,
+    };
+  
     "/patient/cart": {
       params: {
       
@@ -212,6 +219,13 @@ declare module "remix-routes" {
       
       },
       query: ExportedQuery<import('app/routes/_auth+/register').SearchParams>,
+    };
+  
+    "/resources/create-appointment": {
+      params: {
+      
+      },
+      query: ExportedQuery<import('app/routes/resources+/create-appointment').SearchParams>,
     };
   
     "/resources/create-medication": {
@@ -291,6 +305,7 @@ declare module "remix-routes" {
     | 'routes/doctor+/settings'
     | 'routes/patient+/_index'
     | 'routes/patient+/_layout'
+    | 'routes/patient+/appointments'
     | 'routes/patient+/cart'
     | 'routes/patient+/medications'
     | 'routes/patient+/order-history'
@@ -301,6 +316,7 @@ declare module "remix-routes" {
     | 'routes/pharmacist+/medications'
     | 'routes/pharmacist+/orders'
     | 'routes/pharmacist+/settings'
+    | 'routes/resources+/create-appointment'
     | 'routes/resources+/create-medication'
     | 'routes/resources+/create-user'
     | 'routes/resources+/edit-medication'

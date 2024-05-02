@@ -1,3 +1,4 @@
+import { CreateAppointmentModal } from '~/routes/resources+/create-appointment'
 import { CreateMedicationModal } from '~/routes/resources+/create-medication'
 import { CreateUserModal } from '~/routes/resources+/create-user'
 import { EditMedicationModal } from '~/routes/resources+/edit-medication'
@@ -20,12 +21,14 @@ type InferProps<T> =
 export const MODAL = {
   createMedication: 'create-medication',
   createUser: 'create-user',
+  createAppointment: 'create-appointment',
   editPharmacist: 'edit-pharmacist',
   editMedication: 'edit-medication',
   editUser: 'edit-user',
 } as const
 
 const modalMapper = {
+  [MODAL.createAppointment]: CreateAppointmentModal,
   [MODAL.createMedication]: CreateMedicationModal,
   [MODAL.editMedication]: EditMedicationModal,
   [MODAL.editPharmacist]: EditPharmacistModal,
@@ -33,6 +36,7 @@ const modalMapper = {
 } as const
 
 interface ModalPropMappings {
+  [MODAL.createAppointment]: InferProps<typeof CreateAppointmentModal>
   [MODAL.createMedication]: InferProps<typeof CreateMedicationModal>
   [MODAL.editMedication]: InferProps<typeof EditMedicationModal>
   [MODAL.editPharmacist]: InferProps<typeof EditPharmacistModal>
@@ -40,6 +44,7 @@ interface ModalPropMappings {
 }
 
 type RequiredPropsModals = {
+  [MODAL.createAppointment]: ModalPropMappings['create-appointment']
   [MODAL.editMedication]: ModalPropMappings['edit-medication']
   [MODAL.editPharmacist]: ModalPropMappings['edit-pharmacist']
   [MODAL.createUser]: ModalPropMappings['create-user']

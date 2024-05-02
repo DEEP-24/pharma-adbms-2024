@@ -1,4 +1,3 @@
-import { Medication } from '@prisma/client'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { TabletsIcon } from 'lucide-react'
@@ -11,11 +10,10 @@ import { DashboardErrorLayout } from '~/components/layout/dashboard-error-layout
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
 import { patientMedicationColumnDef } from '~/lib/column-def/patient-medication-column-def'
-import { db } from '~/lib/db.server'
-import { getMedications } from '~/lib/medication.server'
+import { getNonPrescribedMedications } from '~/lib/medication.server'
 
 export const loader = async () => {
-  const medications = await getMedications()
+  const medications = await getNonPrescribedMedications()
 
   return json({ medications })
 }

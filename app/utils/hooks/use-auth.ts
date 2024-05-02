@@ -48,6 +48,7 @@ export function useOptionalUser() {
     }
   } else if (data.patient) {
     return {
+      id: data.patient.id,
       name: `${data.patient.firstName} ${data.patient.lastName}`,
       firstName: data.patient.firstName,
       lastName: data.patient.lastName,
