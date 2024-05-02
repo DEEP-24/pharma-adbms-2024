@@ -3,13 +3,21 @@ import { type ColumnDef } from '@tanstack/react-table'
 
 import { DataTableColumnHeader } from '~/components/data-table/data-table-column-header'
 import { DataTableRowCell } from '~/components/data-table/data-table-row-cell'
-import { genderLabelLookup } from '~/utils/helpers'
+import {
+  doctorQualificationLabelLookup,
+  doctorSpecializationLabelLookup,
+  genderLabelLookup,
+} from '~/utils/helpers'
 import { formatDate } from '~/utils/misc'
-import { Gender } from '~/utils/prisma-enums'
+import {
+  DoctorQualification,
+  DoctorSpecialization,
+  Gender,
+} from '~/utils/prisma-enums'
 
 export const adminDoctorsColumnDef: ColumnDef<PrismaPatient>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'firstName',
     cell: info => (
       <DataTableRowCell
         className="truncate"
@@ -20,7 +28,37 @@ export const adminDoctorsColumnDef: ColumnDef<PrismaPatient>[] = [
     ),
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Name" />
+      <DataTableColumnHeader column={column} table={table} title="First Name" />
+    ),
+  },
+  {
+    accessorKey: 'lastName',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Last Name" />
+    ),
+  },
+  {
+    accessorKey: 'age',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Age" />
     ),
   },
   {
@@ -81,6 +119,62 @@ export const adminDoctorsColumnDef: ColumnDef<PrismaPatient>[] = [
     },
   },
   {
+    accessorKey: 'specialization',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={
+          doctorSpecializationLabelLookup[info.getValue<DoctorSpecialization>()]
+        }
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Specialization"
+      />
+    ),
+    meta: {
+      options: Object.values(DoctorSpecialization).map(type => ({
+        label: doctorSpecializationLabelLookup[type],
+        value: type,
+      })),
+    },
+  },
+  {
+    accessorKey: 'qualification',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={
+          doctorQualificationLabelLookup[info.getValue<DoctorQualification>()]
+        }
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Qualification"
+      />
+    ),
+    meta: {
+      options: Object.values(DoctorQualification).map(type => ({
+        label: doctorQualificationLabelLookup[type],
+        value: type,
+      })),
+    },
+  },
+  {
     accessorKey: 'phone',
     cell: info => (
       <DataTableRowCell
@@ -94,6 +188,22 @@ export const adminDoctorsColumnDef: ColumnDef<PrismaPatient>[] = [
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Phone" />
+    ),
+  },
+  {
+    accessorKey: 'address',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Address" />
     ),
   },
 ]

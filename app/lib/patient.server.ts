@@ -6,7 +6,7 @@ import { getPatientId, getUserId, logout } from '~/lib/session.server'
 export async function getPatients() {
   return db.patient.findMany({
     orderBy: {
-      name: 'asc',
+      firstName: 'asc',
     },
   })
 }
@@ -63,7 +63,8 @@ export async function getPatientPrescriptionsById(patientId: Patient['id']) {
       },
       doctor: {
         select: {
-          name: true,
+          firstName: true,
+          lastName: true,
         },
       },
     },

@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import ObjectID from 'bson-objectid'
+import { UserRole } from '~/enums'
 
 export function round(number: number, precision: number) {
   const d = Math.pow(10, precision)
@@ -273,3 +274,10 @@ export const formatDateForPrismaFilter = (date: Date) => {
 export function removeTrailingSlash(s: string) {
   return s.endsWith('/') ? s.slice(0, -1) : s
 }
+
+export const userRoleLabelLookup = {
+  ADMIN: 'Admin',
+  PATIENT: 'Patient',
+  DOCTOR: 'Doctor',
+  PHARMACIST: 'Pharmacist',
+} satisfies Record<UserRole, string>

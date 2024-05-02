@@ -70,7 +70,7 @@ export async function getOptionalPharmacist(
 export async function getPharmacists() {
   return db.pharmacist.findMany({
     orderBy: {
-      name: 'asc',
+      firstName: 'asc',
     },
   })
 }

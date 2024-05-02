@@ -9,7 +9,7 @@ import { Gender } from '~/utils/prisma-enums'
 
 export const adminPatientsColumnDef: ColumnDef<PrismaPatient>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'firstName',
     cell: info => (
       <DataTableRowCell
         className="truncate"
@@ -20,26 +20,37 @@ export const adminPatientsColumnDef: ColumnDef<PrismaPatient>[] = [
     ),
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Name" />
+      <DataTableColumnHeader column={column} table={table} title="First Name" />
     ),
   },
   {
-    accessorKey: 'dob',
+    accessorKey: 'lastName',
     cell: info => (
       <DataTableRowCell
         className="truncate"
         column={info.column}
         table={info.table}
-        value={formatDate(info.getValue<string>())}
+        value={info.getValue<string>()}
       />
     ),
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
-      <DataTableColumnHeader
-        column={column}
-        table={table}
-        title="Date of Birth"
+      <DataTableColumnHeader column={column} table={table} title="Last Name" />
+    ),
+  },
+  {
+    accessorKey: 'age',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
       />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Age" />
     ),
   },
   {
@@ -79,6 +90,62 @@ export const adminPatientsColumnDef: ColumnDef<PrismaPatient>[] = [
         value: type,
       })),
     },
+  },
+  {
+    accessorKey: 'height',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<number>().toString()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Height (cm)"
+      />
+    ),
+  },
+  {
+    accessorKey: 'weight',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<number>().toString()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title="Weight (pounds)"
+      />
+    ),
+  },
+  {
+    accessorKey: 'address',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Address" />
+    ),
   },
   {
     accessorKey: 'phone',

@@ -73,3 +73,22 @@ export function statusLabelLookup(status: OrderStatus) {
     [OrderStatus.REJECTED]: 'Rejected',
   }[status]
 }
+
+export const doctorSpecializationLabelLookup = {
+  CARDIOLOGIST: 'Cardiologist',
+  DERMATOLOGIST: 'Dermatologist',
+  GYNECOLOGIST: 'Gynecologist',
+  NEUROLOGIST: 'Neurologist',
+  ORTHOPEDIC: 'Orthopedic',
+  PEDIATRICIAN: 'Pediatrician',
+  PSYCHIATRIST: 'Psychiatrist',
+  UROLOGIST: 'Urologist',
+}
+
+export const doctorQualificationLabelLookup = {
+  MD: 'MD',
+  MDDM: 'MDDM',
+  DSO: 'DSO',
+  GENERAL_SURGEON: 'General Surgeon',
+  GENERAL_MEDICINE: 'General Medicine',
+}

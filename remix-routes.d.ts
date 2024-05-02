@@ -228,25 +228,11 @@ declare module "remix-routes" {
       query: ExportedQuery<import('app/routes/resources+/create-user').SearchParams>,
     };
   
-    "/resources/edit-doctor": {
-      params: {
-      
-      },
-      query: ExportedQuery<import('app/routes/resources+/edit-doctor').SearchParams>,
-    };
-  
     "/resources/edit-medication": {
       params: {
       
       },
       query: ExportedQuery<import('app/routes/resources+/edit-medication').SearchParams>,
-    };
-  
-    "/resources/edit-patient": {
-      params: {
-      
-      },
-      query: ExportedQuery<import('app/routes/resources+/edit-patient').SearchParams>,
     };
   
     "/resources/edit-pharmacist": {
@@ -317,9 +303,7 @@ declare module "remix-routes" {
     | 'routes/pharmacist+/settings'
     | 'routes/resources+/create-medication'
     | 'routes/resources+/create-user'
-    | 'routes/resources+/edit-doctor'
     | 'routes/resources+/edit-medication'
-    | 'routes/resources+/edit-patient'
     | 'routes/resources+/edit-pharmacist'
     | 'routes/resources+/edit-user'
     | 'routes/resources+/search-medication';

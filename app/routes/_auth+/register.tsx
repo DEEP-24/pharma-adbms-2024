@@ -1,10 +1,10 @@
 import {
   Card,
   Divider,
-  NumberInput,
   PasswordInput,
   Select,
   TextInput,
+  Textarea,
 } from '@mantine/core'
 import { DatePickerInput } from '@mantine/dates'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
@@ -14,10 +14,9 @@ import * as React from 'react'
 import { Button } from '~/components/ui/button'
 import { Label } from '~/components/ui/label'
 import { Switch } from '~/components/ui/switch'
-import { Gender, UserRole } from '~/enums'
+import { UserRole } from '~/enums'
 import { getDoctorByEmail } from '~/lib/doctor.server'
 import { getPatientByEmail } from '~/lib/patient.server'
-import { getPharmacistByEmail } from '~/lib/pharmacist.server'
 import {
   createUserSession,
   getUserId,
@@ -30,6 +29,11 @@ import {
 import { createUser } from '~/lib/user.server'
 import { useIsPending } from '~/utils/hooks/use-is-pending'
 import { badRequest, safeRedirect } from '~/utils/misc.server'
+import {
+  DoctorQualification,
+  DoctorSpecialization,
+  Gender,
+} from '~/utils/prisma-enums'
 import { validateAction, type inferErrors } from '~/utils/validation'
 import { createUserSchema } from '~/utils/zod.schema'
 
@@ -69,8 +73,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const searchParams = new URL(request.url).searchParams
-
   const { fieldErrors, fields } = await validateAction(
     request,
     createUserSchema,
@@ -80,32 +82,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return badRequest<ActionData>({ fieldErrors })
   }
 
-  const { email, password, name, gender, dob, phone, confirmPassword, role } =
-    fields
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    gender,
+    dob,
+    phone,
+    role,
+    age,
+    height,
+    weight,
+    specialization,
+    qualification,
+    address,
+  } = fields
 
   let user
-  if (role === UserRole.PHARMACIST) {
-    const existingPharmacist = await getPharmacistByEmail(email)
-    if (existingPharmacist) {
-      return json({
-        errors: {
-          email: 'An user already exists with this email address.',
-          password: null,
-        },
-      })
-    }
-
-    user = await createUser({
-      email,
-      name,
-      password,
-      confirmPassword,
-      gender,
-      dob,
-      phone,
-      role,
-    })
-  }
 
   if (role === UserRole.DOCTOR) {
     const existingDoctor = await getDoctorByEmail(email)
@@ -120,12 +114,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     user = await createUser({
       email,
-      name,
+      firstName,
+      lastName,
       password,
-      confirmPassword,
       gender,
       dob,
       phone,
+      age,
+      specialization,
+      qualification,
+      address,
       role,
     })
   }
@@ -143,9 +141,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     user = await createUser({
       email,
-      name,
+      firstName,
+      lastName,
+      address,
+      age,
+      height,
+      weight,
       password,
-      confirmPassword,
       gender,
       dob,
       phone,
@@ -175,7 +177,12 @@ export default function Register() {
   const isPending = useIsPending()
 
   const [role, setRole] = React.useState(UserRole.DOCTOR)
-  const [gender, setGender] = React.useState(Gender.MALE)
+  const [gender, setGender] = React.useState<Gender>(Gender.MALE)
+  const [specialization, setSpecialization] =
+    React.useState<DoctorSpecialization>(DoctorSpecialization.CARDIOLOGIST)
+  const [qualification, setQualification] = React.useState<DoctorQualification>(
+    DoctorQualification.MD,
+  )
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -186,7 +193,7 @@ export default function Register() {
       </div>
 
       <Card
-        className="w-96 bg-gray-100"
+        className="w-[600px] bg-gray-100"
         padding="xl"
         radius="lg"
         shadow="xl"
@@ -216,10 +223,11 @@ export default function Register() {
           pb="xl"
           withBorder
         >
-          <Form className="mt-8" method="post">
-            <fieldset className="flex flex-col gap-6" disabled={isPending}>
+          <Form className="mt-4 flex flex-col gap-8" method="post">
+            <fieldset className="grid grid-cols-2 gap-4" disabled={isPending}>
               <Select
                 name="role"
+                className="col-span-2"
                 label="Role"
                 placeholder="Select your role"
                 value={role}
@@ -240,11 +248,17 @@ export default function Register() {
 
               <TextInput
                 autoFocus
-                error={actionData?.fieldErrors?.name}
-                label="Name"
-                name="name"
+                error={actionData?.fieldErrors?.firstName}
+                label="First Name"
+                name="firstName"
                 required
-                type="text"
+                withAsterisk={false}
+              />
+              <TextInput
+                error={actionData?.fieldErrors?.lastName}
+                label="Last Name"
+                name="lastName"
+                required
                 withAsterisk={false}
               />
 
@@ -284,7 +298,6 @@ export default function Register() {
               />
 
               <TextInput
-                autoFocus
                 error={actionData?.fieldErrors?.phone}
                 type="number"
                 label="Phone number"
@@ -295,7 +308,6 @@ export default function Register() {
 
               <TextInput
                 autoComplete="email"
-                autoFocus
                 error={actionData?.fieldErrors?.email}
                 label="Email address"
                 name="email"
@@ -321,7 +333,81 @@ export default function Register() {
                 required
                 withAsterisk={false}
               />
+              {role === UserRole.PATIENT && (
+                <>
+                  <TextInput
+                    error={actionData?.fieldErrors?.height}
+                    label="Height (cm)"
+                    name="height"
+                    type="number"
+                    required
+                    withAsterisk={false}
+                  />
+                  <TextInput
+                    error={actionData?.fieldErrors?.weight}
+                    label="Weight (pounds)"
+                    name="weight"
+                    type="number"
+                    required
+                    withAsterisk={false}
+                  />
+                </>
+              )}
 
+              {role === UserRole.DOCTOR && (
+                <>
+                  <Select
+                    error={actionData?.fieldErrors?.specialization}
+                    label="Specialization"
+                    name="specialization"
+                    value={specialization}
+                    onChange={e => setSpecialization(e as DoctorSpecialization)}
+                    data={Object.values(DoctorSpecialization).map(
+                      specialization => ({
+                        label: specialization,
+                        value: specialization,
+                      }),
+                    )}
+                    required
+                    withAsterisk={false}
+                  />
+                  <Select
+                    error={actionData?.fieldErrors?.qualification}
+                    label="Qualification"
+                    name="qualification"
+                    value={qualification}
+                    onChange={e => setQualification(e as DoctorQualification)}
+                    data={Object.values(DoctorQualification).map(
+                      qualification => ({
+                        label: qualification,
+                        value: qualification,
+                      }),
+                    )}
+                    required
+                    withAsterisk={false}
+                  />
+                </>
+              )}
+
+              <TextInput
+                error={actionData?.fieldErrors?.age}
+                label="Age"
+                name="age"
+                type="number"
+                required
+                withAsterisk={false}
+              />
+
+              <Textarea
+                error={actionData?.fieldErrors?.address}
+                label="Address"
+                name="address"
+                required
+                withAsterisk={false}
+              />
+            </fieldset>
+
+            <div className="col-span-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Label className="text-sm" htmlFor="rememberMe">
@@ -339,16 +425,9 @@ export default function Register() {
               <Button className="mt-2" loading={isPending} type="submit">
                 Continue <ChevronRight className="ml-2" size={14} />
               </Button>
-            </fieldset>
+            </div>
           </Form>
         </Card.Section>
-
-        {/* <Card.Section className="" inheritPadding py="sm">
-          <div className="flex items-center justify-center gap-2">
-            <p className="text-xsm font-medium text-gray-400">Secured by</p>
-            <img alt="TR" className="h-5 w-auto" src="/images/logo-new.png" />
-          </div>
-        </Card.Section> */}
       </Card>
     </div>
   )

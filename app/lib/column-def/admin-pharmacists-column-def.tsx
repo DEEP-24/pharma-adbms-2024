@@ -9,7 +9,7 @@ import { Gender } from '~/utils/prisma-enums'
 
 export const adminPharmacistsColumnDef: ColumnDef<PrismaPatient>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'firstName',
     cell: info => (
       <DataTableRowCell
         className="truncate"
@@ -20,7 +20,22 @@ export const adminPharmacistsColumnDef: ColumnDef<PrismaPatient>[] = [
     ),
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Name" />
+      <DataTableColumnHeader column={column} table={table} title="First Name" />
+    ),
+  },
+  {
+    accessorKey: 'lastName',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Last Name" />
     ),
   },
   {
@@ -40,6 +55,53 @@ export const adminPharmacistsColumnDef: ColumnDef<PrismaPatient>[] = [
         table={table}
         title="Date of Birth"
       />
+    ),
+  },
+  {
+    accessorKey: 'age',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Age" />
+    ),
+  },
+  {
+    accessorKey: 'phone',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        highlight
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Phone" />
+    ),
+  },
+  {
+    accessorKey: 'address',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Address" />
     ),
   },
   {

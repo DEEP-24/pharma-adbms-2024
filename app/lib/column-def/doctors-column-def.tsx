@@ -20,7 +20,7 @@ import { Gender } from '~/utils/prisma-enums'
 
 export const doctorsColumnDef: ColumnDef<PrismaPatient>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'firstName',
     cell: info => (
       <DataTableRowCell
         className="truncate"
@@ -31,7 +31,22 @@ export const doctorsColumnDef: ColumnDef<PrismaPatient>[] = [
     ),
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Name" />
+      <DataTableColumnHeader column={column} table={table} title="First Name" />
+    ),
+  },
+  {
+    accessorKey: 'lastName',
+    cell: info => (
+      <DataTableRowCell
+        className="truncate"
+        column={info.column}
+        table={info.table}
+        value={info.getValue<string>()}
+      />
+    ),
+    filterFn: 'fuzzy',
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Last Name" />
     ),
   },
   {
@@ -136,26 +151,6 @@ function TableRowAction({ row }: TableRowActionProps<PrismaPatient>) {
         View
         <ArrowUpRightIcon className="ml-1" size={14} />
       </CustomButton>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <ActionIconButton>
-            <MoreHorizontalIcon className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
-          </ActionIconButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem
-            onClick={() => {
-              openModal(MODAL.editDoctor, {
-                doctor,
-              })
-            }}
-          >
-            Edit
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
     </div>
   )
 }

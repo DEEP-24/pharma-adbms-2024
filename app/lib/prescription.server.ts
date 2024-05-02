@@ -109,7 +109,8 @@ export const getPrescriptionDetails = ({
       doctor: {
         select: {
           id: true,
-          name: true,
+          firstName: true,
+          lastName: true,
         },
       },
     },

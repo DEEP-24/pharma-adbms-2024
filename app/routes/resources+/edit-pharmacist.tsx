@@ -41,8 +41,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       dob: fields.dob,
       email: fields.email,
       gender: fields.gender,
-      name: fields.name,
+      firstName: fields.firstName,
+      lastName: fields.lastName,
       phone: fields.phone,
+      address: fields.address,
+      age: fields.age,
     },
     where: {
       id: fields.pharmacistId,
@@ -106,11 +109,21 @@ export const EditPharmacistModal = EasyModal.create(
             <input defaultValue={pharmacist.id} hidden name="pharmacistId" />
             <TextInput
               data-autofocus
-              defaultValue={pharmacist.name}
-              error={fetcher.data?.fieldErrors?.name}
-              label="Name"
-              name="name"
-              placeholder="Enter name"
+              defaultValue={pharmacist.firstName}
+              error={fetcher.data?.fieldErrors?.firstName}
+              label="First Name"
+              name="firstName"
+              placeholder="Enter first name"
+              required
+            />
+
+            <TextInput
+              data-autofocus
+              defaultValue={pharmacist.lastName}
+              error={fetcher.data?.fieldErrors?.lastName}
+              label="Last Name"
+              name="lastName"
+              placeholder="Enter last name"
               required
             />
 

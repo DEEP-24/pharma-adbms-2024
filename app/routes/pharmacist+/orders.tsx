@@ -170,7 +170,8 @@ export default function Orders() {
                                     <div className="flex items-center">
                                       <div className="ml-4">
                                         <div className="font-medium text-gray-900">
-                                          {order.patient.name}
+                                          {order.patient.firstName}{' '}
+                                          {order.patient.lastName}
                                         </div>
                                         <div className="text-gray-500">
                                           {order.patient.email}

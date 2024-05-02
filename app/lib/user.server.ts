@@ -43,9 +43,11 @@ import { type createUserSchema, type editUserSchema } from '~/utils/zod.schema'
 //   return false
 // }
 
-export async function createUser(data: z.infer<typeof createUserSchema>) {
-  if (data.role === UserRole.PHARMACIST) {
-    const createdAdmin = await db.pharmacist.create({
+export async function createUser(
+  data: Omit<z.infer<typeof createUserSchema>, 'confirmPassword'>,
+) {
+  if (data.role === UserRole.DOCTOR) {
+    const createdDoctor = await db.doctor.create({
       data: {
         email: data.email,
         firstName: data.firstName,
@@ -54,19 +56,10 @@ export async function createUser(data: z.infer<typeof createUserSchema>) {
         gender: data.gender,
         dob: data.dob,
         phone: data.phone,
-      },
-    })
-
-    return createdAdmin
-  } else if (data.role === UserRole.DOCTOR) {
-    const createdDoctor = await db.doctor.create({
-      data: {
-        email: data.email,
-        name: data.name,
-        password: await createPasswordHash(data.password),
-        gender: data.gender,
-        dob: data.dob,
-        phone: data.phone,
+        address: data.address,
+        age: data.age,
+        specialization: data.specialization!,
+        qualification: data.qualification!,
       },
     })
 
@@ -75,7 +68,12 @@ export async function createUser(data: z.infer<typeof createUserSchema>) {
     const createdPatient = await db.patient.create({
       data: {
         email: data.email,
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        address: data.address,
+        age: data.age,
+        height: data.height!,
+        weight: data.weight!,
         password: await createPasswordHash(data.password),
         gender: data.gender,
         dob: data.dob,

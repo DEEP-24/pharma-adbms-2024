@@ -108,7 +108,7 @@ export default function PatientLayout() {
           />
           <BreadcrumbItem
             href={$path('/doctor/patients/:patientId', params)}
-            label={patient.name}
+            label={patient.firstName}
           />
           {isPrescriptionRoute ? (
             <BreadcrumbItem
@@ -132,7 +132,9 @@ export default function PatientLayout() {
               <div className="space-y-4 p-4 pb-0">
                 <div className="flex flex-col items-center gap-2">
                   <div className="flex flex-col items-center">
-                    <p className="text-xl font-bold">{patient.name}</p>
+                    <p className="text-xl font-bold">
+                      {patient.firstName} {patient.lastName}
+                    </p>
                     <p className="text-sm text-gray-400">
                       Added{' '}
                       {getRelativeTimeString(

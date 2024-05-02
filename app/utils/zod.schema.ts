@@ -1,4 +1,5 @@
 import { Gender } from '@prisma/client'
+import { spec } from 'node:test/reporters'
 import { z } from 'zod'
 import { UserRole } from '~/enums'
 
@@ -30,16 +31,26 @@ export const ManageProductSchema = z.object({
 
 const baseUserSchema = z.object({
   email: z.string().trim().email('Invalid email address'),
-  name: nameSchema,
   password: z.string().trim().min(8, 'Password must be at least 8 characters'),
-
+  firstName: z.string().trim().min(3, 'First name is required'),
+  lastName: z.string().trim().min(3, 'Last name is required'),
+  address: z.string().trim().min(3, 'Address is required'),
+  height: z.preprocess(Number, z.number().optional()).optional(),
+  weight: z.preprocess(Number, z.number().optional()).optional(),
+  specialization: z.string().optional(),
+  qualification: z.string().optional(),
   gender: z.nativeEnum(Gender),
+  age: z.preprocess(Number, z.number().min(0, 'Age must be greater than 0')),
   dob: z.string().trim().min(10, 'Date of birth is required'),
   phone: z
     .string()
     .trim()
     .min(10, 'Phone number should be at least 10 characters'),
-  role: z.nativeEnum(UserRole).optional(),
+  role: z.nativeEnum(UserRole, {
+    errorMap: () => ({
+      message: 'Invalid role',
+    }),
+  }),
 })
 
 export const createUserSchema = baseUserSchema
@@ -100,6 +111,10 @@ export const editPatientSchema = z.object({
   name: z.string().trim().min(3, 'Name is required'),
   patientId: z.string().trim(),
   phone: z.string().trim().min(10, 'Phone number is required'),
+  address: z.string().trim().min(3, 'Address is required'),
+  age: z.preprocess(Number, z.number().min(0, 'Age must be greater than 0')),
+  height: z.preprocess(Number, z.number().optional()).optional(),
+  weight: z.preprocess(Number, z.number().optional()).optional(),
 })
 
 export const editDoctorSchema = z.object({
@@ -116,9 +131,14 @@ export const editDoctorSchema = z.object({
       message: 'Gender is required',
     }),
   }),
-  name: z.string().trim().min(3, 'Name is required'),
+  firstName: z.string().trim().min(3, 'First name is required'),
+  lastName: z.string().trim().min(3, 'Last name is required'),
   doctorId: z.string().trim(),
   phone: z.string().trim().min(10, 'Phone number is required'),
+  address: z.string().trim().min(3, 'Address is required'),
+  age: z.preprocess(Number, z.number().min(0, 'Age must be greater than 0')),
+  specialization: z.string().optional(),
+  qualification: z.string().optional(),
 })
 
 export const editPharmacistSchema = z.object({
@@ -135,9 +155,12 @@ export const editPharmacistSchema = z.object({
       message: 'Gender is required',
     }),
   }),
-  name: z.string().trim().min(3, 'Name is required'),
-  pharmacistId: z.string().trim(),
+  firstName: z.string().trim().min(3, 'First name is required'),
+  lastName: z.string().trim().min(3, 'Last name is required'),
   phone: z.string().trim().min(10, 'Phone number is required'),
+  address: z.string().trim().min(3, 'Address is required'),
+  age: z.preprocess(Number, z.number().min(0, 'Age must be greater than 0')),
+  pharmacistId: z.string().trim(),
 })
 
 export const createMedicationSchema = z.object({

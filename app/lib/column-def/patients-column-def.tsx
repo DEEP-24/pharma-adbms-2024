@@ -136,26 +136,6 @@ function TableRowAction({ row }: TableRowActionProps<PrismaPatient>) {
         View
         <ArrowUpRightIcon className="ml-1" size={14} />
       </CustomButton>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <ActionIconButton>
-            <MoreHorizontalIcon className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
-          </ActionIconButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem
-            onClick={() => {
-              openModal(MODAL.editPatient, {
-                patient,
-              })
-            }}
-          >
-            Edit
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
     </div>
   )
 }
