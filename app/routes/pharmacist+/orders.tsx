@@ -235,8 +235,7 @@ export default function Orders() {
                                                     <i>
                                                       (x
                                                       {
-                                                        orderMedications
-                                                          .medication.quantity
+                                                        orderMedications.quantity
                                                       }
                                                       )
                                                     </i>

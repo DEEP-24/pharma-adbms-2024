@@ -169,9 +169,7 @@ function Order({
               <div className="flex items-center sm:items-start">
                 <div className="flex-1 text-sm">
                   <div className="font-medium text-gray-900 sm:flex sm:justify-between">
-                    <h5>
-                      {medication.name} <i>(x{quantity})</i>
-                    </h5>
+                    <h5>{medication.name}</h5>
                     <p className="mt-2 sm:mt-0">
                       ${(medication.price * quantity).toFixed(2)}
                     </p>
