@@ -32,6 +32,7 @@ const baseUserSchema = z.object({
   email: z.string().trim().email('Invalid email address'),
   name: nameSchema,
   password: z.string().trim().min(8, 'Password must be at least 8 characters'),
+
   gender: z.nativeEnum(Gender),
   dob: z.string().trim().min(10, 'Date of birth is required'),
   phone: z

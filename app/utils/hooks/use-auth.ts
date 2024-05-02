@@ -11,25 +11,26 @@ export function useOptionalUser() {
 
   if (data.admin) {
     return {
-      name: data.admin.name,
+      //combine the firstName and lastName to get the name
+      name: `${data.admin.firstName} ${data.admin.lastName}`,
       email: data.admin.email,
       role: UserRole.ADMIN,
     }
   } else if (data.pharmacist) {
     return {
-      name: data.pharmacist.name,
+      name: `${data.pharmacist.firstName} ${data.pharmacist.lastName}`,
       email: data.pharmacist.email,
       role: UserRole.PHARMACIST,
     }
   } else if (data.doctor) {
     return {
-      name: data.doctor.name,
+      name: `${data.doctor.firstName} ${data.doctor.lastName}`,
       email: data.doctor.email,
       role: UserRole.DOCTOR,
     }
   } else if (data.patient) {
     return {
-      name: data.patient.name,
+      name: `${data.patient.firstName} ${data.patient.lastName}`,
       email: data.patient.email,
       role: UserRole.PATIENT,
     }

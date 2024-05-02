@@ -48,7 +48,8 @@ export async function createUser(data: z.infer<typeof createUserSchema>) {
     const createdAdmin = await db.pharmacist.create({
       data: {
         email: data.email,
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         password: await createPasswordHash(data.password),
         gender: data.gender,
         dob: data.dob,
