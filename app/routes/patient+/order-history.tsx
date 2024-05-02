@@ -112,8 +112,7 @@ function Order({
 }: {
   order: SerializeFrom<typeof loader>['orders'][number]
 }) {
-  const isOrderPending = order.status === OrderStatus.PENDING
-  const isOrderCancelled = order.status === OrderStatus.CANCELLED
+  const isOrderPending = order.status === OrderStatus.IN_PROGRESS
 
   const isOrderFulfilled = order.status === OrderStatus.COMPLETED
 
@@ -155,15 +154,7 @@ function Order({
             <div className="flex justify-between pt-6 text-gray-900 sm:block sm:pt-0">
               <dt className="font-medium text-gray-900">Status</dt>
               <dd className="mt-1 font-medium text-gray-900">
-                <Badge
-                  color={
-                    isOrderPending
-                      ? 'blue'
-                      : isOrderCancelled
-                        ? 'indigo'
-                        : 'green'
-                  }
-                >
+                <Badge color={isOrderPending ? 'blue' : 'green'}>
                   {statusLabelLookup(order.status)}
                 </Badge>
               </dd>

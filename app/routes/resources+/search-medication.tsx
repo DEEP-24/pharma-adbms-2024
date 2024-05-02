@@ -38,6 +38,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       name: true,
       unit: true,
       price: true,
+      quantity: true,
       prescriptionRequired: true,
     },
     // take: 10,

@@ -1,7 +1,6 @@
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { TabletsIcon } from 'lucide-react'
-import { Suspense } from 'react'
 
 import { FourOhFour } from '~/components/404'
 import { GeneralErrorBoundary } from '~/components/GeneralErrorBoundary'
@@ -27,9 +26,7 @@ export default function Medications() {
 
       <Page.Main>
         <Section className="overflow-auto">
-          <Suspense fallback={<TableSkeleton />}>
-            <Table columns={patientMedicationColumnDef} data={medications} />
-          </Suspense>
+          <Table columns={patientMedicationColumnDef} data={medications} />
         </Section>
       </Page.Main>
     </Page.Layout>

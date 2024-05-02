@@ -1,8 +1,6 @@
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { BookMinusIcon, PlusIcon } from 'lucide-react'
-import { Suspense } from 'react'
-import { redirect } from 'remix-typedjson'
 
 import { FourOhFour } from '~/components/404'
 import { GeneralErrorBoundary } from '~/components/GeneralErrorBoundary'
@@ -15,19 +13,16 @@ import { ActionIconButton } from '~/components/ui/action-icon-button'
 import { getAppointmentsByPatientId } from '~/lib/appointment.server'
 import { patientsAppointmentsColumnDef } from '~/lib/column-def/patients-appointments-def'
 import { requireUserId } from '~/lib/session.server'
-import { useUser } from '~/utils/hooks/use-auth'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireUserId(request)
   const appointments = await getAppointmentsByPatientId(userId)
 
-  return json({ appointments })
+  return json({ appointments, userId })
 }
 
 export default function PatientAppointments() {
-  const user = useUser()
-
-  const { appointments } = useLoaderData<typeof loader>()
+  const { appointments, userId } = useLoaderData<typeof loader>()
 
   return (
     <Page.Layout>
@@ -37,7 +32,7 @@ export default function PatientAppointments() {
             color="dark"
             onClick={() =>
               openModal(MODAL.createAppointment, {
-                patientId: user.id as string,
+                patientId: userId,
               })
             }
             variant="white"
@@ -51,12 +46,7 @@ export default function PatientAppointments() {
 
       <Page.Main>
         <Section className="overflow-auto">
-          <Suspense fallback={<TableSkeleton />}>
-            <Table
-              columns={patientsAppointmentsColumnDef}
-              data={appointments}
-            />
-          </Suspense>
+          <Table columns={patientsAppointmentsColumnDef} data={appointments} />
         </Section>
       </Page.Main>
     </Page.Layout>

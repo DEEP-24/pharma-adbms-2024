@@ -49,7 +49,8 @@ import usePrescriptionMedicationState, {
   prescriptionMedicationSchema,
   type PrescriptionItem,
 } from '~/utils/hooks/use-prescription-medication-state'
-import { MedicationUnit } from '~/utils/prisma-enums'
+import { MedicationUnit, OrderStatus } from '~/utils/prisma-enums'
+import { db } from '~/lib/db.server'
 
 interface ActionData {
   success: boolean
@@ -111,12 +112,31 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       appointmentId,
       patientId,
     })
+    const order = await db.order.create({
+      data: {
+        patient: {
+          connect: {
+            id: patientId,
+          },
+        },
+        totalAmount: validMeds.reduce(
+          (acc, med) => acc + med.medication.price,
+          0,
+        ),
+        status: OrderStatus.IN_PROGRESS,
+      },
+    })
 
-    // await createOrderWithoutPayment({
-    //   patientId,
-    //   products: validMeds,
-    //   amount:
-    // })
+    await db.medicationOrder.createMany({
+      data: validMeds.map(med => ({
+        medicationId: med.medication.id,
+        quantity: med.quantity,
+        brand: med.medication.brand,
+        dosage: med.dosage.toString(),
+        price: med.medication.price,
+        orderId: order.id,
+      })),
+    })
 
     return redirectWithSuccess(
       $path('/doctor/patients/:patientId/:appointmentId/prescriptions', {
@@ -566,10 +586,20 @@ export default function PatientPrescription() {
               leftSection={<SaveIcon size={14} />}
               onClick={() => {
                 const hasInvalidItems = state.items.some(item => {
-                  if (!item.medication) return true
+                  if (!item.medication) {
+                    toast.error('Please select a medication.')
+                    return true
+                  }
+
+                  console.log('Item', item)
 
                   const result = prescriptionMedicationSchema.safeParse(item)
-                  if (!result.success) return true
+                  if (!result.success) {
+                    console.log(result.error)
+
+                    toast.error('Issue with parsing the medications.')
+                    return true
+                  }
 
                   return false
                 })

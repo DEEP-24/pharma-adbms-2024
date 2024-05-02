@@ -15,13 +15,27 @@ import { Page } from '~/components/page'
 import { Section } from '~/components/section'
 import { db } from '~/lib/db.server'
 import { updateMedicationStock } from '~/lib/medication.server'
-import { getOrders } from '~/lib/order.server'
 import { titleCase } from '~/utils/misc'
 
 const dateFormatter = new Intl.DateTimeFormat('en-US')
 
 export const loader = async () => {
-  const orders = await getOrders()
+  const orders = await db.order.findMany({
+    include: {
+      medications: {
+        include: {
+          medication: true,
+        },
+      },
+      patient: true,
+      payment: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+
+  console.log(orders[0].medications)
 
   return json({ orders })
 }
@@ -34,23 +48,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const orderId = formData.get('orderId')?.toString()
   invariant(orderId, 'Invalid order id')
-
-  const customerEmail = formData.get('customerEmail')?.toString()
-  invariant(customerEmail, 'Invalid customer email')
+  const status = formData.get('status')?.toString()
+  invariant(status, 'Invalid status')
 
   switch (intent) {
-    case 'reject-order': {
-      await db.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.OUT_OF_STOCK },
-      })
-
-      return json({ success: true })
-    }
     case 'update-order-status': {
-      const status = formData.get('status')?.toString()
-      invariant(status, 'Invalid status')
-
       const updatedOrder = await db.order.update({
         where: { id: orderId },
         data: {
@@ -64,7 +66,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (status === OrderStatus.COMPLETED) {
         const updatePromises = updatedOrder.medications.map(medication =>
           updateMedicationStock({
-            medicationId: medication.id,
+            medicationId: medication.medicationId,
             quantitySold: medication.quantity,
           }),
         )
@@ -137,21 +139,15 @@ export default function Orders() {
                           {orders.map(order => {
                             const isOrderInProgress =
                               order.status === OrderStatus.IN_PROGRESS
-
                             const isOrderOutOfStock =
                               order.status === OrderStatus.OUT_OF_STOCK
-
                             const isOrderCompleted =
                               order.status === OrderStatus.COMPLETED
 
-                            const isOrderFulfilled =
-                              order.status === OrderStatus.COMPLETED
-
-                            const statusOptions = [
-                              'ACCEPTED',
-                              'REJECTED',
+                            const statusOptions: Array<OrderStatus> = [
+                              'IN_PROGRESS',
                               'COMPLETED',
-                              'CANCELLED',
+                              'OUT_OF_STOCK',
                             ]
 
                             return (
@@ -187,57 +183,7 @@ export default function Orders() {
                                   </td>
                                   <td className="relative flex items-center justify-center whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
                                     <div className="flex items-center gap-2">
-                                      {isOrderInProgress ? (
-                                        <>
-                                          <ActionIcon
-                                            color="green"
-                                            disabled={
-                                              isPending || !isOrderInProgress
-                                            }
-                                            onClick={() =>
-                                              submit(
-                                                {
-                                                  intent: 'approve-order',
-                                                  orderId: order.id,
-                                                  customerEmail:
-                                                    order.patient.email,
-                                                },
-                                                {
-                                                  method: 'post',
-                                                  replace: true,
-                                                },
-                                              )
-                                            }
-                                          >
-                                            <CheckCircleIcon className="h-6" />
-                                          </ActionIcon>
-                                          <ActionIcon
-                                            color="red"
-                                            type="submit"
-                                            name="intent"
-                                            value="reject-order"
-                                            disabled={
-                                              isPending || !isOrderInProgress
-                                            }
-                                            onClick={() => {
-                                              submit(
-                                                {
-                                                  intent: 'reject-order',
-                                                  orderId: order.id,
-                                                  customerEmail:
-                                                    order.patient.email,
-                                                },
-                                                {
-                                                  method: 'post',
-                                                  replace: true,
-                                                },
-                                              )
-                                            }}
-                                          >
-                                            <MinusCircleIcon className="h-7" />
-                                          </ActionIcon>
-                                        </>
-                                      ) : !isOrderCompleted ? (
+                                      {!isOrderCompleted ? (
                                         <>
                                           <NativeSelect
                                             className="w-48"
@@ -245,15 +191,17 @@ export default function Orders() {
                                             disabled={
                                               isPending || isOrderCompleted
                                             }
-                                            data={statusOptions}
+                                            data={
+                                              isOrderCompleted
+                                                ? []
+                                                : statusOptions
+                                            }
                                             onChange={e => {
                                               submit(
                                                 {
                                                   intent: 'update-order-status',
                                                   orderId: order.id,
                                                   status: e.target.value,
-                                                  customerEmail:
-                                                    order.patient.email,
                                                 },
                                                 {
                                                   method: 'post',
@@ -271,23 +219,35 @@ export default function Orders() {
                                   <td>
                                     <ul className="divide-y divide-gray-200">
                                       {order.medications.map(
-                                        ({ medication, quantity }) => (
+                                        orderMedications => (
                                           <li
-                                            key={medication.id}
+                                            key={orderMedications.medication.id}
                                             className="p-4 sm:p-6"
                                           >
                                             <div className="flex items-center sm:items-start">
                                               <div className="flex-1 text-sm">
                                                 <div className="font-medium text-gray-900 sm:flex sm:justify-between">
                                                   <h5>
-                                                    {medication.name}{' '}
-                                                    <i>(x{quantity})</i>
+                                                    {
+                                                      orderMedications
+                                                        .medication.name
+                                                    }{' '}
+                                                    <i>
+                                                      (x
+                                                      {
+                                                        orderMedications
+                                                          .medication.quantity
+                                                      }
+                                                      )
+                                                    </i>
                                                   </h5>
                                                   <p className="mt-2 sm:mt-0">
                                                     $
                                                     {(
-                                                      medication.price *
-                                                      quantity
+                                                      orderMedications
+                                                        .medication.price *
+                                                      orderMedications
+                                                        .medication.quantity
                                                     ).toFixed(2)}
                                                   </p>
                                                 </div>
@@ -295,7 +255,7 @@ export default function Orders() {
                                             </div>
                                             <div className="mt-6 sm:flex sm:justify-between">
                                               <div className="flex items-center">
-                                                {isOrderFulfilled ? (
+                                                {isOrderCompleted ? (
                                                   <>
                                                     <CheckCircleIcon
                                                       className="h-5 w-5 text-green-500"

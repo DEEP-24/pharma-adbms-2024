@@ -1,5 +1,3 @@
-import { Suspense } from 'react'
-
 import { PlusIcon, Users2Icon } from 'lucide-react'
 
 import { json } from '@remix-run/node'
@@ -45,10 +43,8 @@ export default function ManageDoctors() {
 
         <Page.Main>
           <Section className="overflow-auto">
-            <Suspense fallback={<TableSkeleton />}>
-              {/* @ts-ignore */}
-              <Table columns={adminPharmacistsColumnDef} data={pharmacists} />
-            </Suspense>
+            {/* @ts-ignore */}
+            <Table columns={adminPharmacistsColumnDef} data={pharmacists} />
           </Section>
         </Page.Main>
       </Page.Layout>

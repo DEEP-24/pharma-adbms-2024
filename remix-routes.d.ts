@@ -255,6 +255,13 @@ declare module "remix-routes" {
       query: ExportedQuery<import('app/routes/resources+/create-medication').SearchParams>,
     };
   
+    "/resources/create-payment": {
+      params: {
+      
+      },
+      query: ExportedQuery<import('app/routes/resources+/create-payment').SearchParams>,
+    };
+  
     "/resources/create-user": {
       params: {
       
@@ -340,6 +347,7 @@ declare module "remix-routes" {
     | 'routes/pharmacist+/settings'
     | 'routes/resources+/create-appointment'
     | 'routes/resources+/create-medication'
+    | 'routes/resources+/create-payment'
     | 'routes/resources+/create-user'
     | 'routes/resources+/edit-medication'
     | 'routes/resources+/edit-pharmacist'

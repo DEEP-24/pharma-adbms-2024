@@ -66,11 +66,9 @@ export const genderLabelLookup = {
 
 export function statusLabelLookup(status: OrderStatus) {
   return {
-    [OrderStatus.PENDING]: 'Pending',
+    [OrderStatus.IN_PROGRESS]: 'In Progress',
     [OrderStatus.COMPLETED]: 'Completed',
-    [OrderStatus.CANCELLED]: 'Cancelled',
-    [OrderStatus.ACCEPTED]: 'Accepted',
-    [OrderStatus.REJECTED]: 'Rejected',
+    [OrderStatus.OUT_OF_STOCK]: 'Out of Stock',
   }[status]
 }
 

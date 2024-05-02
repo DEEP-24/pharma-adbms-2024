@@ -1,10 +1,9 @@
-import { Suspense } from 'react'
 
 import { Users2Icon } from 'lucide-react'
 
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { Table, TableSkeleton } from '~/components/data-table/table'
+import { Table } from '~/components/data-table/table'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
 import { adminDoctorsColumnDef } from '~/lib/column-def/admin-doctors-column-def'
@@ -26,10 +25,8 @@ export default function ManageDoctors() {
 
         <Page.Main>
           <Section className="overflow-auto">
-            <Suspense fallback={<TableSkeleton />}>
-              {/* @ts-ignore */}
-              <Table columns={adminDoctorsColumnDef} data={doctors} />
-            </Suspense>
+            {/* @ts-ignore */}
+            <Table columns={adminDoctorsColumnDef} data={doctors} />
           </Section>
         </Page.Main>
       </Page.Layout>

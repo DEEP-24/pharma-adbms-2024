@@ -1,16 +1,13 @@
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { PlusIcon, TabletsIcon } from 'lucide-react'
-import { Suspense } from 'react'
+import { TabletsIcon } from 'lucide-react'
 
 import { FourOhFour } from '~/components/404'
 import { GeneralErrorBoundary } from '~/components/GeneralErrorBoundary'
-import { Table, TableSkeleton } from '~/components/data-table/table'
-import { MODAL, openModal } from '~/components/global-modals'
+import { Table } from '~/components/data-table/table'
 import { DashboardErrorLayout } from '~/components/layout/dashboard-error-layout'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
-import { ActionIconButton } from '~/components/ui/action-icon-button'
 import { pharmacistMedicationColumnDef } from '~/lib/column-def/pharmacist-medication-column-def'
 import { getMedications } from '~/lib/medication.server'
 
@@ -29,9 +26,7 @@ export default function Medications() {
 
       <Page.Main>
         <Section className="overflow-auto">
-          <Suspense fallback={<TableSkeleton />}>
-            <Table columns={pharmacistMedicationColumnDef} data={medications} />
-          </Suspense>
+          <Table columns={pharmacistMedicationColumnDef} data={medications} />
         </Section>
       </Page.Main>
     </Page.Layout>

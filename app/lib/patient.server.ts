@@ -43,7 +43,7 @@ export type PatientPrescription = Awaited<
 >[number]
 
 export async function getPatientPrescriptionsById(patientId: Patient['id']) {
-  return db.prescription.findMany({
+  const prescriptions = await db.prescription.findMany({
     where: {
       patientId,
     },
@@ -76,6 +76,34 @@ export async function getPatientPrescriptionsById(patientId: Patient['id']) {
       updatedAt: 'desc',
     },
   })
+
+  const updatedPrescriptions = await Promise.all(
+    prescriptions.map(async prescription => {
+      const order = await db.order.findFirst({
+        where: {
+          medications: {
+            some: {
+              medicationId: prescription.medications[0].medication.id,
+            },
+          },
+        },
+        include: {
+          payment: true,
+        },
+      })
+
+      if (!order) {
+        throw new Error('Order not found')
+      }
+
+      return {
+        ...prescription,
+        order,
+      }
+    }),
+  )
+
+  return updatedPrescriptions
 }
 
 export type PatientPrescriptionsById = Awaited<

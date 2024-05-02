@@ -28,11 +28,11 @@ import {
 import { useUser } from '~/utils/hooks/use-auth'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await requireUserId(request)
+  await requireUserId(request)
   const userRole = await getUserRole(request)
   await validateUserRole(request, UserRole.PATIENT)
 
-  if (!userId || !userRole) {
+  if (!userRole) {
     return null
   }
 
@@ -46,6 +46,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return null
 }
+
 const menuItems = [
   {
     items: [

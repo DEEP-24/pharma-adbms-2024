@@ -84,6 +84,7 @@ export const prescriptionMedicationSchema = z
       brand: z.string(),
       unit: z.nativeEnum(MedicationUnit),
       price: z.number(),
+      quantity: z.number(),
     }),
     timing: z.nativeEnum(DoseTiming),
     unit: z.nativeEnum(MedicationUnit),

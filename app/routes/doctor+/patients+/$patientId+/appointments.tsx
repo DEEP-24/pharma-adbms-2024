@@ -26,6 +26,7 @@ export default function Appointments() {
   const { appointments } = useLoaderData<typeof loader>()
 
   return (
+    // @ts-expect-error
     <Table columns={doctorPatientsAppointmentsColumnDef} data={appointments} />
   )
 }

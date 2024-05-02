@@ -11,6 +11,7 @@ export function useOptionalUser() {
 
   if (data.admin) {
     return {
+      id: data.admin.id,
       //combine the firstName and lastName to get the name
       name: `${data.admin.firstName} ${data.admin.lastName}`,
       firstName: data.admin.firstName,
@@ -24,6 +25,7 @@ export function useOptionalUser() {
     }
   } else if (data.pharmacist) {
     return {
+      id: data.pharmacist.id,
       name: `${data.pharmacist.firstName} ${data.pharmacist.lastName}`,
       firstName: data.pharmacist.firstName,
       lastName: data.pharmacist.lastName,
@@ -36,6 +38,7 @@ export function useOptionalUser() {
     }
   } else if (data.doctor) {
     return {
+      id: data.doctor.id,
       name: `${data.doctor.firstName} ${data.doctor.lastName}`,
       firstName: data.doctor.firstName,
       lastName: data.doctor.lastName,

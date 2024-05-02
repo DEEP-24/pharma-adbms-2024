@@ -1,11 +1,11 @@
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { NotepadText } from 'lucide-react'
-import { Suspense } from 'react'
+
 import { typedjson, useTypedLoaderData } from 'remix-typedjson'
 
 import { FourOhFour } from '~/components/404'
 import { GeneralErrorBoundary } from '~/components/GeneralErrorBoundary'
-import { Table, TableSkeleton } from '~/components/data-table/table'
+import { Table } from '~/components/data-table/table'
 import { DashboardErrorLayout } from '~/components/layout/dashboard-error-layout'
 import { Page } from '~/components/page'
 import { Section } from '~/components/section'
@@ -29,12 +29,10 @@ export default function Prescriptions() {
 
       <Page.Main>
         <Section className="overflow-auto">
-          <Suspense fallback={<TableSkeleton />}>
-            <Table
-              columns={patientsPrescriptionsColumnDef}
-              data={prescriptions}
-            />
-          </Suspense>
+          <Table
+            columns={patientsPrescriptionsColumnDef}
+            data={prescriptions}
+          />
         </Section>
       </Page.Main>
     </Page.Layout>
