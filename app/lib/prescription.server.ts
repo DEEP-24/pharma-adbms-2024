@@ -43,6 +43,7 @@ export async function upsertMedicationsInPrescription({
             medicationId: med.medication.id,
             timing: med.timing,
             unit: med.unit,
+            quantity: med.quantity,
           })),
         },
       },

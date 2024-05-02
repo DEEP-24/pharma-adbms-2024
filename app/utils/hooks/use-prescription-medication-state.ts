@@ -7,6 +7,7 @@ import { type MedicineComboboxItem } from '~/routes/resources+/search-medication
 import { useSafeDispatch } from '~/utils/hooks/use-safe-dispatch'
 import { createId } from '~/utils/misc'
 import { MedicationUnit } from '~/utils/prisma-enums'
+import { toast } from 'sonner'
 
 export enum DoseFrequency {
   ALTERNATE_DAYS = 'Alternate Days',
@@ -60,6 +61,7 @@ export type PrescriptionItem = {
   remarks?: string
   timing: DoseTiming
   unit?: MedicationUnit
+  quantity: number
 }
 
 export const prescriptionMedicationSchema = z
@@ -86,6 +88,7 @@ export const prescriptionMedicationSchema = z
     timing: z.nativeEnum(DoseTiming),
     unit: z.nativeEnum(MedicationUnit),
     remarks: z.string().default(''),
+    quantity: z.number().default(0),
   })
   .strip()
 
@@ -100,6 +103,7 @@ type State = {
   name: string
   startDate: string
   expiryDate: string
+  noOfDays?: number
 }
 
 enum ActionTypes {
@@ -133,6 +137,7 @@ type Action =
 const makeItem = (item?: Partial<PrescriptionItem>): PrescriptionItem => ({
   dosage: 0,
   durationNumber: 0,
+  quantity: 1,
   durationUnit: PrescriptionDurationUnits.DAYS,
   frequency: DoseFrequency.ONCE_A_DAY,
   frequencyTimings: [0, 0, 0, 0],
@@ -144,9 +149,11 @@ const makeItem = (item?: Partial<PrescriptionItem>): PrescriptionItem => ({
 const updateMedication = ({
   medication,
   prescriptionItem,
+  noOfDays,
 }: {
   medication?: MedicineComboboxItem
   prescriptionItem: PrescriptionItem
+  noOfDays: number
 }) => {
   console.log({
     medication,
@@ -157,6 +164,7 @@ const updateMedication = ({
     ...prescriptionItem,
     dosage: medication ? Number(medication.dosage) : 0,
     unit: medication?.unit as MedicationUnit | undefined,
+    durationNumber: noOfDays,
   }
 }
 
@@ -188,6 +196,7 @@ const reducer = (state: State, action: Action): State => {
         updatedItem = updateMedication({
           medication: action.value as MedicineComboboxItem | undefined,
           prescriptionItem: updatedItem,
+          noOfDays: state.noOfDays ?? 0,
         })
       }
 
@@ -209,6 +218,7 @@ const reducer = (state: State, action: Action): State => {
       const newItem = updateMedication({
         medication: action.item.medication,
         prescriptionItem: action.item,
+        noOfDays: state.noOfDays ?? 0,
       })
 
       const updatedItems = [...state.items, newItem]
@@ -272,25 +282,76 @@ const reducer = (state: State, action: Action): State => {
         }),
       }
 
-    case ActionTypes.SET_START_DATE:
+    case ActionTypes.SET_START_DATE: {
+      let noOfDays = 0
+      if (state.expiryDate) {
+        const isStartDateAfterExpiryDate =
+          new Date(action.startDate) > new Date(state.expiryDate)
+        if (isStartDateAfterExpiryDate) {
+          toast.error('Start date should be before expiry date')
+          return state
+        }
+
+        const startDate = new Date(action.startDate)
+        const expiryDate = new Date(state.expiryDate)
+        const diffTime = Math.abs(expiryDate.getTime() - startDate.getTime())
+        noOfDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
+      }
+
+      const updatedMedications = state.items.map(item =>
+        updateMedication({
+          medication: item.medication,
+          prescriptionItem: item,
+          noOfDays,
+        }),
+      )
+
       return {
         ...state,
         startDate: action.startDate,
+        noOfDays,
+        items: updatedMedications,
         isDirty: checkIsDirty({
           items: state.items,
           initialState: state.initialItems,
         }),
       }
+    }
 
-    case ActionTypes.SET_EXPIRY_DATE:
+    case ActionTypes.SET_EXPIRY_DATE: {
+      let noOfDays = 0
+      if (state.startDate) {
+        const isExpiryDateBeforeStartDate =
+          new Date(action.expiryDate) < new Date(state.startDate)
+        if (isExpiryDateBeforeStartDate) {
+          toast.error('Expiry date should be after start date')
+          return state
+        }
+
+        const startDate = new Date(state.startDate)
+        const expiryDate = new Date(action.expiryDate)
+        const diffTime = Math.abs(expiryDate.getTime() - startDate.getTime())
+        noOfDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
+      }
+
+      const updatedMedications = state.items.map(item =>
+        updateMedication({
+          medication: item.medication,
+          prescriptionItem: item,
+          noOfDays,
+        }),
+      )
       return {
         ...state,
+        items: updatedMedications,
         expiryDate: action.expiryDate,
         isDirty: checkIsDirty({
           items: state.items,
           initialState: state.initialItems,
         }),
+        noOfDays,
       }
+    }
 
     default:
       return state

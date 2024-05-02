@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Loader } from '@mantine/core'
+import { Loader, Select } from '@mantine/core'
 import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import { CheckIcon, ChevronDownIcon } from 'lucide-react'
 import { useSpinDelay } from 'spin-delay'
@@ -24,11 +24,11 @@ import { useFetcherCallback } from '~/utils/hooks/use-fetcher-callback'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const searchParams = new URL(request.url).searchParams
-  const query = searchParams.get('q')
+  // const query = searchParams.get('q')
 
-  if (!query) {
-    return json(null)
-  }
+  // if (!query) {
+  //   return json(null)
+  // }
 
   const medicines = await db.medication.findMany({
     select: {
@@ -38,21 +38,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       name: true,
       unit: true,
       price: true,
+      prescriptionRequired: true,
     },
-    take: 10,
-    where: {
-      AND: [
-        {
-          name: {
-            contains: query,
-            mode: 'insensitive',
-          },
-        },
-        {
-          prescriptionRequired: true,
-        },
-      ],
-    },
+    // take: 10,
+    // where: {
+    //   AND: [
+    //     // {
+    //     //   name: {
+    //     //     contains: query,
+    //     //     mode: 'insensitive',
+    //     //   },
+    //     // },
+    //     {
+    //       prescriptionRequired: true,
+    //     },
+    //   ],
+    // },
   })
 
   return json({
@@ -117,19 +118,20 @@ const DEFAULT_INPUT_PROPS = {
   placeholder: 'Search item...',
 }
 export function MedicineCombobox(props: MedicineComboboxProps) {
+  const medicinesFetcher = useFetcherCallback<typeof loader>()
+
+  React.useEffect(() => {
+    medicinesFetcher.load(SEARCH_MEDICATION_ROUTE)
+  }, [])
+
+  const medicines = medicinesFetcher.data?.medicines ?? []
+
   const { placeholder = 'Search', className } = props
-  const { isInitialData, isPending, medicines, reset, search } =
-    useMedicineSearch({
-      minChars: 3,
-    })
 
   const [open, setOpen] = React.useState(false)
   const [selectedItem, setSelectedItem] = React.useState<
     (typeof medicines)[number] | undefined
   >(props.value)
-  const [query, setQuery] = React.useState('')
-
-  const inputProps = { ...DEFAULT_INPUT_PROPS, ...props.inputProps }
 
   const onChangeRef = React.useRef(props.onChange)
   React.useEffect(() => {
@@ -137,18 +139,10 @@ export function MedicineCombobox(props: MedicineComboboxProps) {
   })
 
   const handleSelect = (item?: (typeof medicines)[number]) => {
-    setQuery('')
     setOpen(false)
-    reset()
-
     onChangeRef.current?.(item)
     setSelectedItem(item)
   }
-
-  const isValidQuery = query.length >= 3
-  const showNoResults =
-    isValidQuery && !isPending && !isInitialData && medicines.length === 0
-  const showMinimumCharsPrompt = !isValidQuery && !isPending && !selectedItem
 
   React.useEffect(() => {
     setSelectedItem(props.value)
@@ -158,10 +152,6 @@ export function MedicineCombobox(props: MedicineComboboxProps) {
     <Popover
       onOpenChange={open => {
         setOpen(open)
-        if (!open) {
-          reset()
-          setQuery('')
-        }
       }}
       open={open}
     >
@@ -182,93 +172,25 @@ export function MedicineCombobox(props: MedicineComboboxProps) {
       </PopoverTrigger>
 
       <PopoverContent className={cn('w-60 p-0', className)}>
-        <Command>
-          <CommandInput
-            onValueChange={value => {
-              setQuery(value)
-              search(value)
-            }}
-            placeholder={inputProps.placeholder}
-            value={query}
-          />
+        <Select
+          data={medicines.map(medicine => {
+            let label = medicine.name
 
-          {showMinimumCharsPrompt ? (
-            <div
-              className={cn(
-                'flex items-center justify-center px-1 py-2 text-center text-sm',
-              )}
-            >
-              Please enter atleast 3 characters
-            </div>
-          ) : null}
-
-          {showNoResults ? (
-            <div
-              className={cn(
-                'flex items-center justify-center px-1 py-2 text-center text-sm',
-              )}
-            >
-              {inputProps.emptyState}
-            </div>
-          ) : null}
-
-          <CommandList>
-            {isPending ? (
-              <div
-                className={cn(
-                  'flex items-center justify-center px-1 py-2 text-center text-sm',
-                )}
-              >
-                <Loader color="blue" size={16} />
-              </div>
-            ) : null}
-
-            {selectedItem ? (
-              <CommandItem
-                className={cn(
-                  'flex cursor-pointer items-center justify-start gap-2',
-                  'cursor-pointer-none',
-                )}
-                onSelect={() => handleSelect()}
-              >
-                <CheckIcon className={cn('opacity-100')} size={16} />
-                {selectedItem.name} - <i>Click to Remove</i>
-              </CommandItem>
-            ) : null}
-
-            {isValidQuery &&
-              medicines.map(medicine => {
-                const isSelected =
-                  medicine.name.toLowerCase() ===
-                  selectedItem?.name?.toLowerCase()
-
-                return (
-                  <CommandItem
-                    className={cn(
-                      'flex cursor-pointer items-center justify-start gap-2',
-                      isSelected ? 'cursor-pointer-none opacity-50' : '',
-                    )}
-                    disabled={isSelected}
-                    key={medicine.id}
-                    onSelect={val => {
-                      const selectedMedicine = medicines.find(
-                        medicine => medicine.name.toLowerCase() === val,
-                      )
-
-                      handleSelect(selectedMedicine)
-                    }}
-                    value={medicine.name}
-                  >
-                    <CheckIcon
-                      className={cn(isSelected ? 'opacity-100' : 'opacity-0')}
-                      size={16}
-                    />
-                    {medicine.name} ({medicine.dosage} {medicine.unit})
-                  </CommandItem>
-                )
-              })}
-          </CommandList>
-        </Command>
+            if (medicine.prescriptionRequired) {
+              label = `${label} (Prescription Required)`
+            }
+            return {
+              label,
+              value: medicine.id,
+            }
+          })}
+          value={selectedItem?.id}
+          placeholder="Click to see the list"
+          onChange={value => {
+            const item = medicines.find(medicine => medicine.id === value)
+            handleSelect(item)
+          }}
+        />
       </PopoverContent>
     </Popover>
   )

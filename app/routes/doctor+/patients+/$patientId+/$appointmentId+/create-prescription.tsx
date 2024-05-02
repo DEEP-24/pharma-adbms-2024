@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Divider, TextInput } from '@mantine/core'
+import { Divider, NumberInput, TextInput } from '@mantine/core'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import {
   CalendarIcon,
@@ -190,6 +190,7 @@ export default function PatientPrescription() {
             placeholder="Enter prescription name"
             label="Prescription Name"
             onChange={e => setName(e.currentTarget.value)}
+            value={state.name}
             type="text"
             name="name"
             required
@@ -203,6 +204,7 @@ export default function PatientPrescription() {
             dropdownType="popover"
             label="Start Date"
             leftSection={<CalendarIcon className="text-gray-400" size={14} />}
+            value={state.startDate ? new Date(state.startDate) : undefined}
             onChange={val => {
               console.log('Val', val?.toDateString() ?? '')
               setStartDate(val?.toDateString() ?? '')
@@ -226,6 +228,7 @@ export default function PatientPrescription() {
             defaultLevel="decade"
             dropdownType="popover"
             label="Expiry Date"
+            value={state.expiryDate ? new Date(state.expiryDate) : undefined}
             leftSection={<CalendarIcon className="text-gray-400" size={14} />}
             onChange={val => setExpiryDate(val?.toDateString() ?? '')}
             leftSectionPointerEvents="none"
@@ -420,8 +423,18 @@ export default function PatientPrescription() {
                       </div>
                     </div>
 
-                    {/* Timing & Duration */}
+                    {/* Quantity,Timing & Duration */}
                     <div className="grid grid-cols-3 gap-4">
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-xsm font-medium">Quantity</Label>
+                        <NumberInput
+                          defaultValue={item.quantity?.toString()}
+                          onValueChange={value =>
+                            updateItem(item.id, 'quantity', Number(value))
+                          }
+                          required
+                        />
+                      </div>
                       <div className="flex flex-col gap-1">
                         <Label className="text-xsm font-medium">Timing</Label>
                         <Select
@@ -449,31 +462,21 @@ export default function PatientPrescription() {
                           <Input
                             className="remove-arrow h-7 w-16 min-w-0 rounded-br-none rounded-tr-none border-r-transparent bg-white pl-3 pr-1 font-mono tabular-nums focus-visible:ring-transparent"
                             min={0}
-                            onBlur={event => {
-                              if (!event.currentTarget.value) {
-                                updateItem(item.id, 'durationNumber', 0)
-                              }
-                            }}
-                            onChange={event =>
-                              updateItem(
-                                item.id,
-                                'durationNumber',
-                                event.currentTarget.valueAsNumber,
-                              )
-                            }
+                            disabled
                             placeholder="-"
                             type="number"
                             value={item.durationNumber}
                           />
                           <Select
                             defaultValue={item.durationUnit}
-                            onValueChange={value =>
-                              updateItem(
-                                item.id,
-                                'durationUnit',
-                                value as PrescriptionDurationUnits,
-                              )
-                            }
+                            disabled
+                            // onValueChange={value =>
+                            //   updateItem(
+                            //     item.id,
+                            //     'durationUnit',
+                            //     value as PrescriptionDurationUnits,
+                            //   )
+                            // }
                           >
                             <SelectTrigger className="w-full rounded-bl-none rounded-tl-none bg-white">
                               <SelectValue placeholder="Duration" />

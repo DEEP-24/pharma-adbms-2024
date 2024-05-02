@@ -27,10 +27,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function PatientAppointments() {
   const user = useUser()
 
-  if (!user) {
-    return redirect('/login')
-  }
-
   const { appointments } = useLoaderData<typeof loader>()
 
   return (

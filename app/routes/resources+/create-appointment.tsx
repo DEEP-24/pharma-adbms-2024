@@ -47,7 +47,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   await createAppointment(fields)
 
-  return jsonWithSuccess({ success: true }, 'Appointment created successfully!')
+  return redirectWithSuccess(
+    $path('/patient/appointments'),
+    'Appointment created successfully!',
+  )
 }
 
 interface ICreateAppointmentModal extends BaseModalProps {

@@ -172,6 +172,7 @@ model PrescribedMedication {
   remarks          String?
   timing           String
   unit             String
+  quantity         Int
 
   medication   Medication @relation(fields: [medicationId], references: [id])
   medicationId String     @db.ObjectId
