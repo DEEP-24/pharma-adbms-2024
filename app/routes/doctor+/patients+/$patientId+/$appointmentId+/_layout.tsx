@@ -48,24 +48,6 @@ export default function PatientLayout() {
 
   return (
     <>
-      {/* <StickySection>
-        <SectionHeader
-          leftSlot={
-            <TabList
-              items={[
-                {
-                  href: $path(
-                    '/doctor/patients/:patientId/:appointmentId/prescriptions',
-                    params,
-                  ),
-                  icon: <NotepadText size={14} />,
-                  name: 'Prescriptions',
-                },
-              ]}
-            />
-          }
-        />
-      </StickySection> */}
       <Outlet />
     </>
   )

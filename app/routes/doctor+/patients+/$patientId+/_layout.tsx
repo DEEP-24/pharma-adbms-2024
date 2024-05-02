@@ -166,7 +166,7 @@ export default function PatientLayout() {
             </div>
           </div>
           <Section className="overflow-auto">
-            <StickySection>
+            {/* <StickySection>
               <SectionHeader
                 leftSlot={
                   <TabList
@@ -180,7 +180,7 @@ export default function PatientLayout() {
                   />
                 }
               />
-            </StickySection>
+            </StickySection> */}
 
             <Outlet />
           </Section>

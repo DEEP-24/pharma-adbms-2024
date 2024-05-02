@@ -23,6 +23,14 @@ export async function getPatientPrescriptions({
       patientId,
       doctorId,
     },
+    include: {
+      doctor: true,
+      medications: {
+        include: {
+          medication: true,
+        },
+      },
+    },
     orderBy: {
       updatedAt: 'desc',
     },
@@ -61,12 +69,7 @@ export async function getPatientPrescriptionsById(patientId: Patient['id']) {
           },
         },
       },
-      doctor: {
-        select: {
-          firstName: true,
-          lastName: true,
-        },
-      },
+      doctor: true,
     },
     orderBy: {
       updatedAt: 'desc',
