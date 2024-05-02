@@ -12,9 +12,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import { type DateToString, medicationUnitLabelLookup } from '~/utils/helpers'
+import {
+  type DateToString,
+  medicationUnitLabelLookup,
+  medicationTypeLabelLookup,
+} from '~/utils/helpers'
 import { formatCurrency } from '~/utils/misc'
-import { MedicationUnit } from '~/utils/prisma-enums'
+import { MedicationType, MedicationUnit } from '~/utils/prisma-enums'
 
 export type Medication = DateToString<PrismaMedication>
 
@@ -53,6 +57,19 @@ export const medicationColumnDef: ColumnDef<Medication>[] = [
     filterFn: 'fuzzy',
     header: ({ column, table }) => (
       <DataTableColumnHeader column={column} table={table} title="Brand" />
+    ),
+  },
+  {
+    accessorKey: 'quantity',
+    cell: ({ row }) => (
+      <div className="flex items-center">
+        <span>{row.getValue('quantity')}</span>
+      </div>
+    ),
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Quantity" />
     ),
   },
   {
@@ -98,18 +115,31 @@ export const medicationColumnDef: ColumnDef<Medication>[] = [
     },
   },
   {
-    accessorKey: 'quantity',
-    cell: ({ row }) => (
-      <div className="flex items-center">
-        <span>{row.getValue('quantity')}</span>
-      </div>
+    accessorKey: 'type',
+    cell: info => (
+      <DataTableRowCell
+        column={info.column}
+        highlight
+        table={info.table}
+        value={medicationTypeLabelLookup[info.getValue<MedicationType>()]}
+      />
     ),
     enableColumnFilter: false,
     enableGlobalFilter: false,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Quantity" />
+      <DataTableColumnHeader column={column} table={table} title="Type" />
     ),
+    meta: {
+      options: Object.values(MedicationType).map(type => ({
+        label: medicationTypeLabelLookup[type],
+        value: type,
+      })),
+    },
   },
+
   {
     accessorKey: 'price',
     accessorFn: row => formatCurrency(row.price),
