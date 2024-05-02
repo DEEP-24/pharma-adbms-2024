@@ -10,7 +10,7 @@ import { createMedication } from '~/lib/medication.server'
 import { useFetcherCallback } from '~/utils/hooks/use-fetcher-callback'
 import { badRequest } from '~/utils/misc.server'
 import EasyModal, { useModal } from '~/utils/modal-manager'
-import { MedicationUnit } from '~/utils/prisma-enums'
+import { MedicationType, MedicationUnit } from '~/utils/prisma-enums'
 import type { inferErrors } from '~/utils/validation'
 import { validateAction } from '~/utils/validation'
 import { createMedicationSchema } from '~/utils/zod.schema'
@@ -105,13 +105,26 @@ export const CreateMedicationModal = EasyModal.create(
               required
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <TextInput
                 error={fetcher.data?.fieldErrors?.dosage}
                 label="Dosage"
                 name="dosage"
                 placeholder="Enter dosage"
                 required
+              />
+              <Select
+                comboboxProps={{ withinPortal: true }}
+                data={Object.values(MedicationType).map(unit => ({
+                  label: unit,
+                  value: unit,
+                }))}
+                error={fetcher.data?.fieldErrors?.type}
+                label="Type"
+                name="type"
+                placeholder="Select type"
+                required
+                searchable
               />
               <Select
                 comboboxProps={{ withinPortal: true }}

@@ -81,6 +81,7 @@ model Medication {
   price                Float
   quantity             Int
   unit                 String
+  type                 String
   prescriptionRequired Boolean @default(false)
 
   prescriptions PrescribedMedication[]
@@ -217,19 +218,13 @@ enum PaymentMethod {
   CASH
 }
 
-enum MedicationUnit {
+enum MedicationType {
   CAPSULE
-  DROP
-  G
-  IU
-  L
-  MCG
-  MEQ
+  TABLET
+  SYRUP
+}
+
+enum MedicationUnit {
   MG
   ML
-  MMOL
-  PERCENT
-  PILL
-  TABLET
-  UNIT
 }

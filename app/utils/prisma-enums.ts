@@ -25,21 +25,17 @@ export const PaymentMethod = {
 
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];
 
-export const MedicationUnit = {
+export const MedicationType = {
   CAPSULE: "CAPSULE",
-  DROP: "DROP",
-  G: "G",
-  IU: "IU",
-  L: "L",
-  MCG: "MCG",
-  MEQ: "MEQ",
+  TABLET: "TABLET",
+  SYRUP: "SYRUP",
+} as const;
+
+export type MedicationType = (typeof MedicationType)[keyof typeof MedicationType];
+
+export const MedicationUnit = {
   MG: "MG",
   ML: "ML",
-  MMOL: "MMOL",
-  PERCENT: "PERCENT",
-  PILL: "PILL",
-  TABLET: "TABLET",
-  UNIT: "UNIT",
 } as const;
 
 export type MedicationUnit = (typeof MedicationUnit)[keyof typeof MedicationUnit];

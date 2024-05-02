@@ -1,6 +1,11 @@
-import { type ClassValue, clsx } from 'clsx'
+import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { Gender, MedicationUnit, OrderStatus } from '~/utils/prisma-enums'
+import {
+  Gender,
+  MedicationType,
+  MedicationUnit,
+  OrderStatus,
+} from '~/utils/prisma-enums'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -37,21 +42,18 @@ export type DashboardView = (typeof DashboardView)[keyof typeof DashboardView]
  * `MedicationUnit` enum label lookup
  */
 export const medicationUnitLabelLookup = {
-  CAPSULE: 'capsule(s)',
-  DROP: 'drop(s)',
-  G: 'g',
-  IU: 'IU',
-  L: 'l',
-  MCG: 'mcg',
-  MEQ: 'mEq',
   MG: 'mg',
   ML: 'ml',
-  MMOL: 'mmol',
-  PERCENT: '%',
-  PILL: 'pill(s)',
-  TABLET: 'tablet(s)',
-  UNIT: 'unit(s)',
 } satisfies Record<MedicationUnit, string>
+
+/**
+ * `MedicationType` enum label lookup
+ */
+export const medicationTypeLabelLookup = {
+  TABLET: 'Tablet',
+  CAPSULE: 'Capsule',
+  SYRUP: 'Syrup',
+} satisfies Record<MedicationType, string>
 
 /**
  * `Gender` enum label lookup

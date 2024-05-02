@@ -9,11 +9,14 @@ import { Label } from '~/components/ui/label'
 import { Switch } from '~/components/ui/switch'
 import { type Medication } from '~/lib/column-def/medication-column-def'
 import { editMedication } from '~/lib/medication.server'
-import { medicationUnitLabelLookup } from '~/utils/helpers'
+import {
+  medicationTypeLabelLookup,
+  medicationUnitLabelLookup,
+} from '~/utils/helpers'
 import { useFetcherCallback } from '~/utils/hooks/use-fetcher-callback'
 import { badRequest } from '~/utils/misc.server'
 import EasyModal from '~/utils/modal-manager'
-import { MedicationUnit } from '~/utils/prisma-enums'
+import { MedicationType, MedicationUnit } from '~/utils/prisma-enums'
 import type { inferErrors } from '~/utils/validation'
 import { validateAction } from '~/utils/validation'
 import { editMedicationSchema } from '~/utils/zod.schema'
@@ -113,7 +116,7 @@ export const EditMedicationModal = EasyModal.create(
               required
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <NumberInput
                 defaultValue={medication.dosage}
                 error={fetcher.data?.fieldErrors?.dosage}
@@ -123,6 +126,20 @@ export const EditMedicationModal = EasyModal.create(
                 name="dosage"
                 placeholder="Enter dosage"
                 required
+              />
+              <Select
+                comboboxProps={{ withinPortal: true }}
+                data={Object.values(MedicationType).map(unit => ({
+                  label: medicationTypeLabelLookup[unit],
+                  value: unit,
+                }))}
+                defaultValue={medication.type}
+                error={fetcher.data?.fieldErrors?.type}
+                label="Type"
+                name="type"
+                placeholder="Select type"
+                required
+                searchable
               />
               <Select
                 comboboxProps={{ withinPortal: true }}
