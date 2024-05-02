@@ -1,6 +1,12 @@
-import { Gender, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import { createPasswordHash } from '~/utils/misc.server'
-import { MedicationType, MedicationUnit } from '~/utils/prisma-enums'
+import {
+  DoctorQualification,
+  DoctorSpecialization,
+  Gender,
+  MedicationType,
+  MedicationUnit,
+} from '~/utils/prisma-enums'
 
 const db = new PrismaClient()
 
@@ -24,7 +30,13 @@ async function createAdmins() {
   await db.admin.create({
     data: {
       email: 'admin@app.com',
-      name: 'Admin User',
+      firstName: 'Admin',
+      lastName: 'User',
+      address: '123 Admin St, Apt 1, Admin City, AD, 12345',
+      phone: '1234567890',
+      dob: new Date('1980-01-01'),
+      gender: Gender.MALE,
+      age: 40,
       password: await createPasswordHash('password'),
     },
   })
@@ -36,11 +48,16 @@ async function createDoctors() {
   await db.doctor.create({
     data: {
       email: 'doctor@app.com',
-      name: 'Doctor User',
+      firstName: 'Doctor',
+      lastName: 'User',
+      address: '123 Doctor St, Apt 1, Doctor City, DC, 12345',
       password: await createPasswordHash('password'),
       gender: Gender.MALE,
       dob: new Date('1980-01-01'),
       phone: '1234567890',
+      age: 45,
+      specialization: DoctorSpecialization.CARDIOLOGIST,
+      qualification: DoctorQualification.MD,
     },
   })
   console.timeEnd(`👤 Created doctors...`)
@@ -51,11 +68,16 @@ async function createPatients() {
   await db.patient.create({
     data: {
       email: 'patient@app.com',
-      name: 'John Doe',
+      firstName: 'John',
+      lastName: 'Doe',
+      address: '123 Patient St, Apt 1, Patient City, PC, 12345',
       password: await createPasswordHash('password'),
       gender: Gender.MALE,
       dob: new Date('1990-01-01'),
       phone: '1234567890',
+      age: 30,
+      height: 145,
+      weight: 70,
     },
   })
   console.timeEnd(`👤 Created patients...`)
@@ -66,11 +88,14 @@ async function createPharmacists() {
   await db.pharmacist.create({
     data: {
       email: 'pharmacist@app.com',
-      name: 'Aden Walker',
+      firstName: 'Aden',
+      lastName: 'Smith',
+      address: '123 Pharmacist St, Apt 1, Pharmacist City, PC, 12345',
       password: await createPasswordHash('password'),
       gender: Gender.MALE,
       dob: new Date('1985-01-01'),
       phone: '1234567890',
+      age: 35,
     },
   })
   console.timeEnd(`👤 Created pharmacists...`)

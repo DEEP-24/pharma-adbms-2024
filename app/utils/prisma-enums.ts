@@ -17,6 +17,29 @@ export const Gender = {
 
 export type Gender = (typeof Gender)[keyof typeof Gender];
 
+export const DoctorSpecialization = {
+  CARDIOLOGIST: "CARDIOLOGIST",
+  DERMATOLOGIST: "DERMATOLOGIST",
+  GYNECOLOGIST: "GYNECOLOGIST",
+  NEUROLOGIST: "NEUROLOGIST",
+  ORTHOPEDIC: "ORTHOPEDIC",
+  PEDIATRICIAN: "PEDIATRICIAN",
+  PSYCHIATRIST: "PSYCHIATRIST",
+  UROLOGIST: "UROLOGIST",
+} as const;
+
+export type DoctorSpecialization = (typeof DoctorSpecialization)[keyof typeof DoctorSpecialization];
+
+export const DoctorQualification = {
+  MD: "MD",
+  MDDM: "MDDM",
+  DSO: "DSO",
+  GENERAL_SURGEON: "GENERAL_SURGEON",
+  GENERAL_MEDICINE: "GENERAL_MEDICINE",
+} as const;
+
+export type DoctorQualification = (typeof DoctorQualification)[keyof typeof DoctorQualification];
+
 export const PaymentMethod = {
   CREDIT_CARD: "CREDIT_CARD",
   DEBIT_CARD: "DEBIT_CARD",

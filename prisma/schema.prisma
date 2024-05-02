@@ -12,8 +12,15 @@ generator enums {
 }
 
 model Admin {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  address   String
+  dob       DateTime @map("date_of_birth")
+  phone     String
+  age       Int
+  gender    Gender
+
   email    String @unique
   password String
 
@@ -24,13 +31,17 @@ model Admin {
 }
 
 model Pharmacist {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  email    String   @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  address   String
+  dob       DateTime @map("date_of_birth")
+  phone     String
+  age       Int
+  gender    Gender
+
+  email    String @unique
   password String
-  gender   Gender
-  dob      DateTime @map("date_of_birth")
-  phone    String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -39,13 +50,20 @@ model Pharmacist {
 }
 
 model Doctor {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  email    String   @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  address   String
+  dob       DateTime @map("date_of_birth")
+  phone     String
+  age       Int
+  gender    Gender
+
+  specialization String
+  qualification  String
+
+  email    String @unique
   password String
-  gender   Gender
-  dob      DateTime @map("date_of_birth")
-  phone    String
 
   prescriptions Prescription[]
 
@@ -56,13 +74,20 @@ model Doctor {
 }
 
 model Patient {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  email    String   @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  address   String
+  dob       DateTime @map("date_of_birth")
+  phone     String
+  age       Int
+  gender    Gender
+
+  height Float
+  weight Float
+
+  email    String @unique
   password String
-  gender   Gender
-  dob      DateTime @map("date_of_birth")
-  phone    String
 
   prescriptions Prescription[]
   orders        Order[]
@@ -210,6 +235,25 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+enum DoctorSpecialization {
+  CARDIOLOGIST
+  DERMATOLOGIST
+  GYNECOLOGIST
+  NEUROLOGIST
+  ORTHOPEDIC
+  PEDIATRICIAN
+  PSYCHIATRIST
+  UROLOGIST
+}
+
+enum DoctorQualification {
+  MD
+  MDDM
+  DSO
+  GENERAL_SURGEON
+  GENERAL_MEDICINE
 }
 
 enum PaymentMethod {
