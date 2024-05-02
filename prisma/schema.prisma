@@ -247,11 +247,9 @@ model TableView {
 }
 
 enum OrderStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
+  IN_PROGRESS
   COMPLETED
-  CANCELLED
+  OUT_OF_STOCK
 }
 
 enum Gender {

@@ -51,6 +51,23 @@ export async function upsertMedicationsInPrescription({
   })
 }
 
+export function getAllPrescription() {
+  return db.prescription.findMany({
+    include: {
+      doctor: true,
+      patient: true,
+      medications: {
+        include: {
+          medication: true,
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  })
+}
+
 export const getPrescriptionDetails = ({
   prescriptionId,
   patientId,

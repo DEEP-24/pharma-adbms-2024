@@ -3,6 +3,7 @@ import { Outlet } from '@remix-run/react'
 import {
   ClipboardCheckIcon,
   LayoutDashboardIcon,
+  NotepadTextIcon,
   PillIcon,
   Settings,
 } from 'lucide-react'
@@ -60,6 +61,16 @@ const menuItems = [
         href: $path('/pharmacist/medications'),
         leftSlot: <PillIcon width={14} />,
         name: 'Medications',
+      },
+    ],
+  },
+  {
+    title: 'Manage',
+    items: [
+      {
+        href: $path('/pharmacist/prescriptions'),
+        leftSlot: <NotepadTextIcon width={14} />,
+        name: 'Prescriptions',
       },
     ],
   },

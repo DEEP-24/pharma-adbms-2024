@@ -25,6 +25,7 @@ export async function getPatientPrescriptions({
     },
     include: {
       doctor: true,
+      patient: true,
       medications: {
         include: {
           medication: true,

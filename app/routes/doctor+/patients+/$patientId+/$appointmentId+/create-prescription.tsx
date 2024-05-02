@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { Divider, NumberInput, TextInput } from '@mantine/core'
-import { json, type ActionFunctionArgs } from '@remix-run/node'
+import { type ActionFunctionArgs } from '@remix-run/node'
 import {
   CalendarIcon,
   MoonIcon,
@@ -36,8 +36,7 @@ import {
 } from '~/components/ui/select'
 
 import { DatePickerInput } from '@mantine/dates'
-import { useLoaderData } from '@remix-run/react'
-import { getMedications } from '~/lib/medication.server'
+import { createOrderWithoutPayment } from '~/lib/order.server'
 import { upsertMedicationsInPrescription } from '~/lib/prescription.server'
 import { requireUserId } from '~/lib/session.server'
 import { MedicineCombobox } from '~/routes/resources+/search-medication'
@@ -54,14 +53,6 @@ import { MedicationUnit } from '~/utils/prisma-enums'
 
 interface ActionData {
   success: boolean
-}
-
-export const loader = async () => {
-  const medications = await getMedications()
-
-  return json({
-    medications,
-  })
 }
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
@@ -121,6 +112,12 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       patientId,
     })
 
+    // await createOrderWithoutPayment({
+    //   patientId,
+    //   products: validMeds,
+    //   amount:
+    // })
+
     return redirectWithSuccess(
       $path('/doctor/patients/:patientId/:appointmentId/prescriptions', {
         patientId,
@@ -137,8 +134,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 }
 
 export default function PatientPrescription() {
-  const { medications } = useLoaderData<typeof loader>()
-
   const [
     state,
     {
@@ -273,31 +268,6 @@ export default function PatientPrescription() {
                     <div className="grid grid-cols-3 gap-4">
                       <div className="flex flex-col gap-1">
                         <Label className="text-xsm font-medium">Medicine</Label>
-                        {/* <Select
-                          defaultValue={item.medication}
-                          onValueChange={value =>
-                            updateItem(item.id, 'medication', value)
-                          }
-                        >
-                          <SelectTrigger className="w-full bg-white">
-                            <SelectValue placeholder="Timing" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.values(medications).map(medication => (
-                              <SelectItem
-                                key={medication.id}
-                                value={medication.name}
-                              >
-                                {medication.name} (
-                                {medication.prescriptionRequired
-                                  ? '(Prescription Required)'
-                                  : '(Prescription Not Required)'}
-                                )
-                              </SelectItem> 
-                            ))}
-                          </SelectContent>
-                        </Select> */}
-
                         <MedicineCombobox
                           className="w-full min-w-72"
                           inputProps={{

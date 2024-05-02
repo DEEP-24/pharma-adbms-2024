@@ -220,6 +220,13 @@ declare module "remix-routes" {
       query: ExportedQuery<import('app/routes/pharmacist+/orders').SearchParams>,
     };
   
+    "/pharmacist/prescriptions": {
+      params: {
+      
+      },
+      query: ExportedQuery<import('app/routes/pharmacist+/prescriptions').SearchParams>,
+    };
+  
     "/pharmacist/settings": {
       params: {
       
@@ -329,6 +336,7 @@ declare module "remix-routes" {
     | 'routes/pharmacist+/_layout'
     | 'routes/pharmacist+/medications'
     | 'routes/pharmacist+/orders'
+    | 'routes/pharmacist+/prescriptions'
     | 'routes/pharmacist+/settings'
     | 'routes/resources+/create-appointment'
     | 'routes/resources+/create-medication'

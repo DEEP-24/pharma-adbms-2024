@@ -54,7 +54,7 @@ export async function createOrder({
     data: {
       patientId,
       totalAmount: amount,
-      status: OrderStatus.PENDING,
+      status: OrderStatus.IN_PROGRESS,
       medications: {
         createMany: {
           data: products.map(product => ({
@@ -70,6 +70,35 @@ export async function createOrder({
         create: {
           paymentMethod: paymentMethod as PaymentMethod,
           amount,
+        },
+      },
+    },
+  })
+}
+
+export async function createOrderWithoutPayment({
+  patientId,
+  products,
+  amount,
+}: {
+  patientId: Patient['id']
+  products: Array<CartItem>
+  amount: number
+}) {
+  return db.order.create({
+    data: {
+      patientId,
+      totalAmount: amount,
+      status: OrderStatus.IN_PROGRESS,
+      medications: {
+        createMany: {
+          data: products.map(product => ({
+            medicationId: product.id,
+            quantity: product.quantity,
+            brand: product.brand,
+            dosage: product.dosage.toString(),
+            price: product.price,
+          })),
         },
       },
     },

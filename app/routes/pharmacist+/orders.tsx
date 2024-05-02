@@ -1,6 +1,6 @@
 import { ActionIcon, Badge, NativeSelect } from '@mantine/core'
-import { Order, OrderStatus } from '@prisma/client'
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
+import { OrderStatus } from '@prisma/client'
+import type { ActionFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
 import {
@@ -39,19 +39,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   invariant(customerEmail, 'Invalid customer email')
 
   switch (intent) {
-    case 'approve-order': {
-      await db.order.update({
-        where: { id: orderId },
-        data: { status: OrderStatus.ACCEPTED },
-      })
-
-      return json({ success: true })
-    }
-
     case 'reject-order': {
       await db.order.update({
         where: { id: orderId },
-        data: { status: OrderStatus.REJECTED },
+        data: { status: OrderStatus.OUT_OF_STOCK },
       })
 
       return json({ success: true })
@@ -144,12 +135,12 @@ export default function Orders() {
                         </thead>
                         <tbody className="bg-[rgb(129, 135, 80)] divide-y divide-gray-200">
                           {orders.map(order => {
-                            const isOrderPending =
-                              order.status === OrderStatus.PENDING
-                            const isOrderCancelled =
-                              order.status === OrderStatus.CANCELLED
-                            const isOrderRejected =
-                              order.status === OrderStatus.REJECTED
+                            const isOrderInProgress =
+                              order.status === OrderStatus.IN_PROGRESS
+
+                            const isOrderOutOfStock =
+                              order.status === OrderStatus.OUT_OF_STOCK
+
                             const isOrderCompleted =
                               order.status === OrderStatus.COMPLETED
 
@@ -182,11 +173,11 @@ export default function Orders() {
                                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                     <Badge
                                       color={
-                                        isOrderPending
+                                        isOrderInProgress
                                           ? 'gray'
-                                          : isOrderCancelled
+                                          : isOrderCompleted
                                             ? 'indigo'
-                                            : isOrderRejected
+                                            : isOrderOutOfStock
                                               ? 'red'
                                               : 'green'
                                       }
@@ -196,12 +187,12 @@ export default function Orders() {
                                   </td>
                                   <td className="relative flex items-center justify-center whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6">
                                     <div className="flex items-center gap-2">
-                                      {isOrderPending ? (
+                                      {isOrderInProgress ? (
                                         <>
                                           <ActionIcon
                                             color="green"
                                             disabled={
-                                              isPending || !isOrderPending
+                                              isPending || !isOrderInProgress
                                             }
                                             onClick={() =>
                                               submit(
@@ -226,7 +217,7 @@ export default function Orders() {
                                             name="intent"
                                             value="reject-order"
                                             disabled={
-                                              isPending || !isOrderPending
+                                              isPending || !isOrderInProgress
                                             }
                                             onClick={() => {
                                               submit(
@@ -246,16 +237,13 @@ export default function Orders() {
                                             <MinusCircleIcon className="h-7" />
                                           </ActionIcon>
                                         </>
-                                      ) : !isOrderRejected &&
-                                        !isOrderCompleted ? (
+                                      ) : !isOrderCompleted ? (
                                         <>
                                           <NativeSelect
                                             className="w-48"
                                             defaultValue={order.status}
                                             disabled={
-                                              isPending ||
-                                              isOrderCompleted ||
-                                              isOrderCancelled
+                                              isPending || isOrderCompleted
                                             }
                                             data={statusOptions}
                                             onChange={e => {
