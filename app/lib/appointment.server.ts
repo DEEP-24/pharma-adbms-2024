@@ -22,10 +22,17 @@ export async function createAppointment(
   })
 }
 
-export async function getAppointmentsByPatientId(patientId: Patient['id']) {
-  return db.appointment.findMany({
+export async function getAppointmentDetails({
+  appointmentId,
+  patientId,
+}: {
+  appointmentId: Appointment['id']
+  patientId: Patient['id']
+}) {
+  return db.appointment.findUnique({
     where: {
-      patientId,
+      id: appointmentId,
+      patientId: patientId,
     },
     include: {
       doctor: {
@@ -45,6 +52,35 @@ export async function getAppointmentsByPatientId(patientId: Patient['id']) {
     },
   })
 }
+
+export async function getAppointmentsByPatientId(patientId: Patient['id']) {
+  return db.appointment.findMany({
+    where: {
+      patientId,
+    },
+    select: {
+      id: true,
+      doctor: {
+        select: {
+          firstName: true,
+          lastName: true,
+          qualification: true,
+          specialization: true,
+        },
+      },
+      patient: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  })
+}
+
+export type AppointmentsByPatientId = Awaited<
+  ReturnType<typeof getAppointmentsByPatientId>
+>[number]
 
 export async function getAppointmentById(patientId: Appointment['id']) {
   return db.appointment.findMany({

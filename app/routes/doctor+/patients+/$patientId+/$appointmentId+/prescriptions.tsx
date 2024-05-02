@@ -10,7 +10,7 @@ import { requireUserId } from '~/lib/session.server'
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const doctorId = await requireUserId(request)
   const { patientId } = $params(
-    '/doctor/patients/:patientId/prescriptions',
+    '/doctor/patients/:patientId/:appointmentId/prescriptions',
     params,
   )
 

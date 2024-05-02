@@ -1,7 +1,8 @@
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { BookMinusIcon, PlusIcon, TabletsIcon } from 'lucide-react'
+import { BookMinusIcon, PlusIcon } from 'lucide-react'
 import { Suspense } from 'react'
+import { redirect } from 'remix-typedjson'
 
 import { FourOhFour } from '~/components/404'
 import { GeneralErrorBoundary } from '~/components/GeneralErrorBoundary'
@@ -25,6 +26,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Appointments() {
   const user = useUser()
+
+  if (!user) {
+    return redirect('/login')
+  }
+
   const { appointments } = useLoaderData<typeof loader>()
 
   return (

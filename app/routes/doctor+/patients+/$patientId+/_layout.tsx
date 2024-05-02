@@ -1,6 +1,6 @@
 import { Divider, ScrollArea } from '@mantine/core'
 import { type LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useNavigate, useParams } from '@remix-run/react'
+import { Outlet, useParams } from '@remix-run/react'
 import {
   AtSignIcon,
   CalendarIcon,
@@ -20,9 +20,9 @@ import {
   useTypedLoaderData,
   useTypedRouteLoaderData,
 } from 'remix-typedjson'
+import { AppointmentList } from '~/components/appointment-collapsible-list'
 
 import { Page } from '~/components/page'
-import { PrescriptionList } from '~/components/prescription-collapsible-list'
 import { Section } from '~/components/section'
 import { SectionHeader } from '~/components/section-header'
 import { StickySection } from '~/components/sticky-section'
@@ -71,33 +71,20 @@ export function usePatientData() {
 export default function PatientLayout() {
   const { patient } = useTypedLoaderData<typeof loader>()
 
-  const navigate = useNavigate()
-
   const params = useParams() as {
-    prescriptionId?: string
+    appointmentId?: string
     patientId: string
   }
 
-  const isPrescriptionRoute = Boolean(params.prescriptionId)
+  const isAppointmentRoute = Boolean(params.appointmentId)
+
   return (
     <Page.Layout>
       <Page.Header
         action={
           <ActionIconButton
-            className={isPrescriptionRoute ? 'hidden' : ''}
+            className={isAppointmentRoute ? 'hidden' : ''}
             color="dark"
-            onClick={() => {
-              if (isPrescriptionRoute) {
-                return
-              }
-
-              navigate(
-                $path(
-                  '/doctor/patients/:patientId/create-prescription',
-                  params,
-                ),
-              )
-            }}
             variant="filled"
           >
             <PlusIcon size={16} />
@@ -114,15 +101,15 @@ export default function PatientLayout() {
             href={$path('/doctor/patients/:patientId', params)}
             label={patient.firstName}
           />
-          {isPrescriptionRoute ? (
+          {isAppointmentRoute ? (
             <BreadcrumbItem
-              href={$path('/doctor/patients/:patientId/:prescriptionId', {
+              href={$path('/doctor/patients/:patientId/:appointmentId', {
                 patientId: params.patientId,
-                // @ts-expect-error - `prescriptionId` is present in the params
-                prescriptionId: params.prescriptionId,
+                // @ts-expect-error - `appointmentId` is present in the params
+                appointmentId: params.appointmentId,
               })}
               isLast
-              label="Prescription"
+              label="Appointment"
             />
           ) : null}
         </Breadcrumbs>
@@ -198,10 +185,10 @@ export default function PatientLayout() {
                 type="hover"
               >
                 <div className="overflow-hidden px-4">
-                  <PrescriptionList
-                    prescriptions={patient.prescriptions}
+                  <AppointmentList
+                    appointments={patient.appointments}
                     defaultExpanded
-                    title="Prescriptions"
+                    title="Appointments"
                   />
                 </div>
               </ScrollArea>
@@ -214,9 +201,9 @@ export default function PatientLayout() {
                   <TabList
                     items={[
                       {
-                        href: `prescriptions`,
+                        href: `appointments`,
                         icon: <CalendarIcon size={14} />,
-                        name: 'Prescriptions',
+                        name: 'Appointments',
                       },
                     ]}
                   />

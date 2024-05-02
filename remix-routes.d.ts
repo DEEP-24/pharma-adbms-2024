@@ -87,33 +87,46 @@ declare module "remix-routes" {
       query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/_index').SearchParams>,
     };
   
-    "/doctor/patients/:patientId/:prescriptionId": {
+    "/doctor/patients/:patientId/:appointmentId": {
       params: {
       
         patientId: string | number;
       
-        prescriptionId: string | number;
+        appointmentId: string | number;
       
       },
-      query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/$prescriptionId+/index').SearchParams>,
+      query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/$appointmentId+/index').SearchParams>,
     };
   
-    "/doctor/patients/:patientId/create-prescription": {
+    "/doctor/patients/:patientId/:appointmentId/create-prescription": {
       params: {
       
         patientId: string | number;
       
+        appointmentId: string | number;
+      
       },
-      query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/create-prescription').SearchParams>,
+      query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/$appointmentId+/create-prescription').SearchParams>,
     };
   
-    "/doctor/patients/:patientId/prescriptions": {
+    "/doctor/patients/:patientId/:appointmentId/prescriptions": {
+      params: {
+      
+        patientId: string | number;
+      
+        appointmentId: string | number;
+      
+      },
+      query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/$appointmentId+/prescriptions').SearchParams>,
+    };
+  
+    "/doctor/patients/:patientId/appointments": {
       params: {
       
         patientId: string | number;
       
       },
-      query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/prescriptions').SearchParams>,
+      query: ExportedQuery<import('app/routes/doctor+/patients+/$patientId+/appointments').SearchParams>,
     };
   
     "/doctor/settings": {
@@ -298,10 +311,11 @@ declare module "remix-routes" {
     | 'routes/doctor+/patients+/_index'
     | 'routes/doctor+/patients+/$patientId+/_index'
     | 'routes/doctor+/patients+/$patientId+/_layout'
-    | 'routes/doctor+/patients+/$patientId+/$prescriptionId+/_layout'
-    | 'routes/doctor+/patients+/$patientId+/$prescriptionId+/index'
-    | 'routes/doctor+/patients+/$patientId+/create-prescription'
-    | 'routes/doctor+/patients+/$patientId+/prescriptions'
+    | 'routes/doctor+/patients+/$patientId+/$appointmentId+/_layout'
+    | 'routes/doctor+/patients+/$patientId+/$appointmentId+/create-prescription'
+    | 'routes/doctor+/patients+/$patientId+/$appointmentId+/index'
+    | 'routes/doctor+/patients+/$patientId+/$appointmentId+/prescriptions'
+    | 'routes/doctor+/patients+/$patientId+/appointments'
     | 'routes/doctor+/settings'
     | 'routes/patient+/_index'
     | 'routes/patient+/_layout'

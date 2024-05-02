@@ -92,10 +92,10 @@ model Patient {
 
   prescriptions Prescription[]
   orders        Order[]
+  appointments  Appointment[]
 
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  appointments Appointment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("patient")
 }
@@ -131,6 +131,11 @@ model Appointment {
 
   doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   doctorId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("appointment")
 }
 
 model Prescription {

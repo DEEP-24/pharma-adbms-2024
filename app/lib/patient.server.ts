@@ -107,8 +107,28 @@ export async function verifyPatientLogin({
 export async function getPatientById(id: Patient['id']) {
   return db.patient.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      height: true,
+      weight: true,
+      dob: true,
+      address: true,
+      gender: true,
+      age: true,
       prescriptions: true,
+      createdAt: true,
+      updatedAt: true,
+      appointments: {
+        select: {
+          doctor: true,
+          patient: true,
+          createdAt: true,
+        },
+      },
     },
   })
 }
