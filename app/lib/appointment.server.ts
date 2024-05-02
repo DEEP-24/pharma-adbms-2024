@@ -60,6 +60,7 @@ export async function getAppointmentsByPatientId(patientId: Patient['id']) {
     },
     select: {
       id: true,
+      prescription: true,
       doctor: {
         select: {
           firstName: true,

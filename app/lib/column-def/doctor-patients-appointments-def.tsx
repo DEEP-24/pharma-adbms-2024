@@ -84,23 +84,28 @@ interface TableRowActionProps<TData> {
   row: Row<TData>
 }
 
-function TableRowAction({ row }: TableRowActionProps<Appointment>) {
+function TableRowAction({ row }: TableRowActionProps<AppointmentsByPatientId>) {
   const appointment = row.original
+
+  const prescriptionExists = appointment.prescription?.id !== null
+
+  console.log('prescriptionExists', prescriptionExists)
 
   return (
     <div className="flex items-center justify-between gap-2">
-      <CustomButton
-        className="h-6 px-2"
-        color="blue"
-        component={Link}
-        prefetch="intent"
-        size="compact-sm"
-        to={`../${appointment.id}`}
-        variant="subtle"
-      >
-        View
-        <ArrowUpRightIcon className="ml-1" size={14} />
-      </CustomButton>
+      {prescriptionExists && (
+        <CustomButton
+          className="h-6 px-2"
+          color="blue"
+          component={Link}
+          prefetch="intent"
+          size="compact-sm"
+          to={`../${appointment.id}/create-prescription`}
+          variant="subtle"
+        >
+          Create Prescription
+        </CustomButton>
+      )}
     </div>
   )
 }

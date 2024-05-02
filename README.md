@@ -1,8 +1,8 @@
 - [x] Need to add field to all the roles (First Name, Last Name, Address(Street, Apt no, city, state, zip code), Phone Number, Email. Date of birth, age, gender. For patient there will be extra fields like Height and Weight. For doctor specialization and qualification(MD, MDDM, DSO, General Surgeon, General Medicine)
 - [x] Admin will add pharmacist (the pharmacist will not do anything)
-- [ ] Doctor can only see the patients who have booked appointment with him/her
-- [ ] Doctor can see the previous records of patients with whom previous appointments were booked (hold on this)
-- [ ] While creating prescription only the present date and future dates must be shown for the start Date and same thing will apply for expiry date as well
+- [x] Doctor can only see the patients who have booked appointment with him/her
+- [x] Doctor can see the previous records of patients with whom previous appointments were booked (hold on this)
+- [x] While creating prescription only the present date and future dates must be shown for the start Date and same thing will apply for expiry date as well
 - [ ] For every medication the duration should be updated accordingly
 - [ ] For every medication there should be a quantity
 - [ ] Show all the medications for medicine drop down while creating prescription

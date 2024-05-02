@@ -1,18 +1,17 @@
-import { Doctor, Prescription, type Patient } from '@prisma/client'
-import ObjectID from 'bson-objectid'
+import { Appointment, Doctor, Prescription, type Patient } from '@prisma/client'
 import { z } from 'zod'
 
 import { db } from '~/lib/db.server'
 import { prescriptionMedicationSchema } from '~/utils/hooks/use-prescription-medication-state'
 
 export async function upsertMedicationsInPrescription({
-  prescriptionId,
   patientId,
   doctorId,
   medications,
   name,
   startDate,
   expiryDate,
+  appointmentId,
 }: {
   prescriptionId?: Prescription['id']
   patientId: Patient['id']
@@ -20,42 +19,18 @@ export async function upsertMedicationsInPrescription({
   name: Prescription['name']
   startDate: Prescription['startDate']
   expiryDate: Prescription['expiryDate']
+  appointmentId: Appointment['id']
 
   medications: z.infer<typeof prescriptionMedicationSchema>[]
 }) {
-  const pId = prescriptionId ?? ObjectID().toString()
-
-  return db.prescription.upsert({
-    where: {
-      id: pId,
-    },
-    update: {
-      name,
-      startDate,
-      expiryDate,
-      medications: {
-        deleteMany: {},
-        createMany: {
-          data: medications.map(med => ({
-            dosage: med.dosage,
-            durationNumber: med.durationNumber,
-            durationUnit: med.durationUnit,
-            frequency: med.frequency,
-            frequencyTimings: med.frequencyTimings,
-            remarks: med.remarks,
-            medicationId: med.medication.id,
-            timing: med.timing,
-            unit: med.unit,
-          })),
-        },
-      },
-    },
-    create: {
+  return db.prescription.create({
+    data: {
       name,
       startDate,
       expiryDate,
       doctorId,
       patientId,
+      appointmentId,
       medications: {
         createMany: {
           data: medications.map(med => ({

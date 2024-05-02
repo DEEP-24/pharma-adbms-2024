@@ -7,7 +7,6 @@ import {
   GlobeIcon,
   HomeIcon,
   PhoneIcon,
-  PlusIcon,
   RulerIcon,
   UserIcon,
   Users2Icon,
@@ -27,7 +26,6 @@ import { Section } from '~/components/section'
 import { SectionHeader } from '~/components/section-header'
 import { StickySection } from '~/components/sticky-section'
 import { TabList } from '~/components/tab-list'
-import { ActionIconButton } from '~/components/ui/action-icon-button'
 import { BreadcrumbItem, Breadcrumbs } from '~/components/ui/breadcrumb'
 import { getPatientById } from '~/lib/patient.server'
 import {
@@ -80,17 +78,7 @@ export default function PatientLayout() {
 
   return (
     <Page.Layout>
-      <Page.Header
-        action={
-          <ActionIconButton
-            className={isAppointmentRoute ? 'hidden' : ''}
-            color="dark"
-            variant="filled"
-          >
-            <PlusIcon size={16} />
-          </ActionIconButton>
-        }
-      >
+      <Page.Header>
         <Breadcrumbs>
           <BreadcrumbItem
             href={$path('/doctor/patients')}
@@ -175,23 +163,6 @@ export default function PatientLayout() {
               </div>
 
               <Divider className="mx-2" />
-
-              <ScrollArea
-                classNames={{
-                  root: 'flex-1 overflow-auto',
-                }}
-                offsetScrollbars
-                scrollbarSize={8}
-                type="hover"
-              >
-                <div className="overflow-hidden px-4">
-                  <AppointmentList
-                    appointments={patient.appointments}
-                    defaultExpanded
-                    title="Appointments"
-                  />
-                </div>
-              </ScrollArea>
             </div>
           </div>
           <Section className="overflow-auto">

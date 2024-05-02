@@ -24,7 +24,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ appointments })
 }
 
-export default function Appointments() {
+export default function PatientAppointments() {
   const user = useUser()
 
   if (!user) {

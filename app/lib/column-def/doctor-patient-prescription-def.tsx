@@ -65,37 +65,37 @@ export const doctorPatientPrescriptionsColumnDef: ColumnDef<PatientPrescription>
         />
       ),
     },
-    {
-      cell: ({ row }) => <TableRowAction row={row} />,
-      id: 'actions',
-      size: 100,
-    },
+    // {
+    //   cell: ({ row }) => <TableRowAction row={row} />,
+    //   id: 'actions',
+    //   size: 100,
+    // },
   ]
 
-interface TableRowActionProps<TData> {
-  row: Row<TData>
-}
+// interface TableRowActionProps<TData> {
+//   row: Row<TData>
+// }
 
-function TableRowAction({ row }: TableRowActionProps<PatientPrescription>) {
-  const patientPrescription = row.original
+// function TableRowAction({ row }: TableRowActionProps<PatientPrescription>) {
+//   const patientPrescription = row.original
 
-  return (
-    <div className="flex items-center justify-between gap-2">
-      <CustomButton
-        className="h-6 px-2"
-        color="blue"
-        component={Link}
-        prefetch="intent"
-        size="compact-sm"
-        to={$path('/doctor/patients/:patientId/:prescriptionId', {
-          patientId: patientPrescription.patientId,
-          prescriptionId: patientPrescription.id,
-        })}
-        variant="subtle"
-      >
-        View
-        <ArrowUpRightIcon className="ml-1" size={14} />
-      </CustomButton>
-    </div>
-  )
-}
+//   return (
+//     <div className="flex items-center justify-between gap-2">
+//       <CustomButton
+//         className="h-6 px-2"
+//         color="blue"
+//         component={Link}
+//         prefetch="intent"
+//         size="compact-sm"
+//         to={$path('/doctor/patients/:patientId/:prescriptionId', {
+//           patientId: patientPrescription.patientId,
+//           prescriptionId: patientPrescription.id,
+//         })}
+//         variant="subtle"
+//       >
+//         View
+//         <ArrowUpRightIcon className="ml-1" size={14} />
+//       </CustomButton>
+//     </div>
+//   )
+// }

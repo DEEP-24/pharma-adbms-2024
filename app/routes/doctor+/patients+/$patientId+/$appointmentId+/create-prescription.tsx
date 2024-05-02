@@ -66,8 +66,8 @@ export const loader = async () => {
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const doctorId = await requireUserId(request)
-  const { patientId } = $params(
-    '/doctor/patients/:patientId/create-prescription',
+  const { patientId, appointmentId } = $params(
+    '/doctor/patients/:patientId/:appointmentId/create-prescription',
     params,
   )
 
@@ -117,11 +117,15 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       startDate: new Date(prescriptionStartDate as string),
       expiryDate: new Date(prescriptionExpiryDate as string),
       medications: validMeds,
+      appointmentId,
       patientId,
     })
 
     return redirectWithSuccess(
-      $path('/doctor/patients/:patientId/prescriptions', { patientId }),
+      $path('/doctor/patients/:patientId/:appointmentId/prescriptions', {
+        patientId,
+        appointmentId,
+      }),
       'Prescription created successfully!',
     )
   } catch (error) {
@@ -286,7 +290,7 @@ export default function PatientPrescription() {
                                   ? '(Prescription Required)'
                                   : '(Prescription Not Required)'}
                                 )
-                              </SelectItem>
+                              </SelectItem> 
                             ))}
                           </SelectContent>
                         </Select> */}

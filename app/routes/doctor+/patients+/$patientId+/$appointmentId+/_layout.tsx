@@ -48,7 +48,7 @@ export default function PatientLayout() {
 
   return (
     <>
-      <StickySection>
+      {/* <StickySection>
         <SectionHeader
           leftSlot={
             <TabList
@@ -65,7 +65,7 @@ export default function PatientLayout() {
             />
           }
         />
-      </StickySection>
+      </StickySection> */}
       <Outlet />
     </>
   )
