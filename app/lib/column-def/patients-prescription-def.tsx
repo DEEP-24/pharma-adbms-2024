@@ -1,5 +1,6 @@
 import { Button, Input, Modal, Select } from '@mantine/core'
 import { DatePickerInput } from '@mantine/dates'
+import { useDisclosure } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { type ColumnDef, type Row } from '@tanstack/react-table'
@@ -113,6 +114,8 @@ function TableRowAction({
   )
   const patientPrescription = row.original
 
+  const [isViewModalOpen, handleViewModal] = useDisclosure()
+
   const fetcher = useFetcher<ActionData>()
   const [cardNumber, setCardNumber] = React.useState<string>('1234567891234567')
   const [cardExpiry, setCardExpiry] = React.useState<Date | null>(
@@ -209,19 +212,85 @@ function TableRowAction({
     navigate($path('/patient/order-history'))
   }, [fetcher.data, isSubmitting])
 
+  const prescriptionHtml = `
+    <html>
+    <head>
+      <title>Prescription</title>
+      <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+      </style>
+    </head>
+    <body>
+      <h1>${patientPrescription.name}</h1>
+      <table>
+        <tr><th>Start Date</th><td>${formatDate(patientPrescription.startDate)}</td></tr>
+        <tr><th>Expiry Date</th><td>${formatDate(patientPrescription.expiryDate)}</td></tr>
+        <tr><th>Doctor</th><th>${patientPrescription.doctor!.firstName} ${patientPrescription.doctor!.lastName}</th></tr>
+        td></tr>
+      </table>
+      <h2>Medications</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Medication</th>
+            <th>Dosage</th>
+            <th>Duration</th>
+            <th>Frequency</th>
+            <th>Timing</th>
+            <th>Frequency Timings</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${patientPrescription.medications
+            .map(
+              med => `
+            <tr>
+              <td>${med.medication.name} (${med.medication.brand})</td>
+              <td>${med.dosage} ${med.unit}</td>
+              <td>${med.durationNumber} ${med.durationUnit}</td>
+              <td>${med.frequency}</td>
+              <td>${med.timing}</td>
+              <td>${med.frequencyTimings.join(', ')}</td>
+              <td>${med.remarks}</td>
+            </tr>
+          `,
+            )
+            .join('')}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `
+
   return (
     <div className="flex items-center justify-center gap-2">
       {isOrderCompletedAndPaymentPending ? (
-        <CustomButton
-          className="h-6 px-2"
-          color="blue"
-          size="compact-sm"
-          variant="subtle"
-          onClick={handleOpenModal}
-        >
-          Payment
-          <ArrowUpRightIcon className="ml-1" size={14} />
-        </CustomButton>
+        <>
+          <CustomButton
+            className="h-6 px-2"
+            color="blue"
+            size="compact-sm"
+            variant="subtle"
+            onClick={handleOpenModal}
+          >
+            Payment
+            <ArrowUpRightIcon className="ml-1" size={14} />
+          </CustomButton>
+          <CustomButton
+            className="h-6 px-2"
+            color="blue"
+            size="compact-sm"
+            variant="subtle"
+            onClick={handleViewModal.open}
+          >
+            View
+            <ArrowUpRightIcon className="ml-1" size={14} />
+          </CustomButton>
+        </>
       ) : null}
 
       <Modal
@@ -311,6 +380,59 @@ function TableRowAction({
           </div>
         </div>
       </Modal>
+
+      <PrescriptionModal
+        isOpen={isViewModalOpen}
+        onClose={handleViewModal.close}
+        prescription={prescriptionHtml}
+      />
     </div>
+  )
+}
+
+function PrescriptionModal({
+  isOpen,
+  onClose,
+  prescription,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  prescription: string
+}) {
+  const downloadHref = `data:text/html;charset=utf-8,${encodeURIComponent(prescription)}`
+
+  return (
+    <Modal
+      opened={isOpen}
+      onClose={onClose}
+      title="Prescription Details"
+      size="90%"
+      style={{ maxWidth: '1200px' }}
+    >
+      <iframe
+        srcDoc={prescription}
+        style={{ width: '100%', height: '80vh', marginBottom: '20px' }}
+      ></iframe>
+      <a
+        href={downloadHref}
+        download="Prescription.html"
+        style={{ display: 'block', textAlign: 'center' }}
+      >
+        <button
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s',
+          }}
+        >
+          Download Prescription
+        </button>
+      </a>
+    </Modal>
   )
 }
