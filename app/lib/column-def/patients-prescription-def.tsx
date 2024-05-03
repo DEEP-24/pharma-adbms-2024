@@ -229,7 +229,6 @@ function TableRowAction({
         <tr><th>Start Date</th><td>${formatDate(patientPrescription.startDate)}</td></tr>
         <tr><th>Expiry Date</th><td>${formatDate(patientPrescription.expiryDate)}</td></tr>
         <tr><th>Doctor</th><th>${patientPrescription.doctor!.firstName} ${patientPrescription.doctor!.lastName}</th></tr>
-        td></tr>
       </table>
       <h2>Medications</h2>
       <table>
