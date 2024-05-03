@@ -74,12 +74,16 @@ export const patientsPrescriptionsColumnDef: ColumnDef<PatientPrescriptionsById>
       ),
     },
     {
-      accessorKey: 'doctor.name',
+      accessorKey: 'doctor.firstName',
       cell: info => (
         <DataTableRowCell
           column={info.column}
           table={info.table}
-          value={info.getValue<string>()}
+          value={
+            info.row.original.doctor?.firstName +
+            ' ' +
+            info.row.original.doctor?.lastName
+          }
         />
       ),
       enableColumnFilter: false,
